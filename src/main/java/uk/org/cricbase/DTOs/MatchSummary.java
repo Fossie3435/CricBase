@@ -21,6 +21,7 @@ public class MatchSummary {
     private int matchNumber;
     private int overs;
     private List<InningSummary> innings;
+    private GroundSummary ground;
     
     public MatchSummary() {    
     }
@@ -29,7 +30,7 @@ public class MatchSummary {
         this.id = match.getId();
         this.tournament = match.getTournament();
         this.season = match.getSeason();
-        this.matchType = match.getMatchType();
+        this.matchType = match.getMatchFormat();
         this.gender = match.getGender();
         this.teamType = match.getTeamType();
         this.matchNumber = match.getMatchNumber();
@@ -81,4 +82,12 @@ public class MatchSummary {
     public void setOvers(int overs) {
         this.overs = overs;
     } 
+
+    public GroundSummary getGround() {
+        return ground;
+    }
+
+    public void setGround(GroundSummary ground) {
+        this.ground = ground;
+    }
 }

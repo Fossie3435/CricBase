@@ -28,8 +28,8 @@ public class MatchController {
     private MatchService matchService;
     
     @GetMapping
-    public List<MatchSummary> getAllMatches() {
-        return matchService.getAllMatches();
+    public ResponseEntity<Void> getAllMatches() {
+        return ResponseEntity.ok().build();
     }
     
     @PostMapping("/{matchId}")
@@ -41,7 +41,7 @@ public class MatchController {
     
     @PostMapping("/addgroup/{folderName}")
     public ResponseEntity<Void> addNewMatchFolder(@PathVariable String folderName) {
-        matchService.AddNewMatchFolder("src/main/resources/" + folderName);
+        matchService.addNewMatchFolder("src/main/resources/" + folderName);
         return ResponseEntity.ok().build();
     }
     
@@ -54,15 +54,15 @@ public class MatchController {
     
     @GetMapping("/test")
     public ResponseEntity<Void> testMatch() {
-        long matchId = 1529267;
-        matchService.openNewMatchFromJson(new File("src/main/resources/" + matchId + ".json"));
+        long matchId = 1252696;
+        matchService.updateMatchGround(matchService.openNewMatchFromJson(new File("src/main/resources/hnd_json/" + matchId + ".json")));
         return ResponseEntity.accepted().build();
     }
     
     @GetMapping("/testfolder")
     public ResponseEntity<Void> testMatchFolder() {
         String folderName = "hnd_json";
-        matchService.openMatchFolderFromJson("src/main/resources/" + folderName);
+        matchService.updateMatchGrounds("src/main/resources/" + folderName);
         return ResponseEntity.accepted().build();
     }
     

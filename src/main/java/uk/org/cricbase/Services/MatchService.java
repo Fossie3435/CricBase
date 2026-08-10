@@ -32,12 +32,14 @@ public class MatchService {
     
     private final MatchMapper matchMapper;
     private final PlayerService playerService;
+    private final GroundService groundService;
     
     
     
-    public MatchService(MatchMapper matchMapper, PlayerService playerService) {
+    public MatchService(MatchMapper matchMapper, PlayerService playerService, GroundService groundService) {
         this.matchMapper = matchMapper;
         this.playerService = playerService;
+        this.groundService = groundService;
     }
     
     public Match openNewMatchFromJson(File newMatch) {
@@ -45,17 +47,21 @@ public class MatchService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             match = objectMapper.readValue(newMatch, Match.class);
-            match.init(playerService);
+            match.init(playerService, groundService);
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Match Retrieved from JSON");
         return match;
     }
-    public void openMatchFolderFromJson(String directory) {
-        Stream.of(new File(directory).listFiles())
-                .forEach(this::openNewMatchFromJson);
+    
+    public Stream<Match> openMatchFolderFromJson(String directory) {
+        return Stream.of(new File(directory)
+                .listFiles())
+                .map(this::openNewMatchFromJson);
     }
+    
+    
     
     public void addNewMatch(File newMatch) {
         Match match = openNewMatchFromJson(newMatch);
@@ -103,13 +109,9 @@ public class MatchService {
             }
         }
     }
-    public void AddNewMatchFolder(String directory) {
+    public void addNewMatchFolder(String directory) {
         Stream.of(new File(directory).listFiles())
                 .forEach(this::addNewMatch);
-    }
-    
-    public List<MatchSummary> getAllMatches() {
-        return matchMapper.findAllMatchSummaries();
     }
     
     public Optional<DetailedMatchSummary> getMatchById(Long id) {
@@ -119,5 +121,27 @@ public class MatchService {
         } else {
             return Optional.empty();
         }
+    }
+    
+    public Optional<Match> getMatchByInfo(String tournament, String season, int matchNumber) {
+        Match match = matchMapper.findMatchByInfo(tournament, season, matchNumber);
+        if(match != null) {
+            return Optional.of(match);
+        } else {
+            return Optional.empty();
+        }
+    }
+    
+    public void updateMatchGround(Match match) {
+        Optional<Match> matchDb = this.getMatchByInfo(match.getGender(), match.getSeason(), match.getMatchNumber());
+        if(matchDb.isPresent()) {
+            matchDb.get().setGround(match.getGround());
+            this.matchMapper.updateGround(matchDb.get());
+        }
+        
+    }
+    
+    public void updateMatchGrounds(String directory) {
+        openMatchFolderFromJson(directory).forEach(this::updateMatchGround);
     }
 }

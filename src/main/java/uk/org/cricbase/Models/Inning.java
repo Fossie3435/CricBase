@@ -137,7 +137,7 @@ public class Inning {
                     
                     if(batterOut.getName().equals(currentDelivery.getNonStrikerString())) {
                         currentDelivery.getWicket().setBattingPerformance(battingPerformances.get(currentDelivery.getNonStrikerString()));
-                        battingPerformances.get(batterOut).setWicket(currentDelivery.getWicket());
+                        battingPerformances.get(batterOut.getName()).setWicket(currentDelivery.getWicket());
                     }   
                     
                     fallOfWickets.add(new FallOfWicket(wicketsTaken, totalRunsScored, batterOut, currentDeliveryStamp));

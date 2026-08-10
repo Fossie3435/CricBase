@@ -17,8 +17,6 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import uk.org.cricbase.DTOs.BattingPerformanceSummary;
-import uk.org.cricbase.DTOs.BowlingPerformanceSummary;
 import uk.org.cricbase.DTOs.DetailedInningSummary;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
 import uk.org.cricbase.DTOs.InningSummary;
@@ -42,11 +40,34 @@ import uk.org.cricbase.Models.Wicket;
  */
 @Mapper
 public interface MatchMapper {
-    @Select("SELECT * FROM matches WHERE id = #{id}")
-    Match findById(long id);
-    
-    @Select("SELECT * FROM matches LIMIT 10")
-    List<Match> findAll();
+    @Results(id = "matchResult", value = {
+        @Result(property = "id", column = "id", id = true),
+        @Result(property = "ballsPerOver", column = "balls_per_over"),
+        @Result(property = "tournament", column = "tournament"),
+        @Result(property = "season", column = "season"),
+        @Result(property = "matchType", column = "match_type"),
+        @Result(property = "matchFormat", column = "match_format"),
+        @Result(property = "gender", column = "gender"),
+        @Result(property = "matchNumber", column = "match_number"),
+        @Result(property = "overs", column = "overs"),
+        @Result(property = "teamType", column = "team_type")
+    })
+    @Select("""
+            SELECT 
+            id,
+            balls_per_over,
+            gender,
+            match_number,
+            match_format,
+            overs,
+            season,
+            team_type,
+            tournament,
+            match_type
+            FROM matches
+            WHERE season = #{season} AND match_number = #{matchNumber} AND gender = #{tournament}
+            """)
+    Match findMatchByInfo(String tournament, String season, int matchNumber);
     
     @Results(id = "matchSummaryResult", value = {
         @Result(property = "id", column = "id", id = true),
@@ -56,34 +77,25 @@ public interface MatchMapper {
         @Result(property = "gender", column = "gender"),
         @Result(property = "matchNumber", column = "match_number"),
         @Result(property = "overs", column = "overs"),
+        @Result(property = "ground.id", column = "ground_id"),
+        @Result(property = "ground.name", column = "ground_name"),
+        @Result(property = "ground.city", column = "ground_city"),
         @Result(property = "innings", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.MatchMapper.findInningSummariesByMatchId"))
     })
     @Select("""
             SELECT
-                id,
-                tournament,
-                season,
-                match_type,
-                gender,
-                match_number,
-                overs
-            FROM matches 
-            LIMIT 10
-            """)
-    List<MatchSummary> findAllMatchSummaries();
-    
-    @ResultMap("matchSummaryResult")
-    @Select("""
-            SELECT
-                id,
-                tournament,
-                season,
-                match_type,
-                gender,
-                match_number,
-                overs
-            FROM matches
-            WHERE id = #{id}
+                m.id,
+                m.tournament,
+                m.season,
+                m.match_type,
+                m.gender,
+                m.match_number,
+                m.overs,
+                ground_id,
+                g.name AS ground_name,
+                g.city AS ground_city
+            FROM matches m JOIN grounds g ON m.ground_id = g.id
+            WHERE m.id = #{id}
             """)
     MatchSummary findMatchSummaryById(long id);
     
@@ -162,7 +174,7 @@ public interface MatchMapper {
             INSERT INTO matches
             (balls_per_over, gender, match_number, match_type, overs, season, team_type, tournament) 
             VALUES
-            (#{ballsPerOver}, #{gender}, #{matchNumber}, #{matchType}, #{overs}, #{season}, #{teamType}, #{tournament})
+            (#{ballsPerOver}, #{gender}, #{matchNumber}, #{matchFormat}, #{overs}, #{season}, #{teamType}, #{tournament})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertMatch(Match match);
@@ -173,7 +185,7 @@ public interface MatchMapper {
         balls_per_over = #{ballsPerOver},
         gender = #{gender},
         match_number = #{matchNumber},
-        match_type = #{matchType},
+        match_format = #{matchFormat},
         overs = #{overs},
         season = #{season},
         team_type = #{teamType},
@@ -181,6 +193,14 @@ public interface MatchMapper {
     WHERE id = #{id}
     """)
     void update(Match match);
+    
+    @Update("""
+        UPDATE matches
+        SET
+            ground_id = #{ground.id}
+        WHERE id = #{id}
+        """)
+    void updateGround(Match match);
 
     @Delete("DELETE FROM users WHERE id=#{id}")
     void delete(int id);

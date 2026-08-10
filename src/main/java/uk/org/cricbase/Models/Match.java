@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.List;
 import java.util.Map;
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.HashMap;
+import uk.org.cricbase.Services.GroundService;
 import uk.org.cricbase.Services.PlayerService;
 
 
@@ -24,7 +24,7 @@ public class Match {
     
     private List<Inning> innings; 
     private int overs;
-    private String matchType;
+    private String matchFormat;
     private String gender;    
     private int ballsPerOver;
     private int matchNumber;
@@ -34,6 +34,8 @@ public class Match {
     private LocalDate date;
     private String venue;
     private String city;
+    
+    private Ground ground;
     
     private Team teamOne;
     private Team teamTwo;
@@ -53,7 +55,10 @@ public class Match {
         
     }
     
-    public void init(PlayerService playerService) {
+    public void init(PlayerService playerService, GroundService groundService) {
+        this.ground = groundService.getGroundByName(venue)
+                .orElseGet(() -> (groundService.addNewGround(venue, city)));
+        
         HashMap<String, Player> teamOnePlayers = new HashMap<>();
         HashMap<String, Player> teamTwoPlayers = new HashMap<>();
         for(int i = 0; i < nameStrings[0].size(); i++) {
@@ -77,7 +82,7 @@ public class Match {
     @JsonSetter("info")
     private void unpackInfo(Map<String, Object> info) {
         this.overs = (int) info.get("overs");
-        this.matchType = (String) info.get("match_type");
+        this.matchFormat = (String) info.get("match_type");
         this.gender = (String) info.get("gender");
         this.ballsPerOver = (int) info.get("balls_per_over");
         //this.dates = (List<Date>) info.get("dates");
@@ -162,13 +167,22 @@ public class Match {
         this.overs = overs;
     }
 
-    public String getMatchType() {
-        return matchType;
+    public String getMatchFormat() {
+        return matchFormat;
     }
 
-    public void setMatchType(String matchType) {
-        this.matchType = matchType;
+    public void setMatchFormat(String matchFormat) {
+        this.matchFormat = matchFormat;
     }
+
+    public Ground getGround() {
+        return ground;
+    }
+
+    public void setGround(Ground ground) {
+        this.ground = ground;
+    }
+
 
     public String getGender() {
         return gender;

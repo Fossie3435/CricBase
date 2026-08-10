@@ -41,7 +41,7 @@ public interface PlayerMapper {
             VALUES
             (#{cricInfoId}, #{name}, #{uniqueName})
             
-    )""")
+    """)
     @Options (useGeneratedKeys = false)
     void insert(Player player);
     
