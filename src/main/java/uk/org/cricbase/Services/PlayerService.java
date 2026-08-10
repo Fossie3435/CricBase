@@ -22,7 +22,6 @@ public class PlayerService {
     }
     
     public Optional<Player> getPlayerById(String id) {
-        System.out.println("Retrieving Player @ " + id);
         Player player = playerMapper.findById(id);
         if(player != null) {
             return Optional.of(player);
@@ -32,7 +31,6 @@ public class PlayerService {
     }
     
     public void addNewPlayer(Player player) {
-        System.out.println("Adding new player @ " + player.getId());
         playerMapper.insert(player);
     }
     
