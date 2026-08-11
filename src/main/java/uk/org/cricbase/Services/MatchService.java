@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
-import uk.org.cricbase.DTOs.MatchSummary;
 import uk.org.cricbase.Mappers.MatchMapper;
 import uk.org.cricbase.Models.BattingPerformance;
 import uk.org.cricbase.Models.BowlingPerformance;
@@ -144,4 +143,32 @@ public class MatchService {
     public void updateMatchGrounds(String directory) {
         openMatchFolderFromJson(directory).forEach(this::updateMatchGround);
     }
+    
+    public void updatePlayerOfTheMatch(Match match) {
+        Optional<Match> matchDb = this.getMatchByInfo(match.getGender(), match.getSeason(), match.getMatchNumber());
+        if(matchDb.isPresent()) {
+            matchDb.get().setPlayerOfTheMatch(match.getPlayerOfTheMatch());
+            this.matchMapper.updatePlayerOfTheMatch(matchDb.get());
+        }
+    }
+    
+    public void updatePlayersOfTheMatch(String directory) {
+        openMatchFolderFromJson(directory).forEach(this::updatePlayerOfTheMatch);
+    }
+    
+    public void updateToss(Match match) {
+        Optional<Match> matchDb = this.getMatchByInfo(match.getGender(), match.getSeason(), match.getMatchNumber());
+        if(matchDb.isPresent()) {
+            matchDb.get().setTossDecision(match.getTossDecision());
+            matchDb.get().setTossWinner(match.getTossWinner()); 
+            matchDb.get().getTossWinner().setId(this.matchMapper.findTeamIdByInfo(matchDb.get().getId(), match.getTossWinner().getName()));
+            
+            this.matchMapper.updateToss(matchDb.get());
+        }
+    }
+    
+    public void updateTosses(String directory) {
+        openMatchFolderFromJson(directory).forEach(this::updateToss);
+    }
+    
 }

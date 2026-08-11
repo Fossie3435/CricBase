@@ -39,14 +39,17 @@ public class Match {
     
     private Team teamOne;
     private Team teamTwo;
-    /**
-    private Team winner;
+    
+    private Player playerOfTheMatch;
+    private String playerOfTheMatchString;
+
+    //private Team winner;
     private Team tossWinner;
-    private Team tossDecision;
+    private String tossWinnerString;
+    private String tossDecision;
      
     // umpires
     
-    **/
     private Map<String, Object> registry;
     
     private List<String>[] nameStrings = new List[2];
@@ -71,6 +74,18 @@ public class Match {
         }
         this.teamOne.setPlayers(teamOnePlayers);
         this.teamTwo.setPlayers(teamTwoPlayers);
+        
+        if(teamOne.getPlayer(playerOfTheMatchString) != null) {
+            this.playerOfTheMatch = teamOne.getPlayer(playerOfTheMatchString);
+        } else {
+            this.playerOfTheMatch = teamTwo.getPlayer(playerOfTheMatchString);
+        }
+        
+        if(teamOne.getName().equals(tossWinnerString)) {
+            tossWinner = teamOne;
+        } else {
+            tossWinner = teamTwo;
+        }
         
         for(int i = 0; i < innings.size(); i++) {
             innings.get(i).setMatch(this);
@@ -115,6 +130,15 @@ public class Match {
         this.matchNumber = (int) event.get("match_number");
         this.tournament = (String) event.get("tournament");
         
+        this.playerOfTheMatchString = ((List<String>) info.get("player_of_match")).getFirst();
+        
+        Map<String, Object> toss = (Map<String, Object>) info.get("toss");
+        this.tossWinnerString = (String) toss.get("winner");
+        this.tossDecision = (String) toss.get("decision");
+        
+        if(tossDecision.equals("field")) {
+            this.tossDecision = "bowl";
+        }
         //Map<String, Object> outcome = (Map<String, Object>) info.get("outcome");
         /**
         if(outcome.get("winner") == null) {
@@ -287,6 +311,29 @@ public class Match {
     public void setNameStrings(List<String>[] nameStrings) {
         this.nameStrings = nameStrings;
     }
-    
+
+    public Player getPlayerOfTheMatch() {
+        return playerOfTheMatch;
+    }
+
+    public void setPlayerOfTheMatch(Player playerOfTheMatch) {
+        this.playerOfTheMatch = playerOfTheMatch;
+    }
+
+    public Team getTossWinner() {
+        return tossWinner;
+    }
+
+    public void setTossWinner(Team tossWinner) {
+        this.tossWinner = tossWinner;
+    }
+
+    public String getTossDecision() {
+        return tossDecision;
+    }
+
+    public void setTossDecision(String tossDecision) {
+        this.tossDecision = tossDecision;
+    }
     
 }

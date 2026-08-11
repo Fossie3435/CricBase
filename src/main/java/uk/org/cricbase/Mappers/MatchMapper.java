@@ -201,6 +201,14 @@ public interface MatchMapper {
         WHERE id = #{id}
         """)
     void updateGround(Match match);
+    
+    @Update("""
+        UPDATE matches
+        SET
+            player_of_the_match_id = #{playerOfTheMatch.id}
+        WHERE id = #{id}
+            """)
+    void updatePlayerOfTheMatch(Match match);
 
     @Delete("DELETE FROM users WHERE id=#{id}")
     void delete(int id);
@@ -278,6 +286,14 @@ public interface MatchMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertTeam(Team team);
     
+    @Select("""
+            SELECT 
+            id
+            FROM teams
+            WHERE match_id = #{matchId} AND name = #{name}
+            """)
+    long findTeamIdByInfo(long matchId, String name);
+    
     @Insert("""
             INSERT INTO players_teams
             (player_id, team_id)
@@ -285,4 +301,13 @@ public interface MatchMapper {
             (#{player.id}, #{team.id})
             """)
     void insertPlayerTeam(Player player, Team team);
+    
+    @Update("""
+        UPDATE matches
+            SET 
+                toss_decision = #{tossDecision}::toss_decision,
+                toss_Winner = #{tossWinner.id}
+            WHERE id = #{id}
+            """)
+    void updateToss(Match match);
 }
