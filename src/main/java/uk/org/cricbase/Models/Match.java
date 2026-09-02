@@ -13,7 +13,28 @@ import java.util.HashMap;
 import uk.org.cricbase.Services.GroundService;
 import uk.org.cricbase.Services.PlayerService;
 
+enum MatchType {
+    PRE_SEASON,
+    REGULAR_SEASON,
+    POST_SEASON
+}
 
+enum CompetitionStage {
+    GROUP_STAGE,
+    KNOCKOUT,
+    FINAL,
+    SEMI_FINAL
+}
+
+enum ResultType {
+    RESULT,
+    DRAW,
+    TIE,
+    CANCELLED,
+    ABANDONED,
+    IN_PROGRESS,
+    NO_RESULT
+}
 /**
  *
  * @author Benjamin Foster
@@ -43,7 +64,15 @@ public class Match {
     private Player playerOfTheMatch;
     private String playerOfTheMatchString;
 
-    //private Team winner;
+    private ResultType resultType;
+    private Team winner;
+    private String winnerString;
+    
+    private Integer inningsMargin; // innings | runs | balls | wickets. null means not applicatable
+    private Integer runsMargin;
+    private Integer ballsMargin;
+    private Integer wicketsMargin;
+    
     private Team tossWinner;
     private String tossWinnerString;
     private String tossDecision;
@@ -139,28 +168,51 @@ public class Match {
         if(tossDecision.equals("field")) {
             this.tossDecision = "bowl";
         }
-        //Map<String, Object> outcome = (Map<String, Object>) info.get("outcome");
-        /**
+        Map<String, Object> outcome = (Map<String, Object>) info.get("outcome");
+        
         if(outcome.get("winner") == null) {
-            this.resultType = (String) outcome.get("result");
-        } else {
-            this.resultType = "result";
-            if(this.teamNames[0].equals((String) outcome.get("winner"))) {
-                this.winner = teams[0];
-            } else {
-                this.winner = teams[1];
+            switch( (String) outcome.get("result")) {
+                case "tie":
+                    this.resultType = ResultType.TIE;
+                    break;
+                case "no result":
+                    this.resultType = ResultType.NO_RESULT;
+                    break;
+                case "draw":
+                    this.resultType = ResultType.DRAW;
+                    break;
+                default:
+                    this.resultType = null;
+                    break;
             }
-            // victory margin
-            //wickets runs innings 
-            // consider result object
-        }
-        **/
-        
-        
-        // toss handling
+        } else {
+            this.resultType = ResultType.RESULT;
+            initWinner( (String) outcome.get("winner"));
+            initWinMargin((Map<String, Object>) outcome.get("by"));
+                
 
-        
+        }
     }
+    public void initWinner(String winnerString) {
+        if(this.teamOne.getName().equals(winnerString)) {
+            this.winner = teamOne;
+        } else if(this.teamTwo.getName().equals(winnerString)) {
+            this.winner = teamTwo;
+        }
+    }
+    
+    public void initWinMargin(Map<String, Object> by) {
+        if(by.containsKey("innings")) {
+            this.inningsMargin = Integer.valueOf( (int) by.get("innings"));
+        }
+        if(by.containsKey("runs")) {
+            this.runsMargin = Integer.valueOf( (int) by.get("runs"));
+        }
+        if(by.containsKey("wickets")) {
+            this.runsMargin = Integer.valueOf( (int) by.get("wickets"));
+        }
+    }
+    
     public void printScorecard() {
        for(int i = 0; i < innings.size(); i++) {
            innings.get(i).printInningScorecard();
@@ -335,5 +387,46 @@ public class Match {
     public void setTossDecision(String tossDecision) {
         this.tossDecision = tossDecision;
     }
+
+    public String getPlayerOfTheMatchString() {
+        return playerOfTheMatchString;
+    }
+
+    public void setPlayerOfTheMatchString(String playerOfTheMatchString) {
+        this.playerOfTheMatchString = playerOfTheMatchString;
+    }
+
+    public ResultType getResultType() {
+        return resultType;
+    }
+
+    public void setResultType(ResultType resultType) {
+        this.resultType = resultType;
+    }
+
+    public Team getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Team winner) {
+        this.winner = winner;
+    }
+
+    public String getWinnerString() {
+        return winnerString;
+    }
+
+    public void setWinnerString(String winnerString) {
+        this.winnerString = winnerString;
+    }
+
+    public String getTossWinnerString() {
+        return tossWinnerString;
+    }
+
+    public void setTossWinnerString(String tossWinnerString) {
+        this.tossWinnerString = tossWinnerString;
+    }
+    
     
 }
