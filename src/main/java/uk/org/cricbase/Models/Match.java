@@ -14,12 +14,10 @@ import uk.org.cricbase.Services.GroundService;
 import uk.org.cricbase.Services.PlayerService;
 
 enum MatchType {
-    PRE_SEASON,
-    REGULAR_SEASON,
-    POST_SEASON
+    WARM_UP,
+    GROUP_STAGE,
+    KNOCKOUT
 }
-
-
 
 enum ResultType {
     RESULT,
@@ -152,7 +150,12 @@ public class Match {
         this.registry = (Map<String, Object>) ((Map<String, Object>) info.get("registry")).get("people"); // gross
 
         Map<String, Object> event = (Map<String, Object>) info.get("event");
-        this.matchNumber = (int) event.get("match_number");
+        if(event.containsKey("match_number")) {
+            this.matchNumber = (int) event.get("match_number");   
+            this.matchType = MatchType.GROUP_STAGE;
+        } else {
+            this.matchType = MatchType.KNOCKOUT;
+        }
         this.tournament = (String) event.get("tournament");
         
         List<String> playerOfTheMatchStrings = ((List<String>) info.get("player_of_match"));
@@ -465,7 +468,4 @@ public class Match {
     public void setWicketsMargin(Integer wicketsMargin) {
         this.wicketsMargin = wicketsMargin;
     }
-    
-    
-    
 }

@@ -45,7 +45,7 @@ public interface MatchMapper {
         @Result(property = "ballsPerOver", column = "balls_per_over"),
         @Result(property = "tournament", column = "tournament"),
         @Result(property = "season", column = "season"),
-        @Result(property = "matchType", column = "match_type"),
+        @Result(property = "matchType", column = "type"),
         @Result(property = "matchFormat", column = "match_format"),
         @Result(property = "gender", column = "gender"),
         @Result(property = "matchNumber", column = "match_number"),
@@ -63,7 +63,7 @@ public interface MatchMapper {
             season,
             team_type,
             tournament,
-            match_type
+            type
             FROM matches
             WHERE season = #{season} AND match_number = #{matchNumber} AND gender = #{tournament}
             """)
@@ -329,4 +329,12 @@ public interface MatchMapper {
                 WHERE id = #{id}
             """)
     void updateResultType(Match match);
+    
+    @Update("""
+            UPDATE matches
+                SET
+                    type = #{matchType}::match_type
+            WHERE id = #{id}
+            """)
+    void updateMatchType(Match match);
 }
