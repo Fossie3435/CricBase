@@ -303,11 +303,30 @@ public interface MatchMapper {
     void insertPlayerTeam(Player player, Team team);
     
     @Update("""
-        UPDATE matches
-            SET 
-                toss_decision = #{tossDecision}::toss_decision,
-                toss_Winner = #{tossWinner.id}
-            WHERE id = #{id}
+            UPDATE matches
+                SET 
+                    toss_decision = #{tossDecision}::toss_decision,
+                    toss_winner = #{tossWinner.id}
+                WHERE id = #{id}
             """)
     void updateToss(Match match);
+    
+    @Update("""
+            UPDATE matches
+                SET 
+                    winner = #{winner.id},
+                    runs_wm = #{runsMargin},
+                    innings_wm = #{inningsMargin},
+                    wickets_wm = #{wicketsMargin}
+                WHERE id = #{id}
+            """)
+    void updateWin(Match match);
+    
+    @Update("""
+            UPDATE matches
+                SET
+                    result_type = #{resultType}::result_type
+                WHERE id = #{id}
+            """)
+    void updateResultType(Match match);
 }

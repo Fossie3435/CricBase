@@ -19,12 +19,7 @@ enum MatchType {
     POST_SEASON
 }
 
-enum CompetitionStage {
-    GROUP_STAGE,
-    KNOCKOUT,
-    FINAL,
-    SEMI_FINAL
-}
+
 
 enum ResultType {
     RESULT,
@@ -63,7 +58,8 @@ public class Match {
     
     private Player playerOfTheMatch;
     private String playerOfTheMatchString;
-
+    
+    private MatchType matchType;
     private ResultType resultType;
     private Team winner;
     private String winnerString;
@@ -159,7 +155,10 @@ public class Match {
         this.matchNumber = (int) event.get("match_number");
         this.tournament = (String) event.get("tournament");
         
-        this.playerOfTheMatchString = ((List<String>) info.get("player_of_match")).getFirst();
+        List<String> playerOfTheMatchStrings = ((List<String>) info.get("player_of_match"));
+        if(playerOfTheMatchStrings != null && playerOfTheMatchStrings.size() > 0) {
+            this.playerOfTheMatchString = playerOfTheMatchStrings.getFirst();
+        }
         
         Map<String, Object> toss = (Map<String, Object>) info.get("toss");
         this.tossWinnerString = (String) toss.get("winner");
@@ -182,7 +181,7 @@ public class Match {
                     this.resultType = ResultType.DRAW;
                     break;
                 default:
-                    this.resultType = null;
+                    this.resultType = ResultType.ABANDONED;
                     break;
             }
         } else {
@@ -190,7 +189,6 @@ public class Match {
             initWinner( (String) outcome.get("winner"));
             initWinMargin((Map<String, Object>) outcome.get("by"));
                 
-
         }
     }
     public void initWinner(String winnerString) {
@@ -209,7 +207,7 @@ public class Match {
             this.runsMargin = Integer.valueOf( (int) by.get("runs"));
         }
         if(by.containsKey("wickets")) {
-            this.runsMargin = Integer.valueOf( (int) by.get("wickets"));
+            this.wicketsMargin = Integer.valueOf( (int) by.get("wickets"));
         }
     }
     
@@ -427,6 +425,47 @@ public class Match {
     public void setTossWinnerString(String tossWinnerString) {
         this.tossWinnerString = tossWinnerString;
     }
+
+    public MatchType getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(MatchType matchType) {
+        this.matchType = matchType;
+    }
+
+    public Integer getInningsMargin() {
+        return inningsMargin;
+    }
+
+    public void setInningsMargin(Integer inningsMargin) {
+        this.inningsMargin = inningsMargin;
+    }
+
+    public Integer getRunsMargin() {
+        return runsMargin;
+    }
+
+    public void setRunsMargin(Integer runsMargin) {
+        this.runsMargin = runsMargin;
+    }
+
+    public Integer getBallsMargin() {
+        return ballsMargin;
+    }
+
+    public void setBallsMargin(Integer ballsMargin) {
+        this.ballsMargin = ballsMargin;
+    }
+
+    public Integer getWicketsMargin() {
+        return wicketsMargin;
+    }
+
+    public void setWicketsMargin(Integer wicketsMargin) {
+        this.wicketsMargin = wicketsMargin;
+    }
+    
     
     
 }
