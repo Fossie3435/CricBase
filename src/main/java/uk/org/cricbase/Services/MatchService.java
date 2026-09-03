@@ -219,4 +219,21 @@ public class MatchService {
         openMatchFolderFromJson(directory).forEach(this::updateMatchType);
     }
     
+    public void updateDate(Match match) {
+        Optional<Match> matchDb = this.getMatchByInfo(match.getGender(), match.getSeason(), match.getMatchNumber());
+        if(matchDb.isPresent()) {
+            matchDb.get().setDate(match.getDate());
+             
+            this.matchMapper.updateDate(matchDb.get());
+        } else {
+            System.out.println("Missing Match in DB!");
+        }
+    }
+    
+    public void updateDates(String directory) {
+        openMatchFolderFromJson(directory).forEach(this::updateDate);
+    }
+    
+    
+    
 }
