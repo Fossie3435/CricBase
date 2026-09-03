@@ -337,4 +337,12 @@ public interface MatchMapper {
             WHERE id = #{id}
             """)
     void updateMatchType(Match match);
+    
+    @Update("""
+            UPDATE matches
+                SET
+                    date = #{date}
+                WHERE id = #{id}
+            """)
+    void updateDate(Match match);
 }

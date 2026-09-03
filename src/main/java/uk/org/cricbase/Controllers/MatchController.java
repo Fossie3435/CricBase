@@ -56,14 +56,14 @@ public class MatchController {
     public ResponseEntity<Void> testMatch() {
         long matchId = 1252696;
         //long matchId = 1355588;
-        matchService.updateMatchType(matchService.openNewMatchFromJson(new File("src/main/resources/hnd_json/" + matchId + ".json")));
+        matchService.updateDate(matchService.openNewMatchFromJson(new File("src/main/resources/hnd_json/" + matchId + ".json")));
         return ResponseEntity.accepted().build();
     }
     
     @GetMapping("/testfolder")
     public ResponseEntity<Void> testMatchFolder() {
         String folderName = "hnd_json";
-        matchService.updateMatchTypes("src/main/resources/" + folderName);
+        matchService.updateDates("src/main/resources/" + folderName);
         return ResponseEntity.accepted().build();
     }
     
