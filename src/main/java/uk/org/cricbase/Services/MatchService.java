@@ -171,4 +171,38 @@ public class MatchService {
         openMatchFolderFromJson(directory).forEach(this::updateToss);
     }
     
+    public void updateWin(Match match) {
+        Optional<Match> matchDb = this.getMatchByInfo(match.getGender(), match.getSeason(), match.getMatchNumber());
+        if(matchDb.isPresent()) {
+            if(match.getWinner() != null) {
+                matchDb.get().setWinner(match.getWinner());
+                matchDb.get().setRunsMargin(match.getRunsMargin());
+                matchDb.get().setInningsMargin(match.getInningsMargin());
+                matchDb.get().setWicketsMargin(match.getWicketsMargin());
+
+                matchDb.get().getWinner().setId(this.matchMapper.findTeamIdByInfo(matchDb.get().getId(), match.getWinner().getName()));
+
+                this.matchMapper.updateWin(matchDb.get());
+            }
+        }
+    }
+    
+    public void updateWins(String directory) {
+        openMatchFolderFromJson(directory).forEach(this::updateWin);
+    }
+    
+    public void updateMatchResult(Match match) {
+        Optional<Match> matchDb = this.getMatchByInfo(match.getGender(), match.getSeason(), match.getMatchNumber());
+        if(matchDb.isPresent()) {
+            matchDb.get().setResultType(match.getResultType());
+            
+            this.matchMapper.updateResultType(matchDb.get());
+        }
+    }
+    
+    public void updateMatchResults(String directory) {
+        openMatchFolderFromJson(directory).forEach(this::updateMatchResult);
+    }
+    
+    
 }
