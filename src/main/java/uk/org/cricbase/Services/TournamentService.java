@@ -40,7 +40,7 @@ public class TournamentService {
         try {
             this.tournamentMapper.insertTournament(tournament);
             for(TournamentEdition edition : tournament.getEditions()) {
-                this.tournamentMapper.insertEdition(edition);
+                this.tournamentMapper.insertEdition(edition, tournament.getId());
             }
         } catch(DuplicateKeyException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "tournament already exists");

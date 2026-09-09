@@ -40,11 +40,11 @@ public interface TournamentMapper {
             INSERT INTO tournament_editions
                 (name, dates, tournament_id, edition)
             VALUES
-                (#{e.name}, daterange(#{e.start}::date, #{e.end}::date, '[)') , #{e.tournamentId}, #{e.edition})
+                (#{e.name}, daterange(#{e.start}::date, #{e.end}::date, '[)') , #{t}, #{e.edition})
             
             """)
     @Options(useGeneratedKeys = true, keyProperty = "e.id")
-    void insertEdition(@Param("e") TournamentEdition e);
+    void insertEdition(@Param("e") TournamentEdition e, @Param("t") long t);
 
 	@Select("""
 		SELECT 

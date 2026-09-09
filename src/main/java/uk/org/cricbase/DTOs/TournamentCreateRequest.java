@@ -36,7 +36,7 @@ public record TournamentCreateRequest (
         }
         
         if(edition.editionNumber() == null) {
-            tournamentEdition.setEdition(index);
+            tournamentEdition.setEdition(index+1);
         } else {
             tournamentEdition.setEdition(edition.editionNumber().intValue());
         }    
