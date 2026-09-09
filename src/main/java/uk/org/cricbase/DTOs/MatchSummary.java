@@ -4,8 +4,8 @@
  */
 package uk.org.cricbase.DTOs;
 
+import java.time.LocalDate;
 import java.util.List;
-import uk.org.cricbase.Models.Match;
 
 /**
  *
@@ -13,52 +13,30 @@ import uk.org.cricbase.Models.Match;
  */
 public class MatchSummary {
     private long id;
-    private String tournament;
     private String season;
-    private String matchType;
-    private String gender;
-    private String teamType;
     private int matchNumber;
+    private String format;
+    private String teamType;
     private int overs;
+	private LocalDate date;
+
     private List<InningSummary> innings;
     private GroundSummary ground;
-    
+    private TournamentEditionSummary tournament;
+	private ResultSummary result;
+	
+
     public MatchSummary() {    
     }
     
-    public MatchSummary(Match match) {
-        this.id = match.getId();
-        this.tournament = match.getTournament();
-        this.season = match.getSeason();
-        this.matchType = match.getMatchFormat();
-        this.gender = match.getGender();
-        this.teamType = match.getTeamType();
-        this.matchNumber = match.getMatchNumber();
-        this.innings = match.getInnings().stream()
-                .map(InningSummary::new)
-                .toList();
-    }
+   
 
     public long getId() {
         return id;
     }
-
-    public String getTournament() {
-        return tournament;
-    }
-
-    public String getSeason() {
+ 	public String getSeason() {
         return season;
     }
-
-    public String getMatchType() {
-        return matchType;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
     public String getTeamType() {
         return teamType;
     }
@@ -90,4 +68,74 @@ public class MatchSummary {
     public void setGround(GroundSummary ground) {
         this.ground = ground;
     }
+
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
+
+	public void setSeason(String season) {
+		this.season = season;
+	}
+
+
+
+	public void setMatchNumber(int matchNumber) {
+		this.matchNumber = matchNumber;
+	}
+
+
+
+	public String getFormat() {
+		return format;
+	}
+
+
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+
+
+	public void setTeamType(String teamType) {
+		this.teamType = teamType;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+
+
+	public TournamentEditionSummary getTournament() {
+		return tournament;
+	}
+
+
+
+	public void setTournament(TournamentEditionSummary tournament) {
+		this.tournament = tournament;
+	}
+
+
+
+	public ResultSummary getResult() {
+		return result;
+	}
+
+
+
+	public void setResult(ResultSummary result) {
+		this.result = result;
+	}
 }

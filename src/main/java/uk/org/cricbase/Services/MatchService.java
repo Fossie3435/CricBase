@@ -4,14 +4,18 @@
  */
 package uk.org.cricbase.Services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
+import uk.org.cricbase.DTOs.MatchSummary;
 import uk.org.cricbase.Mappers.MatchMapper;
 import uk.org.cricbase.Models.BattingPerformance;
 import uk.org.cricbase.Models.BowlingPerformance;
@@ -21,6 +25,7 @@ import uk.org.cricbase.Models.Inning;
 import uk.org.cricbase.Models.Match;
 import uk.org.cricbase.Models.Over;
 import uk.org.cricbase.Models.Team;
+import uk.org.cricbase.Models.TournamentEdition;
 
 /**
  *
@@ -48,6 +53,7 @@ public class MatchService {
             match = objectMapper.readValue(newMatch, Match.class);
             match.init(playerService, groundService);
         } catch (IOException e) {
+			System.out.println(newMatch.toString());
             e.printStackTrace();
         }
         System.out.println("Match Retrieved from JSON");
@@ -62,55 +68,60 @@ public class MatchService {
     
     
     
-    public void addNewMatch(File newMatch) {
+    public void addNewMatch(File newMatch, List<TournamentEdition> editions) {
         Match match = openNewMatchFromJson(newMatch);
+
+		for(TournamentEdition edition : editions) {
+			if(match.getDate().isAfter(edition.getStart()) && match.getDate().isBefore(edition.getEnd())) {
+				match.setTournament(edition);
+				break;
+			}
+		}
         matchMapper.insertMatch(match);
-        long matchId = match.getId();
+
         Team teamOne = match.getTeamOne();
         matchMapper.insertTeam(teamOne);
         teamOne.getPlayers().values()
                 .forEach(playerTeam -> matchMapper.insertPlayerTeam(playerTeam, teamOne));
-        matchMapper.insertTeam(match.getTeamTwo());
+        
         Team teamTwo = match.getTeamTwo();
+		matchMapper.insertTeam(match.getTeamTwo());
         teamTwo.getPlayers().values()
                 .forEach(playerTeam -> matchMapper.insertPlayerTeam(playerTeam, teamTwo));
+		
+		matchMapper.updateToss(match);
+		matchMapper.updateWin(match);
 
-        List<Inning> innings = match.getInnings();
-        for(int i = 0; i < innings.size(); i++) {
-            matchMapper.insertInning(innings.get(i));
-            long inningId = innings.get(i).getId();
-            List<BattingPerformance> battingPerformances = innings.get(i).getBattingPerformances();
-            for(int j = 0; j < battingPerformances.size(); j++) {
-                matchMapper.insertBattingPerformance(battingPerformances.get(j));
+        for(Inning inning : match.getInnings()) {
+            matchMapper.insertInning(inning);
+            for(BattingPerformance battingPerformance : inning.getBattingPerformances()) {
+                matchMapper.insertBattingPerformance(battingPerformance);
                 //System.out.println("Saved Batting Performance @ " + battingPerformances.get(j).getId());
             }
-            List<BowlingPerformance> bowlingPerformances = innings.get(i).getBowlingPerformances();
-            for(int j = 0; j < bowlingPerformances.size(); j++) {
-                matchMapper.insertBowlingPerformance(bowlingPerformances.get(j));
+            for(BowlingPerformance bowlingPerformance : inning.getBowlingPerformances()) {
+                matchMapper.insertBowlingPerformance(bowlingPerformance);
                 //System.out.println("Saved Bowling Performance @ " + bowlingPerformances.get(j).getId());
             }
-            List<FallOfWicket> fallOfWickets = innings.get(i).getFallOfWickets();
-            for(int j = 0; j < fallOfWickets.size(); j++) {
+            for(FallOfWicket fallOfWicket : inning.getFallOfWickets()) {
                 //System.out.println(fallOfWickets.get(j).getBatterOut().getId());
-                matchMapper.insertFallOfWicket(fallOfWickets.get(j));
+                matchMapper.insertFallOfWicket(fallOfWicket);
                 //System.out.println("Saved Fall Of Wicket @ " + fallOfWickets.get(j).getId());
             }
-            List<Over> overs = innings.get(i).getOvers();
-            for(int j = 0; j < overs.size(); j++) {
-                matchMapper.insertOver(overs.get(j));
-                List<Delivery> deliveries = overs.get(j).getDeliveries();
-                for(int k = 0; k < deliveries.size(); k++) {
-                    if(deliveries.get(k).getWicket() != null) {
-                        matchMapper.insertWicket(deliveries.get(k).getWicket());
+            for(Over over : inning.getOvers()) {
+                matchMapper.insertOver(over);
+                for(Delivery delivery : over.getDeliveries()) {
+                    if(delivery.getWicket() != null) {
+                        matchMapper.insertWicket(delivery.getWicket());
                     }
-                    matchMapper.insertDelivery(deliveries.get(k));
+                    matchMapper.insertDelivery(delivery);
                 }
             }
         }
     }
-    public void addNewMatchFolder(String directory) {
+    public void addNewMatchFolder(String directory, List<TournamentEdition> editions) {
         Stream.of(new File(directory).listFiles())
-                .forEach(this::addNewMatch);
+			.filter(path -> path.getPath().toString().endsWith(".json"))
+			.forEach(file -> addNewMatch(file, editions));
     }
     
     public Optional<DetailedMatchSummary> getMatchById(Long id) {
@@ -121,14 +132,19 @@ public class MatchService {
             return Optional.empty();
         }
     }
+
+	public List<MatchSummary> getMatchSummariesByTournamentEditionId(long id) {
+		return this.matchMapper.findMatchSummariesByTournamentEditionId(id);
+	}
     
     public Optional<Match> getMatchByInfo(String tournament, String season, int matchNumber) {
-        Match match = matchMapper.findMatchByInfo(tournament, season, matchNumber);
+  /**      Match match = matchMapper.findMatchByInfo(tournament, season, matchNumber);
         if(match != null) {
             return Optional.of(match);
         } else {
             return Optional.empty();
-        }
+        } **/
+		return Optional.empty();
     }
     
     public void updateMatchGround(Match match) {

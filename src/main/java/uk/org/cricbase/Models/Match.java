@@ -42,7 +42,6 @@ public class Match {
     private String gender;    
     private int ballsPerOver;
     private int matchNumber;
-    private String tournament;
     private String teamType;
     private String season;
     private LocalDate date;
@@ -70,13 +69,15 @@ public class Match {
     private Team tossWinner;
     private String tossWinnerString;
     private String tossDecision;
-     
+    
+	private TournamentEdition tournament;
     // umpires
     
     private Map<String, Object> registry;
     
     private List<String>[] nameStrings = new List[2];
-    
+    private String tournamentString;
+
     public Match() {
         
     }
@@ -156,7 +157,7 @@ public class Match {
         } else {
             this.matchType = MatchType.KNOCKOUT;
         }
-        this.tournament = (String) event.get("tournament");
+        this.tournamentString = (String) event.get("tournament");
         
         List<String> playerOfTheMatchStrings = ((List<String>) info.get("player_of_match"));
         if(playerOfTheMatchStrings != null && playerOfTheMatchStrings.size() > 0) {
@@ -285,15 +286,7 @@ public class Match {
         this.matchNumber = matchNumber;
     }
 
-    public String getTournament() {
-        return tournament;
-    }
-
-    public void setTournament(String tournament) {
-        this.tournament = tournament;
-    }
-
-    public String getTeamType() {
+       public String getTeamType() {
         return teamType;
     }
 
@@ -468,4 +461,20 @@ public class Match {
     public void setWicketsMargin(Integer wicketsMargin) {
         this.wicketsMargin = wicketsMargin;
     }
+
+	public void setTournament(TournamentEdition tournament) {
+		this.tournament = tournament;
+	}
+
+	public TournamentEdition getTournament() {
+		return tournament;
+	}
+
+	public String getTournamentString() {
+		return tournamentString;
+	}
+
+	public void setTournamentString(String tournamentString) {
+		this.tournamentString = tournamentString;
+	}
 }

@@ -40,68 +40,91 @@ import uk.org.cricbase.Models.Wicket;
  */
 @Mapper
 public interface MatchMapper {
-    @Results(id = "matchResult", value = {
-        @Result(property = "id", column = "id", id = true),
-        @Result(property = "ballsPerOver", column = "balls_per_over"),
-        @Result(property = "tournament", column = "tournament"),
-        @Result(property = "season", column = "season"),
-        @Result(property = "matchType", column = "type"),
-        @Result(property = "matchFormat", column = "match_format"),
-        @Result(property = "gender", column = "gender"),
-        @Result(property = "matchNumber", column = "match_number"),
-        @Result(property = "overs", column = "overs"),
-        @Result(property = "teamType", column = "team_type")
-    })
-    @Select("""
-            SELECT 
-            id,
-            balls_per_over,
-            gender,
-            match_number,
-            match_format,
-            overs,
-            season,
-            team_type,
-            tournament,
-            type
-            FROM matches
-            WHERE season = #{season} AND match_number = #{matchNumber} AND gender = #{tournament}
-            """)
-    Match findMatchByInfo(String tournament, String season, int matchNumber);
-    
     @Results(id = "matchSummaryResult", value = {
         @Result(property = "id", column = "id", id = true),
-        @Result(property = "tournament", column = "tournament"),
         @Result(property = "season", column = "season"),
-        @Result(property = "matchType", column = "match_type"),
-        @Result(property = "gender", column = "gender"),
+        @Result(property = "format", column = "match_format"),
+        @Result(property = "teamType", column = "team_type"),
         @Result(property = "matchNumber", column = "match_number"),
         @Result(property = "overs", column = "overs"),
+		@Result(property = "date", column = "date"),
         @Result(property = "ground.id", column = "ground_id"),
         @Result(property = "ground.name", column = "ground_name"),
         @Result(property = "ground.city", column = "ground_city"),
+		@Result(property = "tournament.id", column = "tournament_id"),
+		@Result(property = "tournament.name", column = "tournament_name"),
+		@Result(property = "tournament.start", column = "tournament_start"),
+		@Result(property = "tournament.end", column = "tournament_end"),
+		@Result(property = "tournament.edition", column = "tournament_edition_number"),
+		@Result(property = "result.type", column = "result_type"),
+		@Result(property = "result.runsMargin", column = "runs_wm"),
+		@Result(property = "result.inningsMargin", column = "innings_wm"),
+		@Result(property = "result.wicketsMargin", column = "wickets_wm"),
         @Result(property = "innings", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.MatchMapper.findInningSummariesByMatchId"))
     })
     @Select("""
             SELECT
                 m.id,
-                m.tournament,
                 m.season,
-                m.match_type,
+                m.match_format,
                 m.gender,
                 m.match_number,
                 m.overs,
+				m.date,
+				m.team_type,
                 ground_id,
                 g.name AS ground_name,
-                g.city AS ground_city
-            FROM matches m JOIN grounds g ON m.ground_id = g.id
+                g.city AS ground_city,
+				tournament_id,
+				tournament.name AS tournament_name,
+				lower(tournament.dates) AS tournament_start,
+				upper(tournament.dates) AS tournament_end,
+				tournament.edition AS tournament_edition_number,
+				m.result_type,
+				m.runs_wm,
+				m.innings_wm,
+				m.wickets_wm
+            FROM matches m 
+			JOIN grounds g ON m.ground_id = g.id
+			JOIN tournament_editions t ON t.tournament_id = t.id
             WHERE m.id = #{id}
             """)
     MatchSummary findMatchSummaryById(long id);
-    
+   
+	@ResultMap("matchSummaryResult")
+	@Select("""
+            SELECT
+                m.id,
+                m.season,
+                m.match_format,
+                m.gender,
+                m.match_number,
+                m.overs,
+            	m.date,
+				m.team_type,
+                ground_id,
+                g.name AS ground_name,
+                g.city AS ground_city,
+				m.tournament_id,
+				t.name AS tournament_name,
+				lower(t.dates) AS tournament_start,
+				upper(t.dates) AS tournament_end,
+				t.edition AS tournament_edition_number,
+				m.result_type,
+				m.runs_wm,
+				m.innings_wm,
+				m.wickets_wm
+            FROM matches m 
+			JOIN grounds g ON m.ground_id = g.id
+			JOIN tournament_editions t ON t.tournament_id = t.id
+            WHERE m.tournament_id = #{id}
+			ORDER BY date;
+            """)
+   	List<MatchSummary> findMatchSummariesByTournamentEditionId(long id); 
+
     @Results(id = "inningSummaryResult", value = {
         @Result(property = "teamName", column = "name"),
-        @Result(property = "runs", column = "runs"),
+        @Result(property = "runs", column = "total_runs"),
         @Result(property = "wickets", column = "wickets_taken")
     })
     @Select("""
@@ -172,28 +195,13 @@ public interface MatchMapper {
     
     @Insert("""
             INSERT INTO matches
-            (balls_per_over, gender, match_number, match_type, overs, season, team_type, tournament) 
+            (balls_per_over, gender, match_number, match_format, overs, season, team_type, ground_id, player_of_the_match_id, result_type, type, date, tournament_id) 
             VALUES
-            (#{ballsPerOver}, #{gender}, #{matchNumber}, #{matchFormat}, #{overs}, #{season}, #{teamType}, #{tournament})
+            (#{ballsPerOver}, #{gender}, #{matchNumber}, #{matchFormat}, #{overs}, #{season}, #{teamType}, #{ground.id}, #{playerOfTheMatch.id}, #{resultType}::result_type, #{matchType}::match_type, #{date}, #{tournament.id}) 
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertMatch(Match match);
 
-    @Update("""
-    UPDATE matches
-    SET
-        balls_per_over = #{ballsPerOver},
-        gender = #{gender},
-        match_number = #{matchNumber},
-        match_format = #{matchFormat},
-        overs = #{overs},
-        season = #{season},
-        team_type = #{teamType},
-        tournament = #{tournament}
-    WHERE id = #{id}
-    """)
-    void update(Match match);
-    
     @Update("""
         UPDATE matches
         SET
@@ -215,18 +223,18 @@ public interface MatchMapper {
     
     @Insert("""
             INSERT INTO Innings
-            (match_id, byes, leg_byes, no_balls, penalty_runs, runs, wickets_taken, wides, batting_team_id, bowling_team_id)
+            (match_id, byes, leg_byes, no_balls, penalty_runs, runs, wickets_taken, wides, batting_team_id, bowling_team_id, total_runs)
             VALUES
-            (#{match.id}, #{byes}, #{legbyes}, #{noballs}, #{penaltyRuns}, #{runs}, #{wicketsTaken}, #{wides}, #{battingTeam.id}, #{bowlingTeam.id})
+            (#{match.id}, #{byes}, #{legbyes}, #{noballs}, #{penaltyRuns}, #{runs}, #{wicketsTaken}, #{wides}, #{battingTeam.id}, #{bowlingTeam.id}, #{totalRuns})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertInning(Inning inning);
     
     @Insert("""
             INSERT INTO batting_performances
-            (balls_faced, batting_position, fours, runs, sixes, inning_id, batter_id)
+            (balls_faced, batting_position, fours, runs, sixes, inning_id, batter_id, is_dismissed)
             VALUES
-            (#{ballsFaced}, #{battingPosition}, #{fours},#{runs} , #{sixes}, #{inning.id}, #{batter.id})
+            (#{ballsFaced}, #{battingPosition}, #{fours},#{runs} , #{sixes}, #{inning.id}, #{batter.id}, #{dismissed})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertBattingPerformance(BattingPerformance battingPerformance);
@@ -270,9 +278,9 @@ public interface MatchMapper {
     
     @Insert("""
             INSERT INTO deliveries
-            (byes, leg_byes, no_balls, penalty_runs, runs, total_delivery_count, wides, batting_performance_id, bowling_performance_id, over_id, wicket_id, bowler_id, batter_id, non_striker_id, delivery_count)
+            (byes, leg_byes, no_balls, penalty_runs, runs, total_delivery_count, wides, batting_performance_id, bowling_performance_id, over_id, wicket_id, bowler_id, batter_id, non_striker_id, delivery_count, non_striker_batting_performance_id)
             VALUES
-            (#{byes}, #{legbyes}, #{noballs}, #{penaltyRuns}, #{runs}, #{totalDeliveryCount}, #{wides}, #{battingPerformance.id}, #{bowlingPerformance.id}, #{over.id}, #{wicket.id}, #{bowler.id}, #{batter.id}, #{nonStriker.id}, #{deliveryCount} )
+            (#{byes}, #{legbyes}, #{noballs}, #{penaltyRuns}, #{runs}, #{totalDeliveryCount}, #{wides}, #{battingPerformance.id}, #{bowlingPerformance.id}, #{over.id}, #{wicket.id}, #{bowler.id}, #{batter.id}, #{nonStriker.id}, #{deliveryCount}, #{nonStrikerBattingPerformance.id} )
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertDelivery(Delivery delivery);
@@ -329,7 +337,7 @@ public interface MatchMapper {
                 WHERE id = #{id}
             """)
     void updateResultType(Match match);
-    
+
     @Update("""
             UPDATE matches
                 SET

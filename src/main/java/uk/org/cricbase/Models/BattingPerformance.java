@@ -177,7 +177,9 @@ public class BattingPerformance implements Comparable<BattingPerformance> {
     public long getId() {
         return id;
     }
-    
+	public boolean isDismissed() {
+		return this.wicket != null;
+	}
     
     
 }

@@ -5,8 +5,8 @@
 package uk.org.cricbase.Controllers;
 
 import java.io.File;
-import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
-import uk.org.cricbase.DTOs.MatchSummary;
 import uk.org.cricbase.Services.MatchService;
 
 /**
@@ -26,25 +25,7 @@ import uk.org.cricbase.Services.MatchService;
 public class MatchController {
     @Autowired
     private MatchService matchService;
-    
-    @GetMapping
-    public ResponseEntity<Void> getAllMatches() {
-        return ResponseEntity.ok().build();
-    }
-    
-    @PostMapping("/{matchId}")
-    public ResponseEntity<Void> addNewMatch(@PathVariable String matchId) {
-        File newMatch = new File("src/main/resources/" + matchId + ".json");
-        matchService.addNewMatch(newMatch);
-        return ResponseEntity.ok().build();
-    }
-    
-    @PostMapping("/addgroup/{folderName}")
-    public ResponseEntity<Void> addNewMatchFolder(@PathVariable String folderName) {
-        matchService.addNewMatchFolder("src/main/resources/" + folderName);
-        return ResponseEntity.ok().build();
-    }
-    
+          
     @GetMapping ("/{id}")
     public  ResponseEntity<DetailedMatchSummary> getMatchById(@PathVariable("id") Long id) {
         return matchService.getMatchById(id)

@@ -149,10 +149,8 @@ public class Inning {
                 }
                 bowlingPerformances.get(currentDelivery.getBowlerString()).addDelivery(currentDelivery);
                 battingPerformances.get(currentDelivery.getBatterString()).addDelivery(currentDelivery);
+				currentDelivery.setNonStrikerBattingPerformance(battingPerformances.get(currentDelivery.getNonStrikerString()));
                 currentOver.addDelivery(currentDelivery);
-                
-                
-                
             }
         }
         this.wicketsTaken = wicketsTaken;

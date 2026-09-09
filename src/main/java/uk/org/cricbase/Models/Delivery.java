@@ -4,12 +4,12 @@
  */
 package uk.org.cricbase.Models;
 
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -28,7 +28,8 @@ public class Delivery {
     private BattingPerformance battingPerformance;   
     @JsonIgnore
     private BowlingPerformance bowlingPerformance;
-    
+    private BattingPerformance nonStrikerBattingPerformance;
+
     @JsonProperty("batter")
     private String batterString;
     
@@ -256,8 +257,14 @@ public class Delivery {
     public void setPenaltyRuns(int penaltyRuns) {
         this.penaltyRuns = penaltyRuns;
     }
-    
-    
+
+	public BattingPerformance getNonStrikerBattingPerformance() {
+		return nonStrikerBattingPerformance;
+	}
+
+	public void setNonStrikerBattingPerformance(BattingPerformance nonStrikerBattingPerformance) {
+		this.nonStrikerBattingPerformance = nonStrikerBattingPerformance;
+	}
 }
     
     
