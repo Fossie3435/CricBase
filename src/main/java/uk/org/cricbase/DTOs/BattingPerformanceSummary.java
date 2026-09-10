@@ -5,8 +5,6 @@
 package uk.org.cricbase.DTOs;
 
 /**
- *
- * @author Benjamin
  */
 public class BattingPerformanceSummary {
     private String batterId;

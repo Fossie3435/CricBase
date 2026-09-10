@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package uk.org.cricbase.DTOs;
 
 import uk.org.cricbase.Models.Inning;
 
-/**
- *
- * @author Benjamin
- */
 public class InningSummary {
     private String teamName;
     private int runs;

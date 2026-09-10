@@ -6,6 +6,7 @@ package uk.org.cricbase.Mappers;
 
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
@@ -17,6 +18,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
 import uk.org.cricbase.DTOs.DetailedInningSummary;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
 import uk.org.cricbase.DTOs.InningSummary;
@@ -36,7 +38,6 @@ import uk.org.cricbase.Models.Wicket;
 
 /**
  *
- * @author Benjamin
  */
 @Mapper
 public interface MatchMapper {
@@ -48,6 +49,7 @@ public interface MatchMapper {
         @Result(property = "matchNumber", column = "match_number"),
         @Result(property = "overs", column = "overs"),
 		@Result(property = "date", column = "date"),
+		@Result(property = "ballsPerOver", column = "balls_per_over"),
         @Result(property = "ground.id", column = "ground_id"),
         @Result(property = "ground.name", column = "ground_name"),
         @Result(property = "ground.city", column = "ground_city"),
@@ -57,9 +59,15 @@ public interface MatchMapper {
 		@Result(property = "tournament.end", column = "tournament_end"),
 		@Result(property = "tournament.edition", column = "tournament_edition_number"),
 		@Result(property = "result.type", column = "result_type"),
+		@Result(property = "result.winner", column = "winner_name"),
 		@Result(property = "result.runsMargin", column = "runs_wm"),
 		@Result(property = "result.inningsMargin", column = "innings_wm"),
 		@Result(property = "result.wicketsMargin", column = "wickets_wm"),
+		@Result(property = "potm.id", column = "potm_id"),
+		@Result(property = "potm.name", column = "potm_name"),
+		@Result(property = "potm.nickname", column = "p.nickname"),
+		@Result(property = "toss.winner", column = "toss_winner_name"),
+		@Result(property = "toss.decision", column = "toss_decision"),
         @Result(property = "innings", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.MatchMapper.findInningSummariesByMatchId"))
     })
     @Select("""
@@ -70,23 +78,33 @@ public interface MatchMapper {
                 m.gender,
                 m.match_number,
                 m.overs,
-				m.date,
+            	m.date,
 				m.team_type,
+				m.toss_decision,
+				m.balls_per_over,
                 ground_id,
                 g.name AS ground_name,
                 g.city AS ground_city,
-				tournament_id,
-				tournament.name AS tournament_name,
-				lower(tournament.dates) AS tournament_start,
-				upper(tournament.dates) AS tournament_end,
-				tournament.edition AS tournament_edition_number,
+				m.tournament_id,
+				t.name AS tournament_name,
+				lower(t.dates) AS tournament_start,
+				upper(t.dates) AS tournament_end,
+				t.edition AS tournament_edition_number,
 				m.result_type,
 				m.runs_wm,
 				m.innings_wm,
-				m.wickets_wm
+				m.wickets_wm,
+				w.name,
+				p.id,
+				p.name,
+				p.nickname,
+				tw.name
             FROM matches m 
 			JOIN grounds g ON m.ground_id = g.id
-			JOIN tournament_editions t ON t.tournament_id = t.id
+			JOIN tournament_editions t ON t.tournament_id = t.id 
+			JOIN players p ON m.player_of_the_match_id = p.id
+			JOIN teams w ON m.winner = w.id
+			JOIN teams tw ON m.toss_winner = tw.id 
             WHERE m.id = #{id}
             """)
     MatchSummary findMatchSummaryById(long id);
@@ -102,6 +120,8 @@ public interface MatchMapper {
                 m.overs,
             	m.date,
 				m.team_type,
+				m.toss_decision,
+				m.balls_per_over,
                 ground_id,
                 g.name AS ground_name,
                 g.city AS ground_city,
@@ -113,10 +133,18 @@ public interface MatchMapper {
 				m.result_type,
 				m.runs_wm,
 				m.innings_wm,
-				m.wickets_wm
+				m.wickets_wm,
+				w.name AS winner_name, 
+				p.id AS potm_id,
+				p.name AS potm_name,
+				p.nickname,
+				tw.name AS toss_winner_name
             FROM matches m 
 			JOIN grounds g ON m.ground_id = g.id
-			JOIN tournament_editions t ON t.tournament_id = t.id
+			JOIN tournament_editions t ON m.tournament_id = t.id 
+			JOIN players p ON m.player_of_the_match_id = p.id
+			JOIN teams w ON m.winner = w.id
+			JOIN teams tw ON m.toss_winner = tw.id 
             WHERE m.tournament_id = #{id}
 			ORDER BY date;
             """)

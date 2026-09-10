@@ -1,22 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package uk.org.cricbase.DTOs;
 
 import java.util.List;
-import uk.org.cricbase.Models.Match;
 
 /**
  *
- * @author Benjamin
  */
 public class DetailedMatchSummary {
     MatchSummary matchSummary;
     List<DetailedInningSummary> innings;
     List<TeamSummary> teams;
-    // TOSS
-    public DetailedMatchSummary() {
+    
+	public DetailedMatchSummary() {
     }
 
     public MatchSummary getMatchSummary() {

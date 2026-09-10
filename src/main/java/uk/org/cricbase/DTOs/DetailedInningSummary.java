@@ -7,12 +7,9 @@ package uk.org.cricbase.DTOs;
 import java.util.List;
 
 
-import uk.org.cricbase.Models.BattingPerformance;
-import uk.org.cricbase.Models.BowlingPerformance;
 
 /**
  *
- * @author Benjamin
  */
 public class DetailedInningSummary {
     private long id;

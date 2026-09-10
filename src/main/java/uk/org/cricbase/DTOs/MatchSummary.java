@@ -9,11 +9,12 @@ import java.util.List;
 
 /**
  *
- * @author Benjamin
  */
 public class MatchSummary {
     private long id;
     private String season;
+	private String gender;
+	private int ballsPerOver;
     private int matchNumber;
     private String format;
     private String teamType;
@@ -24,12 +25,11 @@ public class MatchSummary {
     private GroundSummary ground;
     private TournamentEditionSummary tournament;
 	private ResultSummary result;
-	
+	private PlayerDto potm;
+	private TossSummary toss;
 
     public MatchSummary() {    
     }
-    
-   
 
     public long getId() {
         return id;
@@ -133,9 +133,38 @@ public class MatchSummary {
 		return result;
 	}
 
-
-
 	public void setResult(ResultSummary result) {
 		this.result = result;
+	}
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public int getBallsPerOver() {
+		return ballsPerOver;
+	}
+
+	public void setBallsPerOver(int ballsPerOver) {
+		this.ballsPerOver = ballsPerOver;
+	}
+
+	public TossSummary getToss() {
+		return toss;
+	}
+
+	public void setToss(TossSummary toss) {
+		this.toss = toss;
+	}
+
+	public PlayerDto getPotm() {
+		return potm;
+	}
+
+	public void setPotm(PlayerDto potm) {
+		this.potm = potm;
 	}
 }

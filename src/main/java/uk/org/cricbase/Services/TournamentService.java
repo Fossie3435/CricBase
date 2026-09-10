@@ -62,7 +62,7 @@ public class TournamentService {
 		}
 		
 		try {
-			this.tournamentMapper.insertEdition(tournament);
+			this.tournamentMapper.insertEdition(tournament, tournament.getTournamentId());
 		} catch (DuplicateKeyException e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "edition already exists");
 		}

@@ -1,6 +1,7 @@
 package uk.org.cricbase.DTOs;
 
 public class ResultSummary {
+	private String winner;
 	private String type;
 	private Integer runsMargin;
 	private Integer wicketsMargin;
@@ -39,5 +40,13 @@ public class ResultSummary {
 
 	public void setInningsMargin(Integer inningsMargin) {
 		this.inningsMargin = inningsMargin;
+	}
+
+	public String getWinner() {
+		return winner;
+	}
+
+	public void setWinner(String winner) {
+		this.winner = winner;
 	}
 }

@@ -1,22 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package uk.org.cricbase.Models;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 /**
  *
- * @author Benjamin Foster <fosterbp@lancaster.ac.uk>
  */
 public class Player {
     private String id;
-   
-    
     private String name;
     private String nickname;
     private String uniqueName;
@@ -89,7 +77,4 @@ public class Player {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-    
-    
-            
 }
