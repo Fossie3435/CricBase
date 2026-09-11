@@ -26,7 +26,7 @@ public interface BattingPerformanceMapper {
         @Result(property = "fours", column = "fours"),
         @Result(property = "sixes", column = "sixes"),
         @Result(property = "wicket", column = "id", one=@One(select = "uk.org.cricbase.Mappers.WicketMapper.findWicketSummaryByBattingPerformanceId"))
-    })
+   })
     @Select("""
             SELECT
             id,

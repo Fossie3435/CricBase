@@ -5,14 +5,18 @@
 package uk.org.cricbase.Models;
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Transient;
 
 /**
  *
- * @author Benjamin Foster <fosterbp@lancaster.ac.uk>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Wicket {
@@ -24,13 +28,17 @@ public class Wicket {
     private BattingPerformance battingPerformance;
     @JsonIgnore
     private BowlingPerformance bowlingPerformance;
+
     @JsonProperty("player_out")
     private String batterString;
     @JsonProperty("kind")
     private String dismissalType;
     
-    //private ArrayList<String> fielders = new ArrayList<>();
-    @JsonIgnore
+    private List<String> fieldersStrings = new ArrayList<>();
+	private List<Boolean> isFielderSub = new ArrayList<>();
+	private List<WicketFielder> fielders = new ArrayList<>();
+
+	@JsonIgnore
     private Player bowler;
 
     @JsonIgnore
@@ -40,14 +48,18 @@ public class Wicket {
         
     }
     
-    /**
     @JsonProperty("fielders")
-    private void unpackFielders(List<Map<String, String>> fielders) {
-        this.fielders = new ArrayList<>();
-        for(int i = 0; i < fielders.size(); i++) {
-            this.fielders.add(fielders.get(i).get("name"));
+    private void unpackFielders(List<Map<String, Object>> fielders) {
+		for(int i = 0; i < fielders.size(); i++) {
+            this.fieldersStrings.add((String) (fielders.get(i).get("name")));
+			
+			if(fielders.get(i).containsKey("substitute")) {	
+				this.isFielderSub.add((Boolean) fielders.get(i).get("substitute"));	
+			} else {
+				this.isFielderSub.add(Boolean.FALSE);
+			}
         } 
-    } **/
+    }
 
     public Player getBatter() {
         return batter;
@@ -89,26 +101,6 @@ public class Wicket {
         }
         return "not out";
     }
-    /**
-    public void setFielders(ArrayList<String> fielders) {
-        this.fielders = fielders;
-    }
-    
-    public List<String> getFielders() {
-        return this.fielders;
-    }
-    
-    public String getPrimaryFielder() {
-        return this.fielders.get(0);
-    }
-    
-    public String getFieldersString() {
-        String fielders = getPrimaryFielder();
-        for(int i = 1; i < this.fielders.size(); i++) {
-            fielders +="/" + this.fielders.get(i);
-        }
-        return fielders;  
-    } **/
 
     public Player getBowler() {
         return bowler;
@@ -157,8 +149,28 @@ public class Wicket {
     public void setBatterString(String batterString) {
         this.batterString = batterString;
     }
-    
-    
-    
-    
+
+    public void addFielders(Team bowlingTeam) {
+		switch(this.dismissalType) {
+			case "caught and bowled":
+				this.dismissalType = "caught";
+				this.fielders.add(new WicketFielder(this.bowler, 1, false, false));
+				break;
+			case "run out":
+				for(int i = 0; i < fieldersStrings.size(); i++) {
+					this.fielders.add(new WicketFielder(bowlingTeam.getPlayer(fieldersStrings.get(i)), i+1, bowlingTeam.isPlayerSub(fieldersStrings.get(i)), bowlingTeam.isPlayerWicketkeeper(fieldersStrings.get(i))));
+				}
+				break;
+			case "stumped":
+				this.fielders.add(new WicketFielder(bowlingTeam.getPlayer(fieldersStrings.get(0)), 1, bowlingTeam.isPlayerSub(fieldersStrings.get(0)), true));
+				break;
+			case "caught":
+				this.fielders.add(new WicketFielder(bowlingTeam.getPlayer(fieldersStrings.get(0)), 1, bowlingTeam.isPlayerSub(fieldersStrings.get(0)), bowlingTeam.isPlayerWicketkeeper(fieldersStrings.get(0))));
+				break;
+		}
+	}
+
+    public List<WicketFielder> getFielders() {
+		return this.fielders;
+    } 
 }

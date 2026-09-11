@@ -1,5 +1,7 @@
 package uk.org.cricbase.DTOs;
 
+import java.util.List;
+
 /**
  *
  */
@@ -7,7 +9,9 @@ public class WicketSummary {
     private String batterOut;
     private String bowler;
     private String dismissalType;
-    
+	
+	private List<FielderDto> fielders;
+
     public WicketSummary() {
         
     }
@@ -35,5 +39,12 @@ public class WicketSummary {
     public void setDismissalType(String dismissalType) {
         this.dismissalType = dismissalType;
     }
-    
+
+	public List<FielderDto> getFielders() {
+		return fielders;
+	}
+
+	public void setFielders(List<FielderDto> fielders) {
+		this.fielders = fielders;
+	}
 }

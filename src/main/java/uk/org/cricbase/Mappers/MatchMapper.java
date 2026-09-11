@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -24,6 +25,7 @@ import uk.org.cricbase.DTOs.DetailedMatchSummary;
 import uk.org.cricbase.DTOs.InningSummary;
 import uk.org.cricbase.DTOs.MatchSummary;
 import uk.org.cricbase.DTOs.TeamSummary;
+import uk.org.cricbase.DTOs.WicketSummary;
 import uk.org.cricbase.Models.BattingPerformance;
 import uk.org.cricbase.Models.BowlingPerformance;
 import uk.org.cricbase.Models.Delivery;
@@ -34,6 +36,7 @@ import uk.org.cricbase.Models.Over;
 import uk.org.cricbase.Models.Player;
 import uk.org.cricbase.Models.Team;
 import uk.org.cricbase.Models.Wicket;
+import uk.org.cricbase.Models.WicketFielder;
 
 
 /**
@@ -301,9 +304,17 @@ public interface MatchMapper {
             VALUES
             (#{dismissalType}, #{battingPerformance.id}, #{bowlingPerformance.id}, #{bowler.id}, #{batter.id})
             """)
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    void insertWicket(Wicket wicket); 
-    
+    @Options(useGeneratedKeys = true, keyProperty = "id") 
+	void insertWicket(Wicket wicket); 
+  
+	@Insert("""
+		INSERT INTO wicket_fielders
+		(player_id, ordinal, is_wicketkeeper, is_substitute, wicket_id)
+		VALUES
+		(#{f.fielder.id}, #{f.ordinal}, #{f.isWicketkeeper}, #{f.isSubstitute}, #{w})
+	""")
+	void insertFielder(@Param("f") WicketFielder fielder, @Param("w") long wicket_id);
+
     @Insert("""
             INSERT INTO deliveries
             (byes, leg_byes, no_balls, penalty_runs, runs, total_delivery_count, wides, batting_performance_id, bowling_performance_id, over_id, wicket_id, bowler_id, batter_id, non_striker_id, delivery_count, non_striker_batting_performance_id)

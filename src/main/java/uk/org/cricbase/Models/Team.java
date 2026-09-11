@@ -61,7 +61,12 @@ public class Team {
     public void setMatch(Match match) {
         this.match = match;
     }
-    
-    
-    
+
+	public boolean isPlayerSub(String player) {
+		return !this.players.containsKey(player);
+	}
+
+	public boolean isPlayerWicketkeeper(String player) {
+		return false;
+	}
 }

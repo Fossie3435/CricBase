@@ -139,7 +139,9 @@ public class Inning {
                         currentDelivery.getWicket().setBattingPerformance(battingPerformances.get(currentDelivery.getNonStrikerString()));
                         battingPerformances.get(batterOut.getName()).setWicket(currentDelivery.getWicket());
                     }   
-                    
+                	
+					currentDelivery.getWicket().addFielders(this.bowlingTeam);
+
                     fallOfWickets.add(new FallOfWicket(wicketsTaken, totalRunsScored, batterOut, currentDeliveryStamp));
                     fallOfWickets.get(fallOfWickets.size() - 1).setInning(this);
                 }

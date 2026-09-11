@@ -26,6 +26,7 @@ import uk.org.cricbase.Models.Match;
 import uk.org.cricbase.Models.Over;
 import uk.org.cricbase.Models.Team;
 import uk.org.cricbase.Models.TournamentEdition;
+import uk.org.cricbase.Models.WicketFielder;
 
 /**
  *
@@ -112,6 +113,9 @@ public class MatchService {
                 for(Delivery delivery : over.getDeliveries()) {
                     if(delivery.getWicket() != null) {
                         matchMapper.insertWicket(delivery.getWicket());
+						for(WicketFielder fielder : delivery.getWicket().getFielders()) {
+							matchMapper.insertFielder(fielder, delivery.getWicket().getId());
+						}
                     }
                     matchMapper.insertDelivery(delivery);
                 }

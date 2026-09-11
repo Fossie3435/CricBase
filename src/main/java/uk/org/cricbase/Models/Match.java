@@ -30,7 +30,6 @@ enum ResultType {
 }
 /**
  *
- * @author Benjamin Foster
  */
 @JsonIgnoreProperties (ignoreUnknown = true)
 public class Match {

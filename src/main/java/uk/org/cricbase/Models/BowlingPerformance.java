@@ -1,17 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package uk.org.cricbase.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author Benjamin Foster <fosterbp@lancaster.ac.uk>
  */
 public class BowlingPerformance implements Comparable<BowlingPerformance> {
     private long id;
