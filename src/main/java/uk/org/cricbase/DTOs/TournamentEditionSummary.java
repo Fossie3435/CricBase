@@ -8,6 +8,7 @@ public class TournamentEditionSummary {
 	private LocalDate start;
 	private LocalDate end;
 	private Integer edition;
+	private String season;
 
 	public TournamentEditionSummary() {
 	}
@@ -50,5 +51,13 @@ public class TournamentEditionSummary {
 
 	public void setEdition(Integer edition) {
 		this.edition = edition;
+	}
+
+	public String getSeason() {
+		return season;
+	}
+
+	public void setSeason(String season) {
+		this.season = season;
 	}
 }

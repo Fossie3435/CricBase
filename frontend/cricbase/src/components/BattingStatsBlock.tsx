@@ -18,6 +18,7 @@ function BattingStatsBlock( {battingStats} : BattingStatProps) {
 			<thead>
 				<tr>
 					<th>Tournament</th>
+					<th>Season</th>
 					<th>Matches</th>
 					<th>Innings</th>
 					<th>Runs</th>
@@ -32,6 +33,7 @@ function BattingStatsBlock( {battingStats} : BattingStatProps) {
 				{battingStats.map((stat) => (
 					<tr key={stat.tournament.id}>
 						<td>{stat.tournament.name}</td>
+						<td>{stat.tournament.season}</td>
 						<td>{stat.matches}</td>
 						<td>{stat.innings}</td>
 						<td>{stat.runs}</td>

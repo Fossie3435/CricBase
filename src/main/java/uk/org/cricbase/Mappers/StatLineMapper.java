@@ -79,7 +79,8 @@ public interface StatLineMapper {
         te.name AS te_name,
         lower(te.dates) AS te_start,
         upper(te.dates) AS te_end,
-        te.edition AS te_edition
+        te.edition AS te_edition,
+		te.season AS te_season
     FROM bowling_stats bs
     JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
@@ -101,7 +102,8 @@ public interface StatLineMapper {
     @Result(property = "tournament.name", column = "te_name"),
     @Result(property = "tournament.start", column = "te_start"),
     @Result(property = "tournament.end", column = "te_end"),
-    @Result(property = "tournament.edition", column = "te_edition")
+    @Result(property = "tournament.edition", column = "te_edition"),
+	@Result(property = "tournament.season", column = "te_season")
 })
     List<BowlingStatsSummary> getBowlingStatsSummary(@Param("playerId") String playerId);
 
@@ -119,7 +121,8 @@ public interface StatLineMapper {
         te.name AS tournament_name,
         lower(te.dates) AS tournament_start,
         upper(te.dates) AS tournament_end,
-        te.edition AS tournament_edition
+        te.edition AS tournament_edition,
+		te.season AS tournament_season
 
     FROM batting_stats bs
     JOIN tournament_editions te
@@ -139,7 +142,8 @@ public interface StatLineMapper {
     @Result(property = "tournament.name", column = "tournament_name"),
     @Result(property = "tournament.start", column = "tournament_start"),
     @Result(property = "tournament.end", column = "tournament_end"),
-    @Result(property = "tournament.edition", column = "tournament_edition")
+    @Result(property = "tournament.edition", column = "tournament_edition"),
+	@Result(property = "tournament.season", column = "tournament_season")
 })
     List<BattingStatsSummary> getBattingStatsSummary(String playerId);
 

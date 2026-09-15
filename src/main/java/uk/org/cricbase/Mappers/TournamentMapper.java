@@ -72,7 +72,8 @@ public interface TournamentMapper {
 			lower(dates) AS start,
 			upper(dates) AS end,
 			name,
-			edition
+			edition,
+			season
 		FROM 
 			tournament_editions
 		WHERE tournament_id = #{id}
@@ -101,6 +102,7 @@ public interface TournamentMapper {
 		@Result(property = "end", column = "end"),
 		@Result(property = "edition", column = "edition"),
 		@Result(property = "tournamentId", column = "tournament_id"),
+		@Result(property = "season", column = "season"),
 		@Result(property = "matches", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.MatchMapper.findMatchSummariesByTournamentEditionId"))
 	})
 	@Select("""
@@ -110,7 +112,8 @@ public interface TournamentMapper {
 			lower(dates) AS start,
 			upper(dates) AS end,
 			edition,
-			tournament_id
+			tournament_id,
+			season
 		FROM tournament_editions
 		WHERE id= #{id}
 	""")

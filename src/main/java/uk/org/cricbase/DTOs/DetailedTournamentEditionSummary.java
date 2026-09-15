@@ -10,6 +10,7 @@ public class DetailedTournamentEditionSummary {
 	private LocalDate end;
 	private Integer edition;
 	private Long tournamentId;
+	private String season;
 	private List<MatchSummary> matches;
 	
 
@@ -69,5 +70,13 @@ public class DetailedTournamentEditionSummary {
 
 	public void setMatches(List<MatchSummary> matches) {
 		this.matches = matches;
+	}
+
+	public String getSeason() {
+		return season;
+	}
+
+	public void setSeason(String season) {
+		this.season = season;
 	}
 }

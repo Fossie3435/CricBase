@@ -4,4 +4,5 @@ export interface Tournament {
 	start: string;
 	end: string;
 	edition: number;
+	season: string;
 }
