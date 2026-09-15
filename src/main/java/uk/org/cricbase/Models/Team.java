@@ -8,7 +8,6 @@ import java.util.HashMap;
 
 /**
  *
- * @author Benjamin Foster <fosterbp@lancaster.ac.uk>
  */
 public class Team {
     private long id;

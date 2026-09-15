@@ -31,7 +31,7 @@ public interface WicketMapper {
 		JOIN players ba ON w.batter_id = ba.id
 		JOIN players bo ON w.bowler_id = bo.id
 		LEFT JOIN wicket_fielders wf ON w.id = wf.wicket_id
-		JOIN players f ON wf.player_id = f.id
+		LEFT JOIN players f ON wf.player_id = f.id
 		WHERE w.id = #{id}
 		ORDER BY ordinal ASC
 	""")
@@ -51,7 +51,7 @@ public interface WicketMapper {
 			JOIN players ba ON w.batter_id = ba.id
 			JOIN players bo ON w.bowler_id = bo.id
 			LEFT JOIN wicket_fielders wf ON w.id = wf.wicket_id
-			JOIN players f ON wf.player_id = f.id
+			LEFT JOIN players f ON wf.player_id = f.id
             WHERE w.batting_performance_id = #{battingPerformanceId}           
 			ORDER BY ordinal ASC
             """)

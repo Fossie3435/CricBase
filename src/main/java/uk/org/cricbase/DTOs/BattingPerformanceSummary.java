@@ -13,6 +13,7 @@ public class BattingPerformanceSummary {
     private int ballsFaced;
     private int fours;
     private int sixes;
+	private boolean isDismissed;
     private WicketSummary wicket;
     
     public BattingPerformanceSummary() {}
@@ -72,6 +73,14 @@ public class BattingPerformanceSummary {
     public void setWicket(WicketSummary wicket) {
         this.wicket = wicket;
     }
+
+    public boolean isDismissed() {
+    	return this.isDismissed;
+	}
+
+	public void setDismissed(boolean isDismissed) {
+		this.isDismissed = isDismissed;
+	}
     
     
 }

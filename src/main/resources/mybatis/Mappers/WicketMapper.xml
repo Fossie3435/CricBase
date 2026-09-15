@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="uk.org.cricbase.Mappers.WicketMapper">
+    <resultMap id="wicketSummary"
+               type="uk.org.cricbase.DTOs.WicketSummary">
+
+        <result property="dismissalType"
+                column="dismissal_type"/>
+
+        <result property="bowlerId"
+                column="bowler_id"/>
+
+        <result property="batterId"
+                column="batter_id"/>
+
+        <collection property="fielders"
+                    ofType="uk.org.cricbase.DTOs.FielderDto">
+
+            <result property="fielder"
+                    column="fielder_name"/>
+
+            <result property="isWicketkeeper"
+                    column="fielder_is_wicketkeeper"/>
+
+            <result property="isSubstitute"
+                    column="fielder_is_substitute"/>
+
+        </collection>
+    </resultMap>
+</mapper>

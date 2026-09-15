@@ -1,0 +1,26 @@
+
+.navbar {
+    display: flex;
+
+    padding: 10px;
+	gap: 50px;
+    background: #ffffff;
+	border-bottom: 2px solid #a60d61;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.navbar-links a {
+    color: black;
+    text-decoration: none;
+}

@@ -5,11 +5,14 @@
 package uk.org.cricbase.Mappers;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Many;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+
 import uk.org.cricbase.DTOs.BowlingPerformanceSummary;
 
 /**
@@ -49,5 +52,27 @@ public interface BowlingPerformanceMapper {
             WHERE inning_id = #{inningId}
             """)
     List<BowlingPerformanceSummary> findBowlingPerformancesByInningId();
+	
+	@ResultMap("bowlingPerformanceSummary")
+	@Select("""
+		SELECT
+            balls_bowled,
+            bowling_position,
+            fours_conceded,
+            runs_conceded,
+            sixes_conceded,
+            bowler_id,
+            maidens,
+            bp.no_balls,
+            bp.wides,
+            wicket_count
+        FROM bowling_performances bp
+		JOIN innings i ON bp.inning_id = i.id 
+		JOIN matches m ON i.match_id = m.id
+		WHERE bowler_id = #{pId}
+		AND m.tournament_id = #{tId}
+	""")
+    List<BowlingPerformanceSummary> getBowlingPerformancesByPlayerIdAndTournamentEditionId(@Param("tId") long tournamentEditionId, @Param("pId")
+            String playerId);
         
 }

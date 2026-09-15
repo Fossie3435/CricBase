@@ -4,8 +4,11 @@
  */
 package uk.org.cricbase.Services;
 
+import java.util.List;
 import java.util.Optional;
+
 import org.springframework.stereotype.Service;
+
 import uk.org.cricbase.Mappers.PlayerMapper;
 import uk.org.cricbase.Models.Player;
 
@@ -42,6 +45,23 @@ public class PlayerService {
             return Optional.empty();
         }
     }
+
+    public List<Player> searchPlayers(String search) {
+    	return this.playerMapper.searchPlayers(search);
+	}
+
+	public List<Player> findActivePlayersWithoutNicknames() {
+		return this.playerMapper.findActivePlayersWithoutNickname();
+	}
+
+    public void updateNickname(Player player) {
+    	playerMapper.updateNickname(player);
+	}
+
+    public List<Player> getPlayersByTournamentEdition(long tournamentEditionId) {
+		return this.playerMapper.findPlayersByTournamentEdition(tournamentEditionId);
+    }
+
     
     
         

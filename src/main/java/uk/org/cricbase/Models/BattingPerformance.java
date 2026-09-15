@@ -5,13 +5,10 @@
 package uk.org.cricbase.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Benjamin Foster <fosterbp@lancaster.ac.uk>
  */
 public class BattingPerformance implements Comparable<BattingPerformance> {
     private long id;

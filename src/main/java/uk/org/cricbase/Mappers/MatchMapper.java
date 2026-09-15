@@ -25,7 +25,6 @@ import uk.org.cricbase.DTOs.DetailedMatchSummary;
 import uk.org.cricbase.DTOs.InningSummary;
 import uk.org.cricbase.DTOs.MatchSummary;
 import uk.org.cricbase.DTOs.TeamSummary;
-import uk.org.cricbase.DTOs.WicketSummary;
 import uk.org.cricbase.Models.BattingPerformance;
 import uk.org.cricbase.Models.BowlingPerformance;
 import uk.org.cricbase.Models.Delivery;
@@ -68,7 +67,7 @@ public interface MatchMapper {
 		@Result(property = "result.wicketsMargin", column = "wickets_wm"),
 		@Result(property = "potm.id", column = "potm_id"),
 		@Result(property = "potm.name", column = "potm_name"),
-		@Result(property = "potm.nickname", column = "p.nickname"),
+		@Result(property = "potm.nickname", column = "potm_nickname"),
 		@Result(property = "toss.winner", column = "toss_winner_name"),
 		@Result(property = "toss.decision", column = "toss_decision"),
         @Result(property = "innings", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.MatchMapper.findInningSummariesByMatchId"))
@@ -97,11 +96,11 @@ public interface MatchMapper {
 				m.runs_wm,
 				m.innings_wm,
 				m.wickets_wm,
-				w.name,
-				p.id,
-				p.name,
-				p.nickname,
-				tw.name
+				w.name AS winner_name,
+				p.id AS potm_id,
+				p.name AS potm_name,
+				p.nickname AS potm_nickname,
+				tw.name AS toss_winner_name
             FROM matches m 
 			JOIN grounds g ON m.ground_id = g.id
 			JOIN tournament_editions t ON t.tournament_id = t.id 
@@ -140,7 +139,7 @@ public interface MatchMapper {
 				w.name AS winner_name, 
 				p.id AS potm_id,
 				p.name AS potm_name,
-				p.nickname,
+				p.nickname AS potm_nickname,
 				tw.name AS toss_winner_name
             FROM matches m 
 			JOIN grounds g ON m.ground_id = g.id

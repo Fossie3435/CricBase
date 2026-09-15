@@ -51,6 +51,10 @@ public class TournamentEdition {
         this.tournamentId = request.tournamentId();
     }
 
+    public TournamentEdition(long longValue) {
+        //TODO Auto-generated constructor stub
+    }
+
     public long getId() {
         return id;
     }
