@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="uk.org.cricbase.Mappers.RosterMapper">
+
+    <resultMap id="rosterSummary"
+               type="uk.org.cricbase.DTOs.RosterSummary">
+
+        <id property="id" column="roster_id"/>
+
+        <result property="name" column="roster_name"/>
+        <result property="tournamentEditionId"
+                column="tournament_edition_id"/>
+
+        <collection property="players"
+                    ofType="uk.org.cricbase.Models.Player">
+
+            <id property="id" column="player_id"/>
+            <result property="name" column="player_name"/>
+            <result property="nickname" column="player_nickname"/>
+
+        </collection>
+
+    </resultMap>
+
+</mapper>

@@ -86,4 +86,8 @@ public class TournamentService {
 	public Optional<DetailedTournamentEditionSummary> getTournamentEditionSummary(long tournamentId) {
 		return Optional.of(this.tournamentMapper.findDetailedTournamentEditionSummary(tournamentId));
 	}
+	
+	public Optional<TournamentEdition> findTournamentEditionByRosterId(long rosterId) {
+		return Optional.of(this.tournamentMapper.findTournamentEditionByRosterId(rosterId));
+	}
 }

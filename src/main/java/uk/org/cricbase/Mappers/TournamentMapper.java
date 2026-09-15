@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
@@ -55,15 +56,26 @@ public interface TournamentMapper {
 	""")
 	String findTournamentNameById(long id);
 
+	@Results(id = "tournamentEdition", value = {
+    	@Result(property = "id", column = "id", id = true),
+    	@Result(property = "name", column = "name"),
+    	@Result(property = "edition", column = "edition"),
+    	@Result(property = "start", column = "start"),
+    	@Result(property = "end", column = "end"),
+    	@Result(property = "tournamentId", column = "tournament_id")
+	})
 	@Select("""
-		SELECT 
-			id, 
-			lower(dates) AS start,
-			upper(dates) AS end
-		FROM 
-			tournament_editions
-		WHERE tournament_id = #{id}
-	""")
+    	SELECT
+        	id,
+        	name,
+        	edition,
+        	lower(dates) AS start,
+        	upper(dates) AS end,
+        	tournament_id,
+			season
+    	FROM tournament_editions
+    	WHERE id = #{id}
+    """)
 	List<TournamentEdition> findTournamentEditionsByTournamentId(long id);
 
 	@Select("""
@@ -118,6 +130,21 @@ public interface TournamentMapper {
 		WHERE id= #{id}
 	""")
 	DetailedTournamentEditionSummary findDetailedTournamentEditionSummary(long id);
+
+	@ResultMap("tournamentEdition")
+	@Select("""
+    	SELECT
+        	id,
+        	name,
+        	edition,
+        	lower(dates) AS start,
+        	upper(dates) AS end,
+        	tournament_id,
+			season
+    	FROM tournament_editions
+    	WHERE id = #{id}
+    """)
+    TournamentEdition findTournamentEditionByRosterId(long rosterId);
 
 	
 }

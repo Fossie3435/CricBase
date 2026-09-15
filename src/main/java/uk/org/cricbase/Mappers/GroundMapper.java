@@ -12,7 +12,6 @@ import uk.org.cricbase.Models.Ground;
 
 /**
  *
- * @author Benjamin
  */
 @Mapper
 public interface GroundMapper {

@@ -13,6 +13,7 @@ function Navbar() {
                 <Link to="/players"><h1>Players</h1></Link>
 				<Link to="/tournaments"><h1>Tournaments</h1></Link>
 				<Link to="/records"><h1>Stat Leaders</h1></Link>
+				<Link to="/rosters"><h1>Rosters</h1></Link>
             </div>
         </nav>
     );

@@ -1,13 +1,14 @@
 package uk.org.cricbase.Models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 //
 public class Roster {
 	private long id;
 
-	private List<PlayerRosterContainer> players;
+	private List<PlayerRosterContainer> players = new ArrayList<>();
 	private String name;
 	private TournamentEdition tournament;
 	// organisation
@@ -58,5 +59,16 @@ public class Roster {
 	public void setTournament(TournamentEdition tournament) {
 		this.tournament = tournament;
 	}
+
+    public void setDefaultDates(LocalDate start, LocalDate end) {
+		for(PlayerRosterContainer p : this.players) {
+			if(p.getStart() == null) {
+				p.setStart(start);
+			}
+			if(p.getEnd() == null) {
+				p.setEnd(end);
+			}
+		}
+    }
 }
 

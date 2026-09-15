@@ -19,6 +19,7 @@ public class TournamentEdition {
     private LocalDate start;
     private LocalDate end;
     private Long tournamentId;
+	private String season;
     // winning roster
     // season?
    
@@ -51,8 +52,8 @@ public class TournamentEdition {
         this.tournamentId = request.tournamentId();
     }
 
-    public TournamentEdition(long longValue) {
-        //TODO Auto-generated constructor stub
+    public TournamentEdition(long id) {
+		this.id = id;
     }
 
     public long getId() {
@@ -99,6 +100,14 @@ public class TournamentEdition {
 	}
 	public void setTournamentId(Long tournamentId) {
 		this.tournamentId = tournamentId;
+	}
+
+	public String getSeason() {
+		return season;
+	}
+
+	public void setSeason(String season) {
+		this.season = season;
 	}
 }
 
