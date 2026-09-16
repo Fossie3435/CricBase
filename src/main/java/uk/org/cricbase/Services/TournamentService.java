@@ -111,5 +111,10 @@ public class TournamentService {
 		}
 	}
 
+    public List<TournamentSummary> getAllTournamentSummaries() {
+    	return this.tournamentMapper.findAllTournamentSummaries();
+	}
+
+
 
 }

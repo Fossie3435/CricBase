@@ -8,7 +8,7 @@ public class DetailedTournamentEditionSummary {
 	private String name;
 	private LocalDate start;
 	private LocalDate end;
-	private Integer edition;
+	private Integer edition; 
 	private Long tournamentId;
 	private String season;
 	private List<MatchSummary> matches;

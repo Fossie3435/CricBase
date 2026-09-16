@@ -1,4 +1,4 @@
-import {Tournament } from "./Tournament"
+import {TournamentEdition } from "./Tournament"
 
 export interface CombinedStats {
 	battingStats: BattingStatline[]
@@ -6,7 +6,7 @@ export interface CombinedStats {
 }
 
 export interface BattingStatline {
-	tournament: Tournament
+	tournament: TournamentEdition
 	matches: number;
 	innings: number;
 	runs: number;
@@ -17,7 +17,7 @@ export interface BattingStatline {
 }
 
 export interface BowlingStatline {
-	tournament: Tournament
+	tournament: TournamentEdition
 	matches: number;
 	innings: number;
 	ballsBowled: number;

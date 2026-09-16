@@ -120,7 +120,7 @@ public interface TournamentMapper {
 		@Result(property = "matches", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.MatchMapper.findMatchSummariesByTournamentEditionId"))
 	})
 	@Select("""
-		SELECT 
+		SELECT
 			id,
 			name,
 			lower(dates) AS start,
@@ -156,5 +156,12 @@ public interface TournamentMapper {
 	""")
     void updateTournamentEditionDates(@Param("tId") long TournamentEditionId, @Param("start") LocalDate start, @Param("end") LocalDate end);
 
-	
+	@ResultMap("tournamentSummaryResult")
+	@Select("""
+		SELECT 
+			id,
+			name
+		FROM tournaments
+	""")
+    List<TournamentSummary> findAllTournamentSummaries();
 }

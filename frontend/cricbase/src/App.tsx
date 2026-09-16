@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage'
 import { BrowserRouter,  Routes, Route } from 'react-router-dom'
 import RosterSearchPage from './pages/RosterSearchPage'
 import RosterPage from './pages/RosterPage'
+import TournamentSearchPage from './pages/TournamentSearchPage'
+import TournamentEditionPage from './pages/TournamentEditionPage'
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
                 <Route path="/players/:id" element={<PlayerPage />} />
 				<Route path="/rosters" element={<RosterSearchPage />} />
 				<Route path="/rosters/:id" element={<RosterPage />} />
+				<Route path="/tournaments" element={<TournamentSearchPage />} />
+				<Route path="/tournaments/editions/:id" element={<TournamentEditionPage />} />
             </Routes>
 		</BrowserRouter>
 		</>

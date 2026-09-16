@@ -4,6 +4,8 @@
  */
 package uk.org.cricbase.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,5 +73,9 @@ public class TournamentController {
 		this.tournamentService.updateTournamentDates(4);
 		return ResponseEntity.ok().build();
 	}
-	
+
+	@GetMapping("")
+	public ResponseEntity<List<TournamentSummary>> getAllTournamentSummaries() {
+		return ResponseEntity.ok(tournamentService.getAllTournamentSummaries());	
+	}
 }
