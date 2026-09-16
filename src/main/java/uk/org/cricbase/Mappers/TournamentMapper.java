@@ -77,6 +77,7 @@ public interface TournamentMapper {
 			season
     	FROM tournament_editions
     	WHERE tournament_id = #{id}
+		ORDER BY start
     """)
 	List<TournamentEdition> findTournamentEditionsByTournamentId(long id);
 
@@ -91,6 +92,7 @@ public interface TournamentMapper {
 		FROM 
 			tournament_editions
 		WHERE tournament_id = #{id}
+		ORDER BY start
 	""")
 	List<TournamentEditionSummary> findTournamentEditionSummariesByTournamentId(long id);
 	
