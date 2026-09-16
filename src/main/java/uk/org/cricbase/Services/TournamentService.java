@@ -79,6 +79,11 @@ public class TournamentService {
 		}
 		this.matchService.addNewMatchFolder(folderName, editions);
 	}
+
+	public Optional<TournamentEdition> findTournamentEditionById(long id) {
+		return Optional.of(this.tournamentMapper.findTournamentEditionById(id));
+	}
+
 	public Optional<TournamentSummary> getTournamentSummaryById(long tournamentId) {
 		return Optional.of(this.tournamentMapper.findTournamentSummaryById(tournamentId));
 	}
@@ -87,7 +92,4 @@ public class TournamentService {
 		return Optional.of(this.tournamentMapper.findDetailedTournamentEditionSummary(tournamentId));
 	}
 	
-	public Optional<TournamentEdition> findTournamentEditionByRosterId(long rosterId) {
-		return Optional.of(this.tournamentMapper.findTournamentEditionByRosterId(rosterId));
-	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,12 @@ public class RosterController {
 	}
 
 	@GetMapping("/{rosterId}")
-	public ResponseEntity<RosterSummary> getRosterById(@PathParam("rosterId") long rosterId) {
-		return ResponseEntity.of(this.rosterService.getRosterById(rosterId));
+	public ResponseEntity<RosterSummary> getRosterById(@PathVariable("rosterId") long rosterId) {
+		return ResponseEntity.ok(this.rosterService.getRosterById(rosterId));
+	}
+
+	@GetMapping("/getall")
+	public ResponseEntity<List<RosterSummary>> getAllRosters() {
+		return ResponseEntity.ok(this.rosterService.getAllRosters());
 	}
 }

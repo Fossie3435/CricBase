@@ -1,7 +1,10 @@
 package uk.org.cricbase.Mappers;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
@@ -15,9 +18,9 @@ public interface RosterMapper {
 
 	@Insert("""
 		INSERT INTO players_rosters
-		(player_id, active)
+		(player_id, active, roster_id)
 		VALUES
-		(#{player.id}, daterange(#{start}::date, #{end}::date, '[)'))
+		(#{player.id}, daterange(#{start}::date, #{end}::date, '[)'), #{roster.id})
 	""")
 	void insertPlayerOnRoster(PlayerRosterContainer p);
 
@@ -27,7 +30,24 @@ public interface RosterMapper {
 		VALUES
 		(#{name}, #{tournament.id})
 	""")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
 	void insertRoster(Roster r);
+
+	@ResultMap("rosterSummary")
+	@Select("""
+		SELECT
+			r.id AS roster_id,
+			r.name AS roster_name,
+			r.tournament_edition_id AS tournament_edition_id,
+			p.id AS player_id,
+			p.nickname AS player_nickname,
+			p.name AS player_name
+		FROM players_rosters pr
+		JOIN players p ON pr.player_id = p.id
+		JOIN rosters r ON pr.roster_id = r.id
+		WHERE r.id = #{rId}
+	""")
+	RosterSummary findRosterSummaryById(@Param("rId") long rosterId);
 
 	@ResultMap("rosterSummary")
 	@Select("""
@@ -39,11 +59,9 @@ public interface RosterMapper {
 			p.id AS player_id,
 			p.nickname AS player_nickname,
 			p.name AS player_name
-		FROM rosters
-		WHERE id = #{rId}
+		FROM players_rosters pr
+		JOIN players p ON pr.player_id = p.id
+		JOIN rosters r ON pr.roster_id = r.id
 	""")
-	RosterSummary findRosterSummaryById(@Param("rId") long rosterId);
-	
-	
-
+    List<RosterSummary> findAllRosterSummaries();
 }

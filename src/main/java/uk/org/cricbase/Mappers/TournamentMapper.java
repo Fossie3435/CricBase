@@ -144,7 +144,7 @@ public interface TournamentMapper {
     	FROM tournament_editions
     	WHERE id = #{id}
     """)
-    TournamentEdition findTournamentEditionByRosterId(long rosterId);
+    TournamentEdition findTournamentEditionById(long id);
 
 	
 }

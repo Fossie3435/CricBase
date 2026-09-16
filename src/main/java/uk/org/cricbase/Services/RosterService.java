@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,7 +29,7 @@ public class RosterService {
 
 	public void addNewRoster(RosterCreateRequest request) {
 		Roster roster = request.createRoster();	
-		TournamentEdition te = tournamentService.findTournamentEditionByRosterId(roster.getId()).get();
+		TournamentEdition te = tournamentService.findTournamentEditionById(roster.getTournament().getId()).get();
 		roster.setDefaultDates(te.getStart(), te.getEnd());
 		try {
 			this.rosterMapper.insertRoster(roster);
@@ -40,6 +41,7 @@ public class RosterService {
 				this.rosterMapper.insertPlayerOnRoster(p);
 			}
 		} catch (DataAccessException e) {
+			e.printStackTrace();
 			System.out.println("player insert failed");
 			// log missing player
 		}
@@ -49,7 +51,7 @@ public class RosterService {
     public void addPlayersToRoster(long rosterId, List<PlayerRosterCreateRequest> request) {
 		Roster roster = new Roster();
 
-		TournamentEdition tournamentEdition = this.tournamentService.findTournamentEditionByRosterId(rosterId).get();
+		TournamentEdition tournamentEdition = this.tournamentService.findTournamentEditionById(rosterId).get();
 		for(PlayerRosterCreateRequest p : request) {
 			
 			try {
@@ -67,7 +69,11 @@ public class RosterService {
 		}
 	}
 
-    public Optional<RosterSummary> getRosterById(long rosterId) {
-		return Optional.of(this.rosterMapper.findRosterSummaryById(rosterId));
+    public RosterSummary getRosterById(long rosterId) {
+		return (this.rosterMapper.findRosterSummaryById(rosterId));
+    }
+
+    public List<RosterSummary> getAllRosters() {
+		return this.rosterMapper.findAllRosterSummaries();
     }			
 }

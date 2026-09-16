@@ -1,10 +1,11 @@
-import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import { Player } from "../types/Player";
 import  PlayerStatsBlock  from "../components/PlayerStatsBlock";
+import { useState, useEffect } from "react";
 
 function PlayerPage() {
 	const { id } = useParams<{id: string}>();
+
 	const [player, setPlayer] = useState<Player | null>(null);
 	
 	useEffect(() => {
