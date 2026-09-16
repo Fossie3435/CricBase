@@ -6,6 +6,7 @@ package uk.org.cricbase.Services;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -253,6 +254,15 @@ public class MatchService {
     public void updateDates(String directory) {
         openMatchFolderFromJson(directory).forEach(this::updateDate);
     }
+
+    public LocalDate getDateOfFirstMatchByTournamentEditionId(long tournamentEditionId) {
+    	return this.matchMapper.getDateOfFirstMatchByTournamentEditionId(tournamentEditionId);
+	}
+
+	public LocalDate getDateOfLastMatchByTournamentEditionId(long tournamentEditionId) {
+		return this.matchMapper.getDateOfLastMatchByTournamentEditionId(tournamentEditionId);
+	}
+
     
     
     

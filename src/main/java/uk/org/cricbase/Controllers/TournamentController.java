@@ -63,6 +63,13 @@ public class TournamentController {
 			.map(ResponseEntity::ok)
 			.orElse(ResponseEntity.notFound().build());
 	}
-
+	
+	@GetMapping("/updatedates")
+	public ResponseEntity<Void> updateDates() {
+		System.out.println("test");
+		this.tournamentService.updateTournamentDates(1);
+		this.tournamentService.updateTournamentDates(4);
+		return ResponseEntity.ok().build();
+	}
 	
 }

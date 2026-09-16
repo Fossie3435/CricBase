@@ -5,6 +5,7 @@
 package uk.org.cricbase.Mappers;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
@@ -391,4 +392,24 @@ public interface MatchMapper {
                 WHERE id = #{id}
             """)
     void updateDate(Match match);
+
+	@Select("""
+			SELECT 
+				date
+			FROM matches
+			WHERE tournament_id = #{tId}
+			ORDER BY date ASC
+			LIMIT 1
+	""")
+    LocalDate getDateOfFirstMatchByTournamentEditionId(@Param("tId") long tournamentEditionId);
+	
+	@Select("""
+			SELECT 
+				date
+			FROM matches
+			WHERE tournament_id = #{tId}
+			ORDER BY date DESC
+			LIMIT 1
+	""")
+    LocalDate getDateOfLastMatchByTournamentEditionId(@Param("tId") long tournamentEditionId);
 }

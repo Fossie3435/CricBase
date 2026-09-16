@@ -4,6 +4,7 @@
  */
 package uk.org.cricbase.Services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,4 +93,23 @@ public class TournamentService {
 		return Optional.of(this.tournamentMapper.findDetailedTournamentEditionSummary(tournamentId));
 	}
 	
+	public void updateTournamentEditionDate(long tournamentEditionId) {
+		LocalDate start = this.matchService.getDateOfFirstMatchByTournamentEditionId(tournamentEditionId);
+		LocalDate end = this.matchService.getDateOfLastMatchByTournamentEditionId(tournamentEditionId);
+		
+		if(start != null && end != null) {
+			System.out.println("inserting dates");
+			this.tournamentMapper.updateTournamentEditionDates(tournamentEditionId, start, end);
+		}
+	}
+
+	public void updateTournamentDates(long tournamentId) {
+		List<TournamentEdition> tournamentEditions = this.tournamentMapper.findTournamentEditionsByTournamentId(tournamentId);	
+		for(TournamentEdition te : tournamentEditions) {
+			System.out.println("updating tournament");
+			this.updateTournamentEditionDate(te.getId());
+		}
+	}
+
+
 }

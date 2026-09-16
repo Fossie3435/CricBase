@@ -4,6 +4,7 @@
  */
 package uk.org.cricbase.Mappers;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
@@ -15,6 +16,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import uk.org.cricbase.DTOs.DetailedTournamentEditionSummary;
 import uk.org.cricbase.DTOs.TournamentEditionSummary;
@@ -74,7 +76,7 @@ public interface TournamentMapper {
         	tournament_id,
 			season
     	FROM tournament_editions
-    	WHERE id = #{id}
+    	WHERE tournament_id = #{id}
     """)
 	List<TournamentEdition> findTournamentEditionsByTournamentId(long id);
 
@@ -145,6 +147,14 @@ public interface TournamentMapper {
     	WHERE id = #{id}
     """)
     TournamentEdition findTournamentEditionById(long id);
+
+	@Update("""
+		UPDATE tournament_editions
+			SET 
+				dates = daterange(#{start}::date, #{end}::date, '[]')
+			WHERE id = #{tId}
+	""")
+    void updateTournamentEditionDates(@Param("tId") long TournamentEditionId, @Param("start") LocalDate start, @Param("end") LocalDate end);
 
 	
 }
