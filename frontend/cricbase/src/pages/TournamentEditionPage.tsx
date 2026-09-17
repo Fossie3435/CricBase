@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { DetailedTournamentEdition } from "../types/Tournament";
 import { useParams } from "react-router-dom";
 import MatchSummary from "../components/MatchSummary";
+import StatLeadersBlock from "../components/StatLeadersBlock";
+import "../components/TournamentEdition.css";
 
 function TournamentEditionPage() {
 	const [edition, setEdition] = useState<DetailedTournamentEdition | null>(null)
@@ -32,11 +34,16 @@ function TournamentEditionPage() {
 			<h5>Edition: {edition.edition}</h5>
 			<h5>Start: {edition.start.toString()}</h5>
 			<h5>End: {edition.end.toString()}</h5>
-			
-			{edition.matches.map((match) => {
-				return <MatchSummary match={match} />
-			})}
-			
+			<div className="page">
+				<div className="matchList">	
+				{edition.matches.map((match) => {
+					return <MatchSummary key={"match" + match.id} match={match} />
+				})}
+				</div>
+				<div>
+					<StatLeadersBlock id={id} />
+				</div>
+			</div>
 		</div>
 	)
 }

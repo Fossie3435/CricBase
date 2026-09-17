@@ -1,4 +1,5 @@
 import { MatchSummary, getResultString } from "../types/Match";
+import "./TournamentEdition.css";
 
 interface MatchSummaryProps {
 	match: MatchSummary;
@@ -9,7 +10,7 @@ function MatchSummary( { match } : MatchSummaryProps) {
 		return <p>Invalid Match</p>
 	}	
 	return (
-		<div className="MatchSummary">
+		<div className="matchSummary">
 		{match.innings.map((inning) => (
 			<h3>{inning.teamName}: {inning.runs}/{inning.wickets}</h3>
 		))}

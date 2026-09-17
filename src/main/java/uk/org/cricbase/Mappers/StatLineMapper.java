@@ -6,11 +6,13 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import uk.org.cricbase.DTOs.BattingStatsSummary;
 import uk.org.cricbase.DTOs.BowlingStatsSummary;
+import uk.org.cricbase.DTOs.StatLeaderboardEntry;
 import uk.org.cricbase.Models.BattingStatLine;
 import uk.org.cricbase.Models.BowlingStatLine;
 
@@ -146,5 +148,69 @@ public interface StatLineMapper {
 	@Result(property = "tournament.season", column = "tournament_season")
 })
     List<BattingStatsSummary> getBattingStatsSummary(String playerId);
+
+	@Results(id="statEntries", value = {
+		@Result(property = "player.id", column = "player_id"),
+		@Result(property = "player.name", column = "player_name"),
+		@Result(property = "player.nickname", column = "player_nickname"),
+		@Result(property = "stat", column = "stat"),
+	})
+	@Select("""
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			bs.runs AS stat
+		FROM batting_stats bs
+		JOIN players p ON bs.batter_id = p.id
+		WHERE bs.tournament_edition_id = #{tId}
+		ORDER BY stat DESC
+		LIMIT #{entries}
+	""")
+    List<StatLeaderboardEntry> getHighestRunScorersByTournamentEditionId(@Param("tId")long editionId,@Param("entries") int entries);
+	@ResultMap("statEntries")
+	@Select("""
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			bs.wickets AS stat
+		FROM bowling_stats bs
+		JOIN players p ON bs.bowler_id = p.id
+		WHERE bs.tournament_edition_id = #{tId}
+		ORDER BY stat DESC
+		LIMIT #{entries}
+	""")
+    List<StatLeaderboardEntry> getHighestWicketTakersByTournamentEditionId(@Param("tId")long editionId,@Param("entries") int entries);	
+	@ResultMap("statEntries")
+	@Select("""
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			(100.0 * bs.runs / NULLIF(bs.balls_faced, 0)) AS stat
+		FROM batting_stats bs
+		JOIN players p ON bs.batter_id = p.id
+		WHERE bs.tournament_edition_id = #{tId}
+		AND bs.balls_faced > 50
+		ORDER BY stat DESC
+		LIMIT #{entries}
+	""")
+    List<StatLeaderboardEntry> getHighestStrikeRatesByTournamentEditionId(@Param("tId")long editionId,@Param("entries") int entries);
+	@ResultMap("statEntries")
+	@Select("""
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			(5.0 * bs.runs_conceded / NULLIF(bs.balls_bowled, 0)) AS stat
+		FROM bowling_stats bs
+		JOIN players p ON bs.bowler_id = p.id
+		WHERE bs.tournament_edition_id = #{tId}
+		AND bs.balls_bowled > 80
+		ORDER BY stat ASC
+		LIMIT #{entries}
+	""")
+    List<StatLeaderboardEntry> getLowestEconomyRatesByTournamentEditionId(@Param("tId")long editionId,@Param("entries") int entries);
 
 }

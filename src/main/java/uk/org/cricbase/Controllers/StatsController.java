@@ -1,5 +1,7 @@
 package uk.org.cricbase.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import uk.org.cricbase.DTOs.CareerSummary;
+import uk.org.cricbase.DTOs.StatLeaderboard;
 import uk.org.cricbase.Services.StatLineService;
 
 @RestController
-@RequestMapping("/players/stats")
+@RequestMapping("/stats")
 public class StatsController {
 	@Autowired
 	private StatLineService statlineService;
@@ -24,7 +27,7 @@ public class StatsController {
 		this.statlineService.calculateStatlines(id);
 	}
 	
-	@GetMapping("/{playerId}")
+	@GetMapping("/players/{playerId}")
 	public ResponseEntity<CareerSummary> getCareerStats(@PathVariable String playerId) {
 		return ResponseEntity.ok(this.statlineService.getCareerStats(playerId));
 	}	
@@ -32,5 +35,10 @@ public class StatsController {
 	@GetMapping("/test")
 	public void test() {
 		this.statlineService.calculateStatlinesForPlayer(5, "1f1b4c89");
+	}
+
+	@GetMapping("/editions/{editionId}/leaders")
+	public ResponseEntity<List<StatLeaderboard>> getTournamentEditionStatLeaderboards(@PathVariable long editionId) {
+		return ResponseEntity.ok(this.statlineService.getStatLeadersForTournamentEdition(editionId));
 	}
 }

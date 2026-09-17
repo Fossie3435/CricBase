@@ -1,7 +1,9 @@
 package uk.org.cricbase.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import uk.org.cricbase.DTOs.BattingPerformanceSummary;
@@ -9,6 +11,7 @@ import uk.org.cricbase.DTOs.BattingStatsSummary;
 import uk.org.cricbase.DTOs.BowlingPerformanceSummary;
 import uk.org.cricbase.DTOs.BowlingStatsSummary;
 import uk.org.cricbase.DTOs.CareerSummary;
+import uk.org.cricbase.DTOs.StatLeaderboard;
 import uk.org.cricbase.Mappers.BattingPerformanceMapper;
 import uk.org.cricbase.Mappers.BowlingPerformanceMapper;
 import uk.org.cricbase.Mappers.StatLineMapper;
@@ -73,4 +76,43 @@ public class StatLineService {
 		List<BowlingStatsSummary> bowlingStats = this.statLineMapper.getBowlingStatsSummary(playerId);
 		return new CareerSummary(bowlingStats, battingStats);
     }
+
+    public List<StatLeaderboard> getStatLeadersForTournamentEdition(long editionId) {
+   		ArrayList<StatLeaderboard> leaderboards = new ArrayList<>();
+		leaderboards.add(this.getHighestRunScorersForTournamentEdition(editionId, 5));
+		leaderboards.add(this.getHighestWicketTakersForTournamentEdition(editionId, 5));
+		leaderboards.add(this.getHighestStrikeRatesForTournamentEdition(editionId, 5));
+		leaderboards.add(this.getLowestEconomyRatesForTournamentEdition(editionId, 5));
+
+		return leaderboards;
+	}
+
+	public StatLeaderboard getHighestRunScorersForTournamentEdition(long editionId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Highest Run Scorers", "runs");
+		sb.setEntries(this.statLineMapper.getHighestRunScorersByTournamentEditionId(editionId, entries));
+		sb.setDecimalPlaces(0);
+		sb.generateEntryNumbers();
+		return sb;
+	}	
+	public StatLeaderboard getHighestWicketTakersForTournamentEdition(long editionId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Highest Wicket Takers", "wickets");
+		sb.setEntries(this.statLineMapper.getHighestWicketTakersByTournamentEditionId(editionId, entries));
+		sb.setDecimalPlaces(0);
+		sb.generateEntryNumbers();
+		return sb;
+	}
+	public StatLeaderboard getHighestStrikeRatesForTournamentEdition(long editionId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Highest Strike Rates", "SR");
+		sb.setEntries(this.statLineMapper.getHighestStrikeRatesByTournamentEditionId(editionId, entries));
+		sb.setDecimalPlaces(0);
+		sb.generateEntryNumbers();
+		return sb;
+	}	
+	public StatLeaderboard getLowestEconomyRatesForTournamentEdition(long editionId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Lowest Economy Rates", "ER");
+		sb.setEntries(this.statLineMapper.getLowestEconomyRatesByTournamentEditionId(editionId, entries));
+		sb.setDecimalPlaces(2);
+		sb.generateEntryNumbers();
+		return sb;
+	}
 }

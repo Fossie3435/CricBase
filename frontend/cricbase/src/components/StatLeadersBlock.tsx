@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { StatLeader } from "../types/StatLeader";
+import { StatLeaderboard } from "../types/StatLeader";
 import "./TournamentEdition.css";
 interface StatLeadersBlock {
 	id: string;
 }
 
 function StatLeadersBlock( {id}: StatLeadersBlock ) {
-	const [statLeaders, setStatLeaders] = useState<StatLeader[] | null>(null);
+	const [statLeaders, setStatLeaders] = useState<StatLeaderboard[] | null>(null);
 
 
 	useEffect(() => {
@@ -15,14 +15,12 @@ function StatLeadersBlock( {id}: StatLeadersBlock ) {
 				`http://localhost:8080/stats/editions/${id}/leaders`
 			);
 			const data = await response.json();
+			console.log(data);
 			setStatLeaders(data);
 		}
 		getStatLeaders();
 	}, [id]);
 	
-	if(id == undefined) {
-		return <p></p>
-	}
 	if(statLeaders == null) {
 		return <p>Loading Stat Leaders</p>; 
 	}
