@@ -12,7 +12,7 @@ function MatchSummary( { match } : MatchSummaryProps) {
 	return (
 		<div className="matchSummary">
 		{match.innings.map((inning) => (
-			<h3>{inning.teamName}: {inning.runs}/{inning.wickets}</h3>
+			<h3>{inning.tricode}: {inning.runs}/{inning.wickets}</h3>
 		))}
 		<h5>{getResultString(match.result)}</h5>
 		</div>

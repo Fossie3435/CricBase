@@ -4,13 +4,15 @@ import uk.org.cricbase.Models.Inning;
 
 public class InningSummary {
     private String teamName;
+	private String tricode;
     private int runs;
     private int wickets;
 
     public InningSummary() {}
     
-    public InningSummary(String teamName, int runs, int wickets) {
+    public InningSummary(String teamName, int runs, int wickets, String tricode) {
         this.teamName = teamName;
+		this.tricode = tricode;
         this.runs = runs;
         this.wickets = wickets;
     }
@@ -43,4 +45,12 @@ public class InningSummary {
     public void setWickets(int wickets) {
         this.wickets = wickets;
     }
+
+	public String getTricode() {
+		return tricode;
+	}
+
+	public void setTricode(String tricode) {
+		this.tricode = tricode;
+	}
 }

@@ -7,8 +7,10 @@ import uk.org.cricbase.Models.Player;
  *
  */
 public class TeamSummary {
+	private long id;
     private String name;
-    private List<Player> players;
+	private String tricode;
+	private List<Player> players;
     
     public TeamSummary() {}
 
@@ -27,4 +29,22 @@ public class TeamSummary {
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
+
+    public String getTricode() {
+		return tricode;
+	}
+
+	public void setTricode(String tricode) {
+		this.tricode = tricode;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
 }

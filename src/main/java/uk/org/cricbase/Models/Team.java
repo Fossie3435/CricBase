@@ -13,6 +13,7 @@ public class Team {
     private long id;
     
     private String name;
+	private String tricode;
     private HashMap<String, Player> players;
     
     private Match match;
@@ -67,5 +68,13 @@ public class Team {
 
 	public boolean isPlayerWicketkeeper(String player) {
 		return false;
+	}
+
+	public String getTricode() {
+		return tricode;
+	}
+
+	public void setTricode(String tricode) {
+		this.tricode = tricode;
 	}
 }

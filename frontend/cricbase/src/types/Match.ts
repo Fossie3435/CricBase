@@ -22,6 +22,7 @@ export interface MatchSummary {
 
 export interface InningSummary {
 	teamName: string;
+	tricode: string;
 	runs: number;
 	wickets: number;
 }
