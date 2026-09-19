@@ -6,7 +6,6 @@ package uk.org.cricbase.DTOs;
 
 /**
  *
- * @author Benjamin
  */
 public class BowlingPerformanceSummary {
     private String bowlerId;

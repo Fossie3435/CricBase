@@ -11,7 +11,6 @@ export interface MatchSummary {
     teamType: string;
     overs: number;
 	date: Date;
-
     innings: InningSummary[];
     ground: Ground;
     tournament: TournamentEdition;
@@ -41,6 +40,87 @@ export interface Result {
 	innings: number;
 }
 
+export interface Toss {
+	winner: string;
+	decision: string;
+}
+
+export interface DetailedMatchSummary {
+	matchSummary: MatchSummary;
+	innings: DetailedInningSummary[];
+	teams: TeamSummary[];
+}
+
+export interface DetailedInningSummary {
+	battingTeam: string;
+	bowlingTeam: string;
+	id: number;
+    total: number;
+    wickets: number;
+    runs: number;
+    byes: number;
+    legbyes: number;
+    wides: number;
+    noballs: number;
+    penaltyRuns: number;
+    battingScorecard: BattingPerformanceSummary[];
+    bowlingScorecard: BowlingPerformanceSummary[];
+    fallOfWickets: FallOfWicketSummary[];
+}
+
+export interface BattingPerformanceSummary {
+	batterId : string;
+    battingPosition: number;
+    runs: number;
+    ballsFaced: number;
+    fours: number;
+    sixes: number;
+	isDismissed: boolean;
+    wicket: WicketSummary;
+}
+
+export interface WicketSummary {
+    batterOut: string;
+    bowler: string;
+    dismissalType: string;
+	fielders: Fielder[];
+}
+
+export interface Fielder {
+	fielder: string;
+	isWicketkeeper: boolean;
+	isSubstitute: boolean;
+}
+
+export interface BowlingPerformanceSummary {
+    bowlerId: string;
+    bowlingPosition: number;
+    maidens: number;
+    ballsBowled: number;
+    runsConceded: number;
+    wicketsTaken: number;
+    dots: number;
+    foursConceded: number;
+    sixesConceded: number;
+    wides: number;
+    noballs: number;
+ 
+}
+
+export interface FallOfWicketSummary {
+    delivery: string;
+    total: number;
+    wicket: number;
+    batterId: string;
+}
+
+export interface TeamSummary {
+	id: number;
+	name: string;
+	tricode: string;
+	players: Player[];
+}
+
 export function getResultString(result: Result): string {
 	if(result.type == "RESULT") {
 		var returnString: string = result.winner + " won by ";
@@ -56,13 +136,10 @@ export function getResultString(result: Result): string {
 	return result.type;
 }
 
-export interface Toss {
-	winner: string;
-	decision: string;
-}
-
-export interface DetailedMatchSummary {
-
-
+export function getScoreString(inning: InningSummary) {
+	if(inning.wickets == 10) {
+		return (inning.runs + " ao");
+	}
+	return (inning.runs + "/" + inning.wickets);
 }
 

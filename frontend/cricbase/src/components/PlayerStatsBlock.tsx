@@ -11,7 +11,7 @@ function PlayerStatsBlock({ id }: PlayerStatsBlockProps ){
 	useEffect(() => {
 		async function getPlayer() {
 			const response = await fetch(
-				`http://localhost:8080/players/stats/${id}`
+				`http://localhost:8080/stats/players/${id}`
 			);
 			const data = await response.json();
 			console.log(data);

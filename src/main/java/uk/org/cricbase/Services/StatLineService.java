@@ -46,7 +46,6 @@ public class StatLineService {
 
 	public void calculateStatlinesForPlayer(long tournamentEditionId, String playerId) {
 		int matches = this.statLineMapper.getMatchCount(tournamentEditionId, playerId);
-		System.out.println("Player: " + playerId);
 		if(matches == 0) {
 			return;
 		}

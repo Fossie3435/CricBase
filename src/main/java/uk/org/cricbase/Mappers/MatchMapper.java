@@ -185,6 +185,8 @@ public interface MatchMapper {
     
     @Results(id = "detailedInningSummary", value = {
         @Result(property = "id", column = "id"),
+		@Result(property = "battingTeam", column = "batting_team_name"),
+		@Result(property = "bowlingTeam", column = "bowling_team_name"),
         @Result(property = "total", column = "total_runs"),
         @Result(property = "wickets", column = "wickets_taken"),
         @Result(property = "runs", column = "runs"),
@@ -199,7 +201,9 @@ public interface MatchMapper {
     })
     @Select("""
             SELECT
-            id,
+            i.id AS id,
+			batting.name AS batting_team_name,
+			bowling.name AS bowling_team_name,
             total_runs,
             runs,
             wickets_taken,
@@ -208,10 +212,12 @@ public interface MatchMapper {
             wides,
             no_balls,
             penalty_runs
-            FROM innings
-            WHERE match_id = #{matchId};
+            FROM innings i
+			JOIN teams batting ON batting.id = i.batting_team_id
+			JOIN teams bowling ON bowling.id = i.bowling_team_id
+            WHERE i.match_id = #{matchId};
             """)
-    DetailedInningSummary findDetailedInningSummaryByMatchId(long matchId);
+    List<DetailedInningSummary> findDetailedInningSummaryByMatchId(long matchId);
     
     @Results(id = "teamSummary", value = {
 		@Result(property = "id", column = "id"),

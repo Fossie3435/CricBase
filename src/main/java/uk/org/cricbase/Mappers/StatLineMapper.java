@@ -87,6 +87,7 @@ public interface StatLineMapper {
     JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
     WHERE bs.bowler_id = #{playerId}
+	ORDER BY lower(te.dates)
     """)
 @Results(id = "bowlingStatsSummary", value = {
     @Result(property = "matches", column = "matches"),
@@ -130,6 +131,7 @@ public interface StatLineMapper {
     JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
     WHERE bs.batter_id = #{playerId}
+	ORDER BY lower(te.dates)
     """)
 @Results({
     @Result(property = "runs", column = "runs"),

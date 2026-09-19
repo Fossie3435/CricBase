@@ -1,0 +1,123 @@
+.matchPage {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+	padding: 20px;
+	max-width: 1400px;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+/* Match header */
+.matchPage > .matchSummary {
+	grid-column: 1 / -1;
+}
+
+/* Innings */
+.detailedInningSummary {
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 20px;
+	box-sizing: border-box;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+	overflow-x: auto;
+}
+
+.detailedInningSummary h1 {
+	margin: 0 0 4px 0;
+	font-size: 1.4rem;
+}
+
+.detailedInningSummary h4 {
+	margin: 0 0 18px 0;
+	font-size: 1.2rem;
+	font-weight: 600;
+}
+
+/* Scorecard tables */
+.battingInningStats,
+.bowlingInningStats {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 15px;
+	font-size: 0.95rem;
+}
+
+.battingInningStats tr:first-child,
+.bowlingInningStats tr:first-child {
+	border-bottom: 2px solid #ddd;
+	font-weight: 600;
+	color: #555;
+}
+
+.battingInningStats td,
+.bowlingInningStats td {
+	padding: 8px 6px;
+	border-bottom: 1px solid #eee;
+}
+
+.battingInningStats td:not(:first-child),
+.bowlingInningStats td:not(:first-child) {
+	text-align: right;
+}
+
+.battingInningStats td:first-child,
+.bowlingInningStats td:first-child {
+	text-align: left;
+	font-weight: 500;
+}
+
+.battingInningStats tr:last-child td {
+	border-bottom: none;
+}
+
+/* Extras */
+.battingInningStats tr:last-child {
+	background-color: #f7f7f7;
+}
+
+.battingInningStats tr:last-child td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+/* Bowling scorecard */
+.bowlingInningStats {
+	margin-top: 25px;
+}
+
+.bowlingInningStats tr:last-child td {
+	border-bottom: none;
+}
+
+/* Teams */
+.teams {
+	grid-column: 1 / -1;
+
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 20px;
+}
+
+.TeamSummary {
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 20px;
+	box-sizing: border-box;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.TeamSummary h3 {
+	margin: 0 0 15px 0;
+	font-size: 1.3rem;
+	border-bottom: 2px solid #eee;
+	padding-bottom: 10px;
+}
+
+.TeamSummary h4 {
+	margin: 8px 0;
+	font-size: 1rem;
+	font-weight: 500;
+}

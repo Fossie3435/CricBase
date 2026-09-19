@@ -20,8 +20,56 @@
 	padding-right: 4px;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	background-color: #E0E0E0;
+	background-color: #F5F5F5;
+    text-decoration: none;    
+	color: inherit;
 }
+.matchSummary:hover {
+    background-color: #E8E8E8;
+    cursor: pointer;
+}
+.matchSummary h3 {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+
+}
+
+.matchSummary h3, .matchSummary h5 {
+	margin: 2px;
+}
+
+.matchInfoBar {
+	grid-template-columns: 1fr 1fr;
+	display: grid;
+	padding: 0px;
+}
+
+.matchNumber {
+	padding: 0px;
+}
+
+.matchDate {
+	text-align: right;
+	padding: 0px;
+}
+
+.winningScore, .losingScore {
+	font-weight: bold;
+    font-size: 1.2em;
+    padding: 2px 6px;
+    border-radius: 4px;
+	text-align: right;
+}
+
+.losingScore {
+	color: DimGray;
+}
+
+.matchResult {
+	text-align: right;
+}
+
 .statLeadersBlock {
 	background-color: violet;
 	display: grid;
@@ -41,5 +89,5 @@
 	padding-top: 2px;
 	padding-bottom: 2px;
 	align-items: start;
-	background-color: #E0E0E0;
+	background-color: #F5F5F5;
 }

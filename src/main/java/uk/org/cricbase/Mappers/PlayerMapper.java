@@ -21,7 +21,6 @@ import uk.org.cricbase.Models.Player;
 
 /**
  *
- * @author Benjamin
  */
 @Mapper
 public interface PlayerMapper {

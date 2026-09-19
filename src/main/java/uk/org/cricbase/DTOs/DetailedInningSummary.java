@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class DetailedInningSummary {
     private long id;
+	private String battingTeam;
+	private String bowlingTeam;
     private int total;
     private int wickets;
     private int runs;
@@ -125,10 +127,20 @@ public class DetailedInningSummary {
     public void setFallOfWickets(List<FallOfWicketSummary> fallOfWickets) {
         this.fallOfWickets = fallOfWickets;
     }
-    
-    
-    
-    
-    
-    
+
+	public String getBattingTeam() {
+		return battingTeam;
+	}
+
+	public void setBattingTeam(String battingTeam) {
+		this.battingTeam = battingTeam;
+	}
+
+	public String getBowlingTeam() {
+		return bowlingTeam;
+	}
+
+	public void setBowlingTeam(String bowlingTeam) {
+		this.bowlingTeam = bowlingTeam;
+	}
 }
