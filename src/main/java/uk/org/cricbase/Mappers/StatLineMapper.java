@@ -10,7 +10,9 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
+import uk.org.cricbase.DTOs.BattingLeaderboardEntry;
 import uk.org.cricbase.DTOs.BattingStatsSummary;
+import uk.org.cricbase.DTOs.BowlingLeaderboardEntry;
 import uk.org.cricbase.DTOs.BowlingStatsSummary;
 import uk.org.cricbase.DTOs.StatLeaderboardEntry;
 import uk.org.cricbase.Models.BattingStatLine;
@@ -133,7 +135,7 @@ public interface StatLineMapper {
     WHERE bs.batter_id = #{playerId}
 	ORDER BY lower(te.dates)
     """)
-@Results({
+@Results( id = "battingStatsSummary", value = {
     @Result(property = "runs", column = "runs"),
     @Result(property = "ballsFaced", column = "balls_faced"),
     @Result(property = "matches", column = "matches"),
@@ -215,4 +217,63 @@ public interface StatLineMapper {
 	""")
     List<StatLeaderboardEntry> getLowestEconomyRatesByTournamentEditionId(@Param("tId")long editionId,@Param("entries") int entries);
 
+	@ResultMap("battingLeaderboardEntry")
+	@Select("""
+		SELECT
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+		    bs.runs,
+        	bs.balls_faced,
+        	bs.matches,
+        	bs.innings,
+        	bs.fours,
+        	bs.sixes,
+        	bs.dismissals,
+
+        	te.id AS tournament_id,
+        	te.name AS tournament_name,
+        	lower(te.dates) AS tournament_start,
+        	upper(te.dates) AS tournament_end,
+        	te.edition AS tournament_edition,
+			te.season AS tournament_season
+
+    	FROM batting_stats bs
+    	JOIN tournament_editions te
+        ON bs.tournament_edition_id = te.id
+		JOIN players p ON p.id = bs.batter_id
+    	WHERE bs.tournament_edition_id = #{tId} AND bs.balls_faced > 36
+	""")
+    List<BattingLeaderboardEntry> getQualifiedBattingStatsByTournamentEditionId(@Param("tId") long editionId);
+
+	@ResultMap("bowlingLeaderboardEntry")
+	@Select("""
+		SELECT
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+	        bs.tournament_edition_id,
+	        bs.matches,
+    	    bs.innings,
+        	bs.balls_bowled,
+        	bs.runs_conceded,
+        	bs.wickets,
+        	bs.maidens,
+        	bs.fours_conceded,
+			bs.sixes_conceded,
+        	bs.wides,
+        	bs.no_balls,
+        	te.id AS te_id,
+        	te.name AS te_name,
+        	lower(te.dates) AS te_start,
+        	upper(te.dates) AS te_end,
+        	te.edition AS te_edition,
+			te.season AS te_season
+    	FROM bowling_stats bs
+    	JOIN tournament_editions te
+        ON bs.tournament_edition_id = te.id
+		JOIN players p ON p.id = bs.bowler_id
+		WHERE bs.tournament_edition_id = #{tId} AND bs.balls_bowled > 50
+	""")
+	List<BowlingLeaderboardEntry> getQualifiedBowlingStatsByTournamentEditionId(@Param("tId") long editionId);
 }

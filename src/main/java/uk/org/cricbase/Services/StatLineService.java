@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import uk.org.cricbase.DTOs.BattingLeaderboardEntry;
 import uk.org.cricbase.DTOs.BattingPerformanceSummary;
 import uk.org.cricbase.DTOs.BattingStatsSummary;
+import uk.org.cricbase.DTOs.BowlingLeaderboardEntry;
 import uk.org.cricbase.DTOs.BowlingPerformanceSummary;
 import uk.org.cricbase.DTOs.BowlingStatsSummary;
 import uk.org.cricbase.DTOs.CareerSummary;
@@ -114,4 +116,12 @@ public class StatLineService {
 		sb.generateEntryNumbers();
 		return sb;
 	}
+
+    public List<BattingLeaderboardEntry> getQualifiedBattingStatLinesForTournamentEdition(long editionId) {
+		return this.statLineMapper.getQualifiedBattingStatsByTournamentEditionId(editionId);
+    }
+
+    public List<BowlingLeaderboardEntry> getQualifiedBowlingStatLinesForTournamentEdition(long editionId) {
+		return this.statLineMapper.getQualifiedBowlingStatsByTournamentEditionId(editionId);
+    }
 }

@@ -29,6 +29,7 @@ public interface PlayerMapper {
         @Result(property = "id", column = "id", id = true),
         @Result(property = "name", column = "name"),
         @Result(property = "uniqueName", column = "unique_name"),
+		@Result(property = "nickname", column = "nickname"),
         @Result(property = "cricInfoId", column = "cricinfo_id")
     })
     Player findById(String id);

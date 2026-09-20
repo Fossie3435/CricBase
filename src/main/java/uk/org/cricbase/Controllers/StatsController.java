@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import uk.org.cricbase.DTOs.BattingLeaderboardEntry;
+import uk.org.cricbase.DTOs.BowlingLeaderboardEntry;
 import uk.org.cricbase.DTOs.CareerSummary;
 import uk.org.cricbase.DTOs.StatLeaderboard;
 import uk.org.cricbase.Services.StatLineService;
@@ -40,5 +42,15 @@ public class StatsController {
 	@GetMapping("/editions/{editionId}/leaders")
 	public ResponseEntity<List<StatLeaderboard>> getTournamentEditionStatLeaderboards(@PathVariable long editionId) {
 		return ResponseEntity.ok(this.statlineService.getStatLeadersForTournamentEdition(editionId));
+	}
+
+	@GetMapping("/editions/{editionId}/leaderboards/batting")
+	public ResponseEntity<List<BattingLeaderboardEntry>> getTournamentEditionBattingStats(@PathVariable long editionId) {
+		return ResponseEntity.ok(this.statlineService.getQualifiedBattingStatLinesForTournamentEdition(editionId));
+	}
+
+	@GetMapping("/editions/{editionId}/leaderboards/bowling")
+	public ResponseEntity<List<BowlingLeaderboardEntry>> getTournamentEditionBowlingStats(@PathVariable long editionId) {
+		return ResponseEntity.ok(this.statlineService.getQualifiedBowlingStatLinesForTournamentEdition(editionId));
 	}
 }

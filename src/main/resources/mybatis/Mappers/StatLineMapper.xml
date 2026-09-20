@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="uk.org.cricbase.Mappers.StatLineMapper">
+	<resultMap id="bowlingLeaderboardEntry" type="uk.org.cricbase.DTOs.BowlingLeaderboardEntry"> 
+		<association property="player" resultMap="playerResultTest"/> 
+		<association property="statLine" resultMap="bowlingStatsSummary"/> 
+	</resultMap>
+
+	<resultMap id="playerResultTest"
+				type="uk.org.cricbase.Models.Player"> 
+		<result property="id" column="player_id" />
+		<result property="name" column="player_name" />
+		<result property="nickname" column="player_nickname" />
+	</resultMap>
+
+	<resultMap id="battingLeaderboardEntry" type="uk.org.cricbase.DTOs.BattingLeaderboardEntry">
+		<association property="player" resultMap="playerResultTest"/>
+		<association property="statLine" resultMap="battingStatsSummary" />
+
+	</resultMap>
+
+</mapper>

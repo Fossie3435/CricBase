@@ -1,0 +1,60 @@
+.leaderboard {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.leaderboard h1 {
+    margin: 0 0 20px 0;
+    font-size: 2rem;
+}
+
+.leaderboard table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+
+.leaderboard th {
+    padding: 12px 16px;
+    text-align: right;
+    background-color: #f1f1f1;
+    border-bottom: 2px solid #ddd;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.leaderboard th:first-child {
+    text-align: left;
+}
+
+.leaderboard th:hover {
+    background-color: #e5e5e5;
+}
+
+/* Rows */
+
+.leaderboard td {
+    padding: 12px 16px;
+    text-align: right;
+    border-bottom: 1px solid #eee;
+}
+
+.leaderboard td:first-child {
+    text-align: left;
+    font-weight: 500;
+}
+
+.leaderboard tbody tr:hover {
+    background-color: #f8f8f8;
+}
+
+.leaderboard tbody tr:last-child td {
+    border-bottom: none;
+}

@@ -1,8 +1,14 @@
+import { Player } from "./Player";
 import {TournamentEdition } from "./Tournament"
 
 export interface CombinedStats {
 	battingStats: BattingStatline[]
 	bowlingStats: BowlingStatline[]
+}
+
+export interface BattingLeaderboardEntry {
+	player: Player;
+	statLine: BattingStatline;
 }
 
 export interface BattingStatline {
@@ -16,6 +22,11 @@ export interface BattingStatline {
 	dismissals: number;
 }
 
+export interface BowlingLeaderboardEntry {
+	player: Player;
+	statLine: BowlingStatline;
+}
+
 export interface BowlingStatline {
 	tournament: TournamentEdition
 	matches: number;
@@ -25,6 +36,7 @@ export interface BowlingStatline {
 	wickets: number;
 	maidens: number;
 	foursConceded: number;
+	sixesConceded: number;
 	wides: number;
 	noBalls: number;
 }

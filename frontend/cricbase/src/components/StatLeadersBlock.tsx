@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { StatLeaderboard } from "../types/StatLeader";
 import "./TournamentEdition.css";
+import { Link } from "react-router-dom";
 interface StatLeadersBlock {
 	id: string;
 }
@@ -28,12 +29,19 @@ function StatLeadersBlock( {id}: StatLeadersBlock ) {
 	return(
 		<div className="statLeadersBlock">
 			{statLeaders.map((statLeader) => (
-				<div className="statLeaderboard" key={statLeader.name}>
+				<Link 
+					className="statLeaderboard" 
+					key={statLeader.name} 
+					to={`leaderboards/${
+						statLeader.statName === "runs" 
+						|| statLeader.statName === "SR"  
+						? "batting": "bowling"
+					}?sort=${statLeader.statName}&ascending=false`} >
 					<h3>{statLeader.name}</h3>
 					{statLeader.entries.map((entry) => (
 						<h5 key={entry.entry}>{entry.entry}. {entry.player.nickname}: {entry.stat.toFixed(statLeader.decimalPlaces)} {statLeader.statName}</h5>
 					))}
-				</div>
+				</Link>
 			))}
 		</div>
 	)
