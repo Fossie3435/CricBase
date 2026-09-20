@@ -1,5 +1,6 @@
 import { BowlingStatline } from "../types/Statline";
 import "./StatsTable.css";
+import { getShortBowlingPeformanceSummary } from '../utils/bowlingPerformance';
 
 interface BowlingStatProps {
 	bowlingStats: BowlingStatline[]
@@ -20,9 +21,12 @@ function BattingStatsBlock( {bowlingStats} : BowlingStatProps) {
 				<th>Season</th>
 				<th>Matches</th>
 				<th>Innings</th>
+				<th>Economy</th>
+				<th>Average</th>
+				<th>Wickets</th> 
 				<th>Balls</th>
 				<th>Runs</th>
-				<th>Wickets</th>
+				<th>Best</th>
 				<th>Maidens</th>
 				<th>4s</th>
 				<th>Wides</th>
@@ -37,9 +41,12 @@ function BattingStatsBlock( {bowlingStats} : BowlingStatProps) {
 					<td>{stat.tournament.season}</td>
 					<td>{stat.matches}</td>
 					<td>{stat.innings}</td>
+					<td>{stat.economyRate.toFixed(2)}</td>
+					<td>{stat.average.toFixed(2)}</td>
+					<td>{stat.wickets}</td>
 					<td>{stat.ballsBowled}</td>
 					<td>{stat.runsConceded}</td>
-					<td>{stat.wickets}</td>
+					<td>{getShortBowlingPeformanceSummary(stat.best)}</td>
 					<td>{stat.maidens}</td>
 					<td>{stat.foursConceded}</td>
 					<td>{stat.wides}</td>

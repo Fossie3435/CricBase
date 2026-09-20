@@ -90,8 +90,8 @@ public interface StatLineMapper {
 		te.season AS te_season,
 		bp.wicket_count AS best_wickets,
 		bp.runs_conceded AS best_runs,
-		(1.0 * runs_conceded / NULLIF(wickets, 0)) AS average,
-		(5.0 * runs_conceded / NULLIF(balls_bowled, 0)) AS economyRate
+		(1.0 * bs.runs_conceded / NULLIF(bs.wickets, 0)) AS average,
+		(5.0 * bs.runs_conceded / NULLIF(bs.balls_bowled, 0)) AS economyRate
     FROM bowling_stats bs
     JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
@@ -133,6 +133,7 @@ public interface StatLineMapper {
         bs.sixes,
         bs.dismissals,
 		(100.0 * bs.runs / NULLIF(bs.balls_faced, 0)) AS strike_rate,
+		COALESCE(1.0 * bs.runs / NULLIF(bs.dismissals, 0), bs.runs) AS average,
         te.id AS tournament_id,
         te.name AS tournament_name,
         lower(te.dates) AS tournament_start,
