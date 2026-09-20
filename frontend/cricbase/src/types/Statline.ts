@@ -1,3 +1,4 @@
+import { BattingPerformanceSummary, BowlingPerformanceSummary } from "./Match";
 import { Player } from "./Player";
 import {TournamentEdition } from "./Tournament"
 
@@ -20,6 +21,9 @@ export interface BattingStatline {
 	fours: number;
 	sixes: number;
 	dismissals: number;
+	strikeRate: number;
+	average: number;
+	best: BattingPerformanceSummary;
 }
 
 export interface BowlingLeaderboardEntry {
@@ -39,4 +43,7 @@ export interface BowlingStatline {
 	sixesConceded: number;
 	wides: number;
 	noBalls: number;
+	economyRate: number;
+	average: number;
+	best: BowlingPerformanceSummary;
 }

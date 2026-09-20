@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import uk.org.cricbase.DTOs.BowlingPerformanceSummary;
+import uk.org.cricbase.Models.BowlingPerformance;
 
 /**
  *
@@ -74,5 +75,17 @@ public interface BowlingPerformanceMapper {
 	""")
     List<BowlingPerformanceSummary> getBowlingPerformancesByPlayerIdAndTournamentEditionId(@Param("tId") long tournamentEditionId, @Param("pId")
             String playerId);
+
+	@Select("""
+		SELECT 
+			bp.id AS id 
+		FROM bowling_performances bp
+		JOIN innings i ON bp.inning_id = i.id
+		JOIN matches m ON i.match_id = m.id
+		WHERE m.tournament_id = #{tId} AND bp.bowler_id = #{pId}
+		ORDER BY bp.wicket_count DESC, bp.runs_conceded ASC
+		LIMIT 1
+	""")
+    BowlingPerformance getBestBowlingPerformanceByTournamentEditionIdAndPlayerId(@Param("tId") long tournamentEditionId, @Param("pId") String playerId);
         
 }

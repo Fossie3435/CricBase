@@ -3,13 +3,15 @@ import { useSearchParams } from "react-router-dom";
 import { useParams } from "react-router-dom"
 import { BattingLeaderboardEntry } from "../types/Statline";
 import './Leaderboard.css';
+import { getShortBattingPerformanceSummary } from "../utils/battingPerformance";
 
 function BattingLeaderboard() {
 	const { id } = useParams();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const sortColumn = searchParams.get("sort") ?? "runs";
 	const ascending = searchParams.get("ascending") === "true";	
-	const [leaderboard, setLeaderboard] = useState<BattingLeaderboardEntry[] | null>(null);
+	const [leaderboard, setLeaderboard] = useState<BattingLeaderboardEntry[]>([]);
+
 	
 	function sortLeaderboard(column: string) {
 		if(sortColumn === column) {
@@ -66,6 +68,18 @@ function BattingLeaderboard() {
 			case "player":
 				result = a.player.nickname.localeCompare(b.player.nickname);
 				break;
+			case "SR":
+				result = b.statLine.strikeRate - a.statLine.strikeRate;
+				break;
+			case "average":
+				result = b.statLine.average - a.statLine.average;
+				break;
+			case "best":
+				result = b.statLine.best.runs - a.statLine.best.runs;
+				if(!result) {
+					result = Number(a.statLine.best.dismissed) - Number(b.statLine.best.dismissed);
+				}
+				break;
 			default:
 				return 0;
 		}
@@ -85,10 +99,14 @@ function BattingLeaderboard() {
 						<th onClick={() => sortLeaderboard("matches")}>Matches{sortColumn === "matches" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("innings")}>Innings{sortColumn === "innings" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("dismissals")}>Dismissals{sortColumn === "dismissals" && (ascending ? "↑" : "↓")}</th>
+						<th onClick={() => sortLeaderboard("average")}>Average{sortColumn === "average" && (ascending ? "↑" : "↓")}</th>
+						<th onClick={() => sortLeaderboard("SR")}>Strike Rate{sortColumn==="SR" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("runs")}>Runs{sortColumn === "runs" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("balls")}>Balls{sortColumn === "balls" && (ascending ? "↑" : "↓")}</th>
+						<th onClick={() => sortLeaderboard("best")}>Best{sortColumn === "best" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("fours")}>Fours{sortColumn === "fours" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("sixes")}>Sixes{sortColumn === "sixes" && (ascending ? "↑" : "↓")}</th>
+
 					</tr>
 				</thead>
 				<tbody>
@@ -98,8 +116,11 @@ function BattingLeaderboard() {
 							<td>{e.statLine.matches}</td>
 							<td>{e.statLine.innings}</td>
 							<td>{e.statLine.dismissals}</td>
+							<td>{e.statLine.average.toFixed(2)}</td>
+							<td>{e.statLine.strikeRate.toFixed(0)}</td>
 							<td>{e.statLine.runs}</td>
 							<td>{e.statLine.ballsFaced}</td>
+							<td>{getShortBattingPerformanceSummary(e.statLine.best)}</td>
 							<td>{e.statLine.fours}</td>
 							<td>{e.statLine.sixes}</td>
 						</tr>

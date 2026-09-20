@@ -12,6 +12,9 @@ public class BowlingStatsSummary {
 	private int sixesConceded;
 	private int wides;
 	private int noBalls;
+	private BowlingPerformanceSummary best;
+	private float economyRate;
+	private float average;
 
 	public BowlingStatsSummary() {
 	}
@@ -102,5 +105,29 @@ public class BowlingStatsSummary {
 
 	public void setSixesConceded(int sixesConceded) {
 		this.sixesConceded = sixesConceded;
+	}
+
+	public float getEconomyRate() {
+		return economyRate;
+	}
+
+	public void setEconomyRate(float economyRate) {
+		this.economyRate = economyRate;
+	}
+
+	public float getAverage() {
+		return average;
+	}
+
+	public void setAverage(float average) {
+		this.average = average;
+	}
+
+	public BowlingPerformanceSummary getBest() {
+		return best;
+	}
+
+	public void setBest(BowlingPerformanceSummary best) {
+		this.best = best;
 	}
 }

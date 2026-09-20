@@ -16,6 +16,7 @@ public class BowlingStatLine {
 	private int wides;
 	private int foursConceded;
 	private int sixesConceded;
+	private BowlingPerformance best;
 
 	public BowlingStatLine(String playerId, long tournamentEditionId) {
 		this.bowlerId = playerId;
@@ -138,5 +139,13 @@ public class BowlingStatLine {
 
 	public void setBowlerId(String bowlerId) {
 		this.bowlerId = bowlerId;
+	}
+
+	public BowlingPerformance getBest() {
+		return best;
+	}
+
+	public void setBest(BowlingPerformance best) {
+		this.best = best;
 	}
 }

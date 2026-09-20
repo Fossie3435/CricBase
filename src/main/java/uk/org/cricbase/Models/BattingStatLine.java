@@ -13,6 +13,7 @@ public class BattingStatLine {
 	private int dismissals;
 	private int fours;
 	private int sixes;
+	private BattingPerformance best;
 	
 	public BattingStatLine(String playerId, long tournamentId) {
 		this.batterId = playerId;
@@ -108,5 +109,13 @@ public class BattingStatLine {
 
 	public void setTournamentEditionId(long tournamentEditionId) {
 		this.tournamentEditionId = tournamentEditionId;
+	}
+
+	public BattingPerformance getBest() {
+		return best;
+	}
+
+	public void setBest(BattingPerformance best) {
+		this.best = best;
 	}
 }

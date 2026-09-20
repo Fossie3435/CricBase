@@ -75,7 +75,7 @@ export interface BattingPerformanceSummary {
     ballsFaced: number;
     fours: number;
     sixes: number;
-	isDismissed: boolean;
+	dismissed: boolean;
     wicket: WicketSummary;
 }
 

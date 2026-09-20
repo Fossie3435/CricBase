@@ -3,7 +3,6 @@ package uk.org.cricbase.Services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import uk.org.cricbase.DTOs.BattingLeaderboardEntry;
@@ -58,6 +57,7 @@ public class StatLineService {
 				battingStatLine.add(bp);
 			}
 			battingStatLine.setMatches(matches);
+			battingStatLine.setBest(this.battingPerformanceMapper.getBestBattingPerformanceByTournamentEditionIdAndPlayerId(tournamentEditionId, playerId));
 			this.statLineMapper.insertOrUpdateBattingStats(battingStatLine);
 		}
 
@@ -68,6 +68,7 @@ public class StatLineService {
 				bowlingStatLine.add(bp);
 			}
 			bowlingStatLine.setMatches(matches);
+			bowlingStatLine.setBest(this.bowlingPerformanceMapper.getBestBowlingPerformanceByTournamentEditionIdAndPlayerId(tournamentEditionId, playerId));
 			this.statLineMapper.insertOrUpdateBowlingStats(bowlingStatLine);	
 		}
 	}

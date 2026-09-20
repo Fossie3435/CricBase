@@ -9,7 +9,9 @@ public class BattingStatsSummary {
 	private int fours;
 	private int sixes;
 	private int dismissals;
-
+	private float strikeRate;
+	private float average;
+	private BattingPerformanceSummary best;
 	public BattingStatsSummary() {}
 
 	public TournamentEditionSummary getTournament() {
@@ -74,5 +76,29 @@ public class BattingStatsSummary {
 
 	public void setDismissals(int dismissals) {
 		this.dismissals = dismissals;
+	}
+
+	public float getStrikeRate() {
+		return strikeRate;
+	}
+
+	public void setStrikeRate(float strikeRate) {
+		this.strikeRate = strikeRate;
+	}
+
+	public float getAverage() {
+		return average;
+	}
+
+	public void setAverage(float average) {
+		this.average = average;
+	}
+
+	public BattingPerformanceSummary getBest() {
+		return best;
+	}
+
+	public void setBest(BattingPerformanceSummary best) {
+		this.best = best;
 	}
 }

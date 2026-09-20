@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import uk.org.cricbase.DTOs.BattingPerformanceSummary;
+import uk.org.cricbase.Models.BattingPerformance;
 
 /**
  *
@@ -65,6 +66,18 @@ public interface BattingPerformanceMapper {
 		AND m.tournament_id = #{tId}
 	""")
     List<BattingPerformanceSummary> getBattingPerformancesByPlayerIdAndTournamentEditionId(@Param("tId") long tournamentEditionId, @Param("pId") String playerId);
+	
+	@Select("""
+		SELECT 
+			bp.id AS id 
+		FROM batting_performances bp
+		JOIN innings i ON bp.inning_id = i.id
+		JOIN matches m ON i.match_id = m.id
+		WHERE m.tournament_id = #{tId} AND bp.batter_id = #{pId}
+		ORDER BY bp.runs DESC, bp.is_dismissed ASC
+		LIMIT 1
+	""")
+    BattingPerformance getBestBattingPerformanceByTournamentEditionIdAndPlayerId(@Param("tId") long tournamentEditionId, @Param("pId") String playerId);
 
 
     

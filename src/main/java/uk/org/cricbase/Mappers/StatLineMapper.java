@@ -32,9 +32,10 @@ public interface StatLineMapper {
 
 	@Insert("""
 		INSERT INTO bowling_stats
-			(bowler_id, tournament_edition_id, matches, innings, balls_bowled, runs_conceded, wickets, maidens, fours_conceded, sixes_conceded, wides, no_balls)
+			(bowler_id, tournament_edition_id, matches, innings, balls_bowled, runs_conceded, wickets, maidens, fours_conceded, sixes_conceded, wides, no_balls, best)
+
 		VALUES
-			(#{bowlerId}, #{tournamentEditionId}, #{matches}, #{innings}, #{ballsBowled}, #{runsConceded}, #{wickets}, #{maidens}, #{foursConceded}, #{sixesConceded}, #{wides}, #{noBalls})
+			(#{bowlerId}, #{tournamentEditionId}, #{matches}, #{innings}, #{ballsBowled}, #{runsConceded}, #{wickets}, #{maidens}, #{foursConceded}, #{sixesConceded}, #{wides}, #{noBalls}, #{best.id})
 		ON CONFLICT (bowler_id, tournament_edition_id) DO UPDATE SET
 			matches = EXCLUDED.matches,
 			innings = EXCLUDED.innings,
@@ -45,15 +46,16 @@ public interface StatLineMapper {
 			fours_conceded = EXCLUDED.fours_conceded,
 			sixes_conceded = EXCLUDED.sixes_conceded,
 			wides = EXCLUDED.wides,
-			no_balls = EXCLUDED.no_balls
+			no_balls = EXCLUDED.no_balls,
+			best = EXCLUDED.best
 	""")
     void insertOrUpdateBowlingStats(BowlingStatLine bowlingStatLine);
 	
 	@Insert("""
 		INSERT INTO batting_stats
-			(batter_id, tournament_edition_id, runs, balls_faced, matches, innings, fours, sixes, dismissals)
+			(batter_id, tournament_edition_id, runs, balls_faced, matches, innings, fours, sixes, dismissals, best)
 		VALUES
-			(#{batterId}, #{tournamentEditionId}, #{runsScored}, #{ballsFaced}, #{matches}, #{innings}, #{fours}, #{sixes}, #{dismissals})
+			(#{batterId}, #{tournamentEditionId}, #{runsScored}, #{ballsFaced}, #{matches}, #{innings}, #{fours}, #{sixes}, #{dismissals}, #{best.id})
 		ON CONFLICT (batter_id, tournament_edition_id) DO UPDATE SET
 			matches = EXCLUDED.matches,
 			innings = EXCLUDED.innings,
@@ -61,7 +63,8 @@ public interface StatLineMapper {
 			balls_faced = EXCLUDED.balls_faced,
 			fours = EXCLUDED.fours,
 			sixes = EXCLUDED.sixes,
-			dismissals = EXCLUDED.dismissals
+			dismissals = EXCLUDED.dismissals,
+			best = EXCLUDED.best
 	""")
     void insertOrUpdateBattingStats(BattingStatLine battingStatLine);
 	
@@ -84,10 +87,15 @@ public interface StatLineMapper {
         lower(te.dates) AS te_start,
         upper(te.dates) AS te_end,
         te.edition AS te_edition,
-		te.season AS te_season
+		te.season AS te_season,
+		bp.wicket_count AS best_wickets,
+		bp.runs_conceded AS best_runs,
+		(1.0 * runs_conceded / NULLIF(wickets, 0)) AS average,
+		(5.0 * runs_conceded / NULLIF(balls_bowled, 0)) AS economyRate
     FROM bowling_stats bs
     JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
+	JOIN bowling_performances bp ON bs.best = bp.id
     WHERE bs.bowler_id = #{playerId}
 	ORDER BY lower(te.dates)
     """)
@@ -102,13 +110,16 @@ public interface StatLineMapper {
 	@Result(property = "sixesConceded", column = "sixes_conceded"),
     @Result(property = "wides", column = "wides"),
     @Result(property = "noBalls", column = "no_balls"),
-
+	@Result(property = "average", column = "average"),
+	@Result(property = "economyRate", column = "economyRate"),
     @Result(property = "tournament.id", column = "te_id"),
     @Result(property = "tournament.name", column = "te_name"),
     @Result(property = "tournament.start", column = "te_start"),
     @Result(property = "tournament.end", column = "te_end"),
     @Result(property = "tournament.edition", column = "te_edition"),
-	@Result(property = "tournament.season", column = "te_season")
+	@Result(property = "tournament.season", column = "te_season"),
+	@Result(property = "best.wicketsTaken", column = "best_wickets"),
+	@Result(property = "best.runsConceded", column = "best_runs"),
 })
     List<BowlingStatsSummary> getBowlingStatsSummary(@Param("playerId") String playerId);
 
@@ -121,17 +132,20 @@ public interface StatLineMapper {
         bs.fours,
         bs.sixes,
         bs.dismissals,
-
+		(100.0 * bs.runs / NULLIF(bs.balls_faced, 0)) AS strike_rate,
         te.id AS tournament_id,
         te.name AS tournament_name,
         lower(te.dates) AS tournament_start,
         upper(te.dates) AS tournament_end,
         te.edition AS tournament_edition,
-		te.season AS tournament_season
+		te.season AS tournament_season,
+		bp.runs AS best_runs,
+		bp.is_dismissed AS best_is_dismissed
 
     FROM batting_stats bs
     JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
+	JOIN batting_performances bp ON bp.id = bs.best
     WHERE bs.batter_id = #{playerId}
 	ORDER BY lower(te.dates)
     """)
@@ -143,13 +157,16 @@ public interface StatLineMapper {
     @Result(property = "fours", column = "fours"),
     @Result(property = "sixes", column = "sixes"),
     @Result(property = "dismissals", column = "dismissals"),
-
+	@Result(property = "strikeRate", column = "strike_rate"),
+	@Result(property = "average", column = "average"),
     @Result(property = "tournament.id", column = "tournament_id"),
     @Result(property = "tournament.name", column = "tournament_name"),
     @Result(property = "tournament.start", column = "tournament_start"),
     @Result(property = "tournament.end", column = "tournament_end"),
     @Result(property = "tournament.edition", column = "tournament_edition"),
-	@Result(property = "tournament.season", column = "tournament_season")
+	@Result(property = "tournament.season", column = "tournament_season"),
+	@Result(property = "best.runs", column = "best_runs"),
+	@Result(property = "best.isDismissed", column = "best_is_dismissed"),
 })
     List<BattingStatsSummary> getBattingStatsSummary(String playerId);
 
@@ -230,7 +247,10 @@ public interface StatLineMapper {
         	bs.fours,
         	bs.sixes,
         	bs.dismissals,
-
+			(100.0 * bs.runs / NULLIF(bs.balls_faced, 0)) AS strike_rate,
+			(1.0 * bs.runs / NULLIF(bs.dismissals,0)) AS average,
+			bp.runs AS best_runs,
+			bp.is_dismissed AS best_is_dismissed,
         	te.id AS tournament_id,
         	te.name AS tournament_name,
         	lower(te.dates) AS tournament_start,
@@ -242,6 +262,7 @@ public interface StatLineMapper {
     	JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
 		JOIN players p ON p.id = bs.batter_id
+		JOIN batting_performances bp ON bs.best = bp.id
     	WHERE bs.tournament_edition_id = #{tId} AND bs.balls_faced > 36
 	""")
     List<BattingLeaderboardEntry> getQualifiedBattingStatsByTournamentEditionId(@Param("tId") long editionId);
@@ -268,10 +289,15 @@ public interface StatLineMapper {
         	lower(te.dates) AS te_start,
         	upper(te.dates) AS te_end,
         	te.edition AS te_edition,
-			te.season AS te_season
+			te.season AS te_season,
+			bp.wicket_count AS best_wickets,
+			bp.runs_conceded AS best_runs,
+			(1.0 * bs.runs_conceded / NULLIF(bs.wickets, 0)) AS average,
+			(5.0 * bs.runs_conceded / NULLIF(bs.balls_bowled, 0)) AS economyRate
     	FROM bowling_stats bs
     	JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
+		JOIN bowling_performances bp ON bs.best = bp.id
 		JOIN players p ON p.id = bs.bowler_id
 		WHERE bs.tournament_edition_id = #{tId} AND bs.balls_bowled > 50
 	""")
