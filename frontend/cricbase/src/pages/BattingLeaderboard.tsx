@@ -56,8 +56,8 @@ function BattingLeaderboard() {
 			case "innings":
 				result = (b.statLine.innings - a.statLine.innings);
 				break;
-		 	case "dismissals":
-				result = (b.statLine.dismissals - a.statLine.dismissals);
+		 	case "notouts":
+				result = (a.statLine.dismissals - b.statLine.dismissals);
 				break;
 			case "fours":
 				result = (b.statLine.fours - a.statLine.fours);
@@ -68,7 +68,7 @@ function BattingLeaderboard() {
 			case "player":
 				result = a.player.nickname.localeCompare(b.player.nickname);
 				break;
-			case "SR":
+			case "strikeRate":
 				result = b.statLine.strikeRate - a.statLine.strikeRate;
 				break;
 			case "average":
@@ -98,9 +98,9 @@ function BattingLeaderboard() {
 						<th onClick={() => sortLeaderboard("player")}>Player{sortColumn === "player" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("matches")}>Matches{sortColumn === "matches" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("innings")}>Innings{sortColumn === "innings" && (ascending ? "↑" : "↓")}</th>
-						<th onClick={() => sortLeaderboard("dismissals")}>Dismissals{sortColumn === "dismissals" && (ascending ? "↑" : "↓")}</th>
+						<th onClick={() => sortLeaderboard("notouts")}>Not Outs{sortColumn === "notouts" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("average")}>Average{sortColumn === "average" && (ascending ? "↑" : "↓")}</th>
-						<th onClick={() => sortLeaderboard("SR")}>Strike Rate{sortColumn==="SR" && (ascending ? "↑" : "↓")}</th>
+						<th onClick={() => sortLeaderboard("strikeRate")}>Strike Rate{sortColumn==="strikeRate" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("runs")}>Runs{sortColumn === "runs" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("balls")}>Balls{sortColumn === "balls" && (ascending ? "↑" : "↓")}</th>
 						<th onClick={() => sortLeaderboard("best")}>Best{sortColumn === "best" && (ascending ? "↑" : "↓")}</th>
@@ -115,7 +115,7 @@ function BattingLeaderboard() {
 							<td>{e.player.nickname}</td>
 							<td>{e.statLine.matches}</td>
 							<td>{e.statLine.innings}</td>
-							<td>{e.statLine.dismissals}</td>
+							<td>{e.statLine.innings - e.statLine.dismissals}</td>
 							<td>{e.statLine.average.toFixed(2)}</td>
 							<td>{e.statLine.strikeRate.toFixed(0)}</td>
 							<td>{e.statLine.runs}</td>

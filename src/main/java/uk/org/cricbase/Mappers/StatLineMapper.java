@@ -214,7 +214,7 @@ public interface StatLineMapper {
 		FROM batting_stats bs
 		JOIN players p ON bs.batter_id = p.id
 		WHERE bs.tournament_edition_id = #{tId}
-		AND bs.balls_faced > 50
+		AND bs.balls_faced > 36 
 		ORDER BY stat DESC
 		LIMIT #{entries}
 	""")
@@ -249,7 +249,7 @@ public interface StatLineMapper {
         	bs.sixes,
         	bs.dismissals,
 			(100.0 * bs.runs / NULLIF(bs.balls_faced, 0)) AS strike_rate,
-			(1.0 * bs.runs / NULLIF(bs.dismissals,0)) AS average,
+			COALESCE(1.0 * bs.runs / NULLIF(bs.dismissals,0), bs.runs) AS average,
 			bp.runs AS best_runs,
 			bp.is_dismissed AS best_is_dismissed,
         	te.id AS tournament_id,
@@ -300,7 +300,39 @@ public interface StatLineMapper {
         ON bs.tournament_edition_id = te.id
 		JOIN bowling_performances bp ON bs.best = bp.id
 		JOIN players p ON p.id = bs.bowler_id
-		WHERE bs.tournament_edition_id = #{tId} AND bs.balls_bowled > 50
+		WHERE bs.tournament_edition_id = #{tId} AND bs.balls_bowled > 80
 	""")
 	List<BowlingLeaderboardEntry> getQualifiedBowlingStatsByTournamentEditionId(@Param("tId") long editionId);
+	
+	@ResultMap("statEntries")
+	@Select("""
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			COALESCE(1.0 * bs.runs / NULLIF(bs.dismissals, 0), bs.runs) AS stat
+		FROM batting_stats bs
+		JOIN players p ON bs.batter_id = p.id
+		WHERE bs.tournament_edition_id = #{tId}
+		AND bs.balls_faced > 36
+		ORDER BY stat DESC
+		LIMIT #{entries}
+	""")
+    List<StatLeaderboardEntry> getHighestBattingAverageByTournamentEditionId(@Param("tId") long editionId,@Param("entries") int entries);
+
+	@ResultMap("statEntries")
+	@Select("""
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			COALESCE(1.0 * bs.runs_conceded / NULLIF(bs.wickets, 0), bs.runs_conceded) AS stat
+		FROM bowling_stats bs
+		JOIN players p ON bs.bowler_id = p.id
+		WHERE bs.tournament_edition_id = #{tId}
+		AND bs.balls_bowled > 80
+		ORDER BY stat ASC
+		LIMIT #{entries}
+	""")
+    List<StatLeaderboardEntry> getLowestBowlingAverageForTournamentEdition(@Param("tId") long editionId,@Param("entries") int entries);
 }

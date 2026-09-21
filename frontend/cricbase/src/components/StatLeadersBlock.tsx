@@ -32,14 +32,10 @@ function StatLeadersBlock( {id}: StatLeadersBlock ) {
 				<Link 
 					className="statLeaderboard" 
 					key={statLeader.name} 
-					to={`leaderboards/${
-						statLeader.statName === "runs" 
-						|| statLeader.statName === "SR"  
-						? "batting": "bowling"
-					}?sort=${statLeader.statName}&ascending=false`} >
+					to={`leaderboards/${statLeader.statType}?sort=${statLeader.statName}&ascending=false`} >
 					<h3>{statLeader.name}</h3>
 					{statLeader.entries.map((entry) => (
-						<h5 key={entry.entry}>{entry.entry}. {entry.player.nickname}: {entry.stat.toFixed(statLeader.decimalPlaces)} {statLeader.statName}</h5>
+						<h5 key={entry.entry}>{entry.entry}. {entry.player.nickname}: {entry.stat.toFixed(statLeader.decimalPlaces)} {statLeader.statUnit}</h5>
 					))}
 				</Link>
 			))}

@@ -85,34 +85,51 @@ public class StatLineService {
 		leaderboards.add(this.getHighestWicketTakersForTournamentEdition(editionId, 5));
 		leaderboards.add(this.getHighestStrikeRatesForTournamentEdition(editionId, 5));
 		leaderboards.add(this.getLowestEconomyRatesForTournamentEdition(editionId, 5));
-
+		leaderboards.add(this.getHighestBattingAverageForTournamentEdition(editionId, 5));
+		leaderboards.add(this.getLowestBowlingAverageForTournamentEdition(editionId, 5));
 		return leaderboards;
 	}
 
 	public StatLeaderboard getHighestRunScorersForTournamentEdition(long editionId, int entries) {
-		StatLeaderboard sb = new StatLeaderboard("Highest Run Scorers", "runs");
+		StatLeaderboard sb = new StatLeaderboard("Highest Run Scorers", "runs", "runs", "batting");
 		sb.setEntries(this.statLineMapper.getHighestRunScorersByTournamentEditionId(editionId, entries));
 		sb.setDecimalPlaces(0);
 		sb.generateEntryNumbers();
 		return sb;
 	}	
 	public StatLeaderboard getHighestWicketTakersForTournamentEdition(long editionId, int entries) {
-		StatLeaderboard sb = new StatLeaderboard("Highest Wicket Takers", "wickets");
+		StatLeaderboard sb = new StatLeaderboard("Highest Wicket Takers", "wickets", "wickets", "bowling");
 		sb.setEntries(this.statLineMapper.getHighestWicketTakersByTournamentEditionId(editionId, entries));
 		sb.setDecimalPlaces(0);
 		sb.generateEntryNumbers();
 		return sb;
 	}
 	public StatLeaderboard getHighestStrikeRatesForTournamentEdition(long editionId, int entries) {
-		StatLeaderboard sb = new StatLeaderboard("Highest Strike Rates", "SR");
+		StatLeaderboard sb = new StatLeaderboard("Highest Strike Rates", "strikeRate", "SR", "batting");
 		sb.setEntries(this.statLineMapper.getHighestStrikeRatesByTournamentEditionId(editionId, entries));
 		sb.setDecimalPlaces(0);
 		sb.generateEntryNumbers();
 		return sb;
 	}	
 	public StatLeaderboard getLowestEconomyRatesForTournamentEdition(long editionId, int entries) {
-		StatLeaderboard sb = new StatLeaderboard("Lowest Economy Rates", "ER");
+		StatLeaderboard sb = new StatLeaderboard("Lowest Economy Rates", "economyRate", "ER", "bowling");
 		sb.setEntries(this.statLineMapper.getLowestEconomyRatesByTournamentEditionId(editionId, entries));
+		sb.setDecimalPlaces(2);
+		sb.generateEntryNumbers();
+		return sb;
+	}
+
+	public StatLeaderboard getHighestBattingAverageForTournamentEdition(long editionId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Highest Batting Averages", "average", "", "batting");
+		sb.setEntries(this.statLineMapper.getHighestBattingAverageByTournamentEditionId(editionId, entries));
+		sb.setDecimalPlaces(2);
+		sb.generateEntryNumbers();
+		return sb;
+	}
+
+	public StatLeaderboard getLowestBowlingAverageForTournamentEdition(long editionId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Lowest Bowling Average", "average", "", "bowling");
+		sb.setEntries(this.statLineMapper.getLowestBowlingAverageForTournamentEdition(editionId, entries));
 		sb.setDecimalPlaces(2);
 		sb.generateEntryNumbers();
 		return sb;
