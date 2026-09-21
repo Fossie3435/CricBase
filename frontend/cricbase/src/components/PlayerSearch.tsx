@@ -2,7 +2,11 @@ import {useState} from 'react'
 import PlayerList from './PlayerList'
 import type { Player } from '../types/Player'
 
-function PlayerSearch() {
+interface PlayerSearchProps {
+	handlePlayerClick: (player: Player) => void;
+}
+
+function PlayerSearch( {handlePlayerClick }: PlayerSearchProps ) {
 	const [query, setQuery] = useState('')
 	const [players, setPlayers] = useState<Player[]>([])
 
@@ -33,6 +37,7 @@ function PlayerSearch() {
                 <PlayerList
                     key={player.id}
                     player={player}
+					onClick={handlePlayerClick}
                 />
             ))}
 		</div>

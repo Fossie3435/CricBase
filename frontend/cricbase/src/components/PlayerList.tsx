@@ -1,20 +1,14 @@
 import type {Player} from '../types/Player'
-import { useNavigate } from "react-router-dom";
 
 interface PlayerListProps {
-	player: Player
+	player: Player;
+	onClick: (player: Player) => void;
 }
 
-function PlayerList({player}: PlayerListProps) {
-	const navigate = useNavigate();
-
-	function handleClick() {
-        navigate(`/players/${player.id}`);
-    }
-
+function PlayerList({player, onClick}: PlayerListProps) {
 	return (
 		<div>
-			<button onClick={handleClick} >
+			<button onClick={() => onClick(player)} >
 				<h3>{player.nickname}</h3> 
 				<h4><i>{player.name}</i></h4>
 			</button>

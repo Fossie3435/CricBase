@@ -20,7 +20,7 @@ public interface RosterMapper {
 		INSERT INTO players_rosters
 		(player_id, active, roster_id)
 		VALUES
-		(#{player.id}, daterange(#{start}::date, #{end}::date, '[)'), #{roster.id})
+		(#{player.id}, daterange(#{start}::date, #{end}::date, '[]'), #{roster.id})
 	""")
 	void insertPlayerOnRoster(PlayerRosterContainer p);
 
@@ -44,7 +44,7 @@ public interface RosterMapper {
 			p.name AS player_name
 		FROM players_rosters pr
 		JOIN players p ON pr.player_id = p.id
-		JOIN rosters r ON pr.roster_id = r.id
+		RIGHT JOIN rosters r ON pr.roster_id = r.id
 		WHERE r.id = #{rId}
 	""")
 	RosterSummary findRosterSummaryById(@Param("rId") long rosterId);
@@ -61,7 +61,7 @@ public interface RosterMapper {
 			p.name AS player_name
 		FROM players_rosters pr
 		JOIN players p ON pr.player_id = p.id
-		JOIN rosters r ON pr.roster_id = r.id
+		RIGHT JOIN rosters r ON pr.roster_id = r.id
 	""")
     List<RosterSummary> findAllRosterSummaries();
 }

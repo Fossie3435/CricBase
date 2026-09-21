@@ -1,6 +1,6 @@
 import NavBar from './components/NavBar'
-import PlayerSearchPage from './components/PlayerSearchPage' 
 import PlayerPage from './pages/PlayerPage'
+import PlayerSearchPage from './pages/PlayerSearchPage'
 import HomePage from './pages/HomePage'
 import { BrowserRouter,  Routes, Route } from 'react-router-dom'
 import RosterSearchPage from './pages/RosterSearchPage'
@@ -12,7 +12,7 @@ import BattingLeaderboard from './pages/BattingLeaderboard'
 import BowlingLeaderboard from './pages/BowlingLeaderboard'
 
 function App() {
-  return (
+  	return (
 		<>
 		<BrowserRouter>
 		<NavBar />

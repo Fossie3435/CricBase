@@ -22,10 +22,11 @@ public record RosterCreateRequest(
 		}
 		roster.setTournament(new TournamentEdition(tournamentEditionId().longValue()));
 		roster.setName(name);
-		for(PlayerRosterCreateRequest p : players()) {
-			PlayerRosterContainer player = p.getPlayerRosterContainer(roster);
-			roster.addPlayer(player);
-
+		if(players != null) {
+			for(PlayerRosterCreateRequest p : players()) {
+				PlayerRosterContainer player = p.getPlayerRosterContainer(roster);
+				roster.addPlayer(player);
+			}
 		}
 		return roster;
 	}

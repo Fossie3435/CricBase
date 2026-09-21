@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.websocket.server.PathParam;
 import uk.org.cricbase.DTOs.PlayerRosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterSummary;
@@ -23,11 +22,6 @@ public class RosterController {
 	@Autowired
 	private RosterService rosterService;
 	
-	@GetMapping("")
-	public void test() {
-	System.out.println("test");
-	}
-
 	@PostMapping("")
 	public ResponseEntity<Void> addRoster(@RequestBody RosterCreateRequest request) {
 		this.rosterService.addNewRoster(request);
@@ -35,7 +29,7 @@ public class RosterController {
 	}
 
 	@PostMapping("/{rosterId}/players")
-	public ResponseEntity<Void> addPlayers(@PathParam("rosterId") long rosterId, @RequestBody List<PlayerRosterCreateRequest> request) {
+	public ResponseEntity<Void> addPlayers(@PathVariable("rosterId") long rosterId, @RequestBody List<PlayerRosterCreateRequest> request) {
 		if(request.size() == 0) {
 			return ResponseEntity.badRequest().build();
 		}

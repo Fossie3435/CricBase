@@ -1,13 +1,9 @@
 package uk.org.cricbase.Services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import uk.org.cricbase.DTOs.PlayerRosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterCreateRequest;
@@ -50,21 +46,22 @@ public class RosterService {
 
     public void addPlayersToRoster(long rosterId, List<PlayerRosterCreateRequest> request) {
 		Roster roster = new Roster();
-
+		roster.setId(rosterId);
 		TournamentEdition tournamentEdition = this.tournamentService.findTournamentEditionById(rosterId).get();
-		for(PlayerRosterCreateRequest p : request) {
-			
-			try {
-				PlayerRosterContainer prc = p.getPlayerRosterContainer(roster);
-				if(prc.getStart() == null) {
-					prc.setStart(tournamentEdition.getStart());
+		if(tournamentEdition != null) {
+			for(PlayerRosterCreateRequest p : request) {
+				try {
+					PlayerRosterContainer prc = p.getPlayerRosterContainer(roster);
+					if(prc.getStart() == null) {
+						prc.setStart(tournamentEdition.getStart());
+					}
+					if(prc.getEnd() == null) {
+						prc.setEnd(tournamentEdition.getEnd());
+					}
+					this.rosterMapper.insertPlayerOnRoster(prc);
+				} catch (DataAccessException e) {
+					System.out.println("Player addition failed");
 				}
-				if(prc.getEnd() == null) {
-					prc.setEnd(tournamentEdition.getEnd());
-				}
-				this.rosterMapper.insertPlayerOnRoster(prc);
-			} catch (DataAccessException e) {
-				// log failed insert players	
 			}
 		}
 	}
