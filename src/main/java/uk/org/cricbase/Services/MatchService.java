@@ -26,7 +26,6 @@ import uk.org.cricbase.Models.Inning;
 import uk.org.cricbase.Models.Match;
 import uk.org.cricbase.Models.Over;
 import uk.org.cricbase.Models.Team;
-import uk.org.cricbase.Models.TournamentEdition;
 import uk.org.cricbase.Models.WicketFielder;
 
 /**
@@ -38,21 +37,33 @@ public class MatchService {
     private final MatchMapper matchMapper;
     private final PlayerService playerService;
     private final GroundService groundService;
+	private final RosterService rosterService;
     
     
     
-    public MatchService(MatchMapper matchMapper, PlayerService playerService, GroundService groundService) {
+    public MatchService(
+			MatchMapper matchMapper, 
+			PlayerService playerService, 
+			GroundService groundService, 
+			RosterService rosterService
+	) {
         this.matchMapper = matchMapper;
         this.playerService = playerService;
         this.groundService = groundService;
+		this.rosterService = rosterService;
     }
     
-    public Match openNewMatchFromJson(File newMatch) {
+    public Match openNewMatchFromJson(File newMatch, TournamentService tournamentService) {
         Match match = new Match();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             match = objectMapper.readValue(newMatch, Match.class);
-            match.init(playerService, groundService);
+            match.init(playerService);
+			match.initGround(groundService);
+			if(tournamentService != null) {
+				match.initTournamentEdition(tournamentService);
+				match.initRosters(rosterService);
+			}
         } catch (IOException e) {
 			System.out.println(newMatch.toString());
             e.printStackTrace();
@@ -61,23 +72,24 @@ public class MatchService {
         return match;
     }
     
-    public Stream<Match> openMatchFolderFromJson(String directory) {
+    public Stream<Match> openMatchFolderFromJson(String directory, TournamentService tournamentService) {
         return Stream.of(new File(directory)
                 .listFiles())
-                .map(this::openNewMatchFromJson);
+                .map(match -> openNewMatchFromJson(match, tournamentService));
     }
     
     
     
-    public void addNewMatch(File newMatch, List<TournamentEdition> editions) {
-        Match match = openNewMatchFromJson(newMatch);
-
-		for(TournamentEdition edition : editions) {
-			if(match.getDate().isAfter(edition.getStart()) && match.getDate().isBefore(edition.getEnd())) {
-				match.setTournament(edition);
-				break;
-			}
+    public void addNewMatch(File newMatch, TournamentService tournamentService) {
+        Match match = openNewMatchFromJson(newMatch, tournamentService);
+		if(match.getTournament() == null
+			|| match.getTeamOne().getRoster() == null
+			|| match.getTeamTwo().getRoster() == null
+		) {
+			System.out.println("Import failed!");
+			return;
 		}
+
         matchMapper.insertMatch(match);
 
         Team teamOne = match.getTeamOne();
@@ -122,10 +134,10 @@ public class MatchService {
             }
         }
     }
-    public void addNewMatchFolder(String directory, List<TournamentEdition> editions) {
+    public void addNewMatchFolder(String directory, TournamentService tournamentService) {
         Stream.of(new File(directory).listFiles())
 			.filter(path -> path.getPath().toString().endsWith(".json"))
-			.forEach(file -> addNewMatch(file, editions));
+			.forEach(file -> addNewMatch(file, tournamentService));
     }
     
     public Optional<DetailedMatchSummary> getMatchById(Long id) {
@@ -161,7 +173,7 @@ public class MatchService {
     }
     
     public void updateMatchGrounds(String directory) {
-        openMatchFolderFromJson(directory).forEach(this::updateMatchGround);
+        openMatchFolderFromJson(directory, null).forEach(this::updateMatchGround);
     }
     
     public void updatePlayerOfTheMatch(Match match) {
@@ -173,7 +185,7 @@ public class MatchService {
     }
     
     public void updatePlayersOfTheMatch(String directory) {
-        openMatchFolderFromJson(directory).forEach(this::updatePlayerOfTheMatch);
+        openMatchFolderFromJson(directory, null).forEach(this::updatePlayerOfTheMatch);
     }
     
     public void updateToss(Match match) {
@@ -188,7 +200,7 @@ public class MatchService {
     }
     
     public void updateTosses(String directory) {
-        openMatchFolderFromJson(directory).forEach(this::updateToss);
+        openMatchFolderFromJson(directory, null).forEach(this::updateToss);
     }
     
     public void updateWin(Match match) {
@@ -208,7 +220,7 @@ public class MatchService {
     }
     
     public void updateWins(String directory) {
-        openMatchFolderFromJson(directory).forEach(this::updateWin);
+        openMatchFolderFromJson(directory, null).forEach(this::updateWin);
     }
     
     public void updateMatchResult(Match match) {
@@ -221,7 +233,7 @@ public class MatchService {
     }
     
     public void updateMatchResults(String directory) {
-        openMatchFolderFromJson(directory).forEach(this::updateMatchResult);
+        openMatchFolderFromJson(directory, null).forEach(this::updateMatchResult);
     }
     
     public void updateMatchType(Match match) {
@@ -236,7 +248,7 @@ public class MatchService {
     }
     
     public void updateMatchTypes(String directory) {
-        openMatchFolderFromJson(directory).forEach(this::updateMatchType);
+        openMatchFolderFromJson(directory, null).forEach(this::updateMatchType);
     }
     
     public void updateDate(Match match) {
@@ -251,7 +263,7 @@ public class MatchService {
     }
     
     public void updateDates(String directory) {
-        openMatchFolderFromJson(directory).forEach(this::updateDate);
+        openMatchFolderFromJson(directory, null).forEach(this::updateDate);
     }
 
     public LocalDate getDateOfFirstMatchByTournamentEditionId(long tournamentEditionId) {

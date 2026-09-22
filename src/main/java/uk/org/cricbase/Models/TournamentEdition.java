@@ -5,6 +5,7 @@
 package uk.org.cricbase.Models;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import uk.org.cricbase.DTOs.TournamentEditionCreateRequest;
 
@@ -20,6 +21,7 @@ public class TournamentEdition {
     private LocalDate end;
     private Long tournamentId;
 	private String season;
+	private List<Roster> rosters;
     // winning roster
     // season?
    
@@ -50,6 +52,7 @@ public class TournamentEdition {
         this.start = request.start();
         this.end = request.end();
         this.tournamentId = request.tournamentId();
+		this.season = request.season();
     }
 
     public TournamentEdition(long id) {
@@ -108,6 +111,14 @@ public class TournamentEdition {
 
 	public void setSeason(String season) {
 		this.season = season;
+	}
+
+	public List<Roster> getRosters() {
+		return rosters;
+	}
+
+	public void setRosters(List<Roster> rosters) {
+		this.rosters = rosters;
 	}
 }
 

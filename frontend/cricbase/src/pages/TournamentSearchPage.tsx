@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Tournament } from "../types/Tournament";
 import TournamentEditionSearchButton from "../components/TournamentEditionSearchButton";
+import TournamentAdd from "../components/TournamentAdd";
 
 
 
@@ -32,6 +33,9 @@ function TournamentSearchPage() {
 				))}
 				</ div>
 			})}
+
+			<h1>Add Tournament</h1>
+			<TournamentAdd />
 		</>
 	)
 }

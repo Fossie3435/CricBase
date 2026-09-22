@@ -9,6 +9,7 @@ import uk.org.cricbase.DTOs.PlayerRosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterSummary;
 import uk.org.cricbase.Mappers.RosterMapper;
+import uk.org.cricbase.Mappers.TournamentMapper;
 import uk.org.cricbase.Models.PlayerRosterContainer;
 import uk.org.cricbase.Models.Roster;
 import uk.org.cricbase.Models.TournamentEdition;
@@ -16,16 +17,16 @@ import uk.org.cricbase.Models.TournamentEdition;
 @Service
 public class RosterService {
 	private final RosterMapper rosterMapper;
-	private final TournamentService tournamentService;
+	private final TournamentMapper tournamentMapper;
 
-	public RosterService(RosterMapper rosterMapper, TournamentService tournamentService) {
+	public RosterService(RosterMapper rosterMapper, TournamentMapper tournamentMapper) {
 		this.rosterMapper = rosterMapper;
-		this.tournamentService = tournamentService;
+		this.tournamentMapper = tournamentMapper;
 	}
 
 	public void addNewRoster(RosterCreateRequest request) {
 		Roster roster = request.createRoster();	
-		TournamentEdition te = tournamentService.findTournamentEditionById(roster.getTournament().getId()).get();
+		TournamentEdition te = tournamentMapper.findTournamentEditionById(roster.getTournament().getId());
 		roster.setDefaultDates(te.getStart(), te.getEnd());
 		try {
 			this.rosterMapper.insertRoster(roster);
@@ -47,7 +48,7 @@ public class RosterService {
     public void addPlayersToRoster(long rosterId, List<PlayerRosterCreateRequest> request) {
 		Roster roster = new Roster();
 		roster.setId(rosterId);
-		TournamentEdition tournamentEdition = this.tournamentService.findTournamentEditionById(rosterId).get();
+		TournamentEdition tournamentEdition = this.tournamentMapper.findTournamentEditionById(rosterId);
 		if(tournamentEdition != null) {
 			for(PlayerRosterCreateRequest p : request) {
 				try {
@@ -72,5 +73,9 @@ public class RosterService {
 
     public List<RosterSummary> getAllRosters() {
 		return this.rosterMapper.findAllRosterSummaries();
-    }			
+    }
+
+    public void insertRoster(Roster r) {
+		this.rosterMapper.insertRoster(r);
+    }
 }

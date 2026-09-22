@@ -14,10 +14,12 @@ import uk.org.cricbase.DTOs.TournamentCreateRequest;
 public class Tournament {
     private long id;
     private String name;
+	private String gender;
     private List<TournamentEdition> editions;
     
     public Tournament(TournamentCreateRequest request) {
         this.name = request.name();
+		this.gender = request.gender();
         this.editions = request.getEditions();  
     }
 
@@ -48,6 +50,12 @@ public class Tournament {
     public void addEdition(TournamentEdition edition) {
         this.editions.add(edition);
     }
-    
-    
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 }

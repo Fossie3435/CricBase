@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import uk.org.cricbase.Services.GroundService;
 import uk.org.cricbase.Services.PlayerService;
+import uk.org.cricbase.Services.RosterService;
+import uk.org.cricbase.Services.TournamentService;
 
 enum MatchType {
     WARM_UP,
@@ -81,9 +83,7 @@ public class Match {
         
     }
     
-    public void init(PlayerService playerService, GroundService groundService) {
-        this.ground = groundService.getGroundByName(venue)
-                .orElseGet(() -> (groundService.addNewGround(venue, city)));
+    public void init(PlayerService playerService) {
         
         HashMap<String, Player> teamOnePlayers = new HashMap<>();
         HashMap<String, Player> teamTwoPlayers = new HashMap<>();
@@ -116,6 +116,31 @@ public class Match {
             innings.get(i).generatePerformances();
         }
     }
+	public void initGround(GroundService groundService) {
+        this.ground = groundService.getGroundByName(venue)
+                .orElseGet(() -> groundService.addNewGround(venue, city));
+	}
+
+	public void initTournamentEdition(TournamentService tournamentService) {
+		this.tournament = tournamentService.findTournamentEditionForNewMatch(tournamentString, season, gender)
+			.orElse(null);	
+	}
+
+	public void initRosters(RosterService rosterService) {
+		if(this.tournament == null) {
+			return;
+		}
+		for(Roster r: this.tournament.getRosters()) {
+			if(teamOne.getName().equals(r.getName())) {
+				teamOne.setRoster(r);
+				System.out.println("team one roster found!");
+			} else if(teamTwo.getName().equals(r.getName())) {
+				teamTwo.setRoster(r);
+				System.out.println("team two roster found!");
+			}
+		}
+
+	}
     
     @JsonSetter("info")
     private void unpackInfo(Map<String, Object> info) {

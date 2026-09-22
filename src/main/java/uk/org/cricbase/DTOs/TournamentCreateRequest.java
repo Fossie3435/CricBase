@@ -8,8 +8,10 @@ import uk.org.cricbase.Models.TournamentEdition;
  *
  */
 public record TournamentCreateRequest (
+	String folderName,
     String name,
-    List<TournamentEditionCreateRequest> editions    
+	String gender,
+    List<TournamentEditionCreateRequest> editions
 ) {
     public List<TournamentEdition> getEditions() {
         ArrayList<TournamentEdition> editions = new ArrayList<>();
@@ -34,6 +36,9 @@ public record TournamentCreateRequest (
         } else {
             tournamentEdition.setEdition(edition.editionNumber().intValue());
         }    
+		
+		tournamentEdition.setSeason(edition.season());
+		tournamentEdition.setRosters(edition.getRosters());
         
         return tournamentEdition;
     }

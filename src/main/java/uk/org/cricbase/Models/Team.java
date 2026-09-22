@@ -14,6 +14,7 @@ public class Team {
     
     private String name;
 	private String tricode;
+	private Roster roster;
     private HashMap<String, Player> players;
     
     private Match match;
@@ -77,4 +78,13 @@ public class Team {
 	public void setTricode(String tricode) {
 		this.tricode = tricode;
 	}
+
+	public Roster getRoster() {
+		return roster;
+	}
+
+	public void setRoster(Roster roster) {
+		this.roster = roster;
+	}
 }
+	

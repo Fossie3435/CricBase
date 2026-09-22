@@ -5,6 +5,7 @@
 package uk.org.cricbase.Services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,9 @@ import uk.org.cricbase.DTOs.DetailedTournamentEditionSummary;
 import uk.org.cricbase.DTOs.TournamentCreateRequest;
 import uk.org.cricbase.DTOs.TournamentEditionCreateRequest;
 import uk.org.cricbase.DTOs.TournamentSummary;
+import uk.org.cricbase.Mappers.RosterMapper;
 import uk.org.cricbase.Mappers.TournamentMapper;
+import uk.org.cricbase.Models.Roster;
 import uk.org.cricbase.Models.Tournament;
 import uk.org.cricbase.Models.TournamentEdition;
 
@@ -29,23 +32,76 @@ import uk.org.cricbase.Models.TournamentEdition;
 public class TournamentService {
     private final TournamentMapper tournamentMapper;
     private final MatchService matchService;
+	private final RosterMapper rosterMapper;
+	private final StatLineService statLineService;
 
-    public TournamentService(TournamentMapper tournamentMapper, MatchService matchService) {
-        this.tournamentMapper = tournamentMapper;
-        this.matchService = matchService;
-    }
-    
+	private ArrayList<Tournament> activeTournaments;
+
+	public TournamentService(TournamentMapper tournamentMapper, MatchService matchService, RosterMapper rosterMapper, StatLineService statLineService) {
+		this.tournamentMapper = tournamentMapper;
+		this.matchService = matchService;
+		this.rosterMapper = rosterMapper;
+		this.statLineService = statLineService;
+
+		this.activeTournaments = new ArrayList<>();
+	}
+
+	public Optional<TournamentEdition> findTournamentEditionForNewMatch(String name, String season, String gender) {
+		if(activeTournaments.size() == 0) {
+			System.out.println("no active tournaments");
+			return Optional.empty();
+		} else if(activeTournaments.size() == 1 && activeTournaments.getFirst().getGender().equals(gender)) {
+			return findTournamentEditionInTournament(activeTournaments.getFirst(), season);
+		} else {
+			for(Tournament t : activeTournaments) {
+				if(t.getName().equals(name)) {
+					return findTournamentEditionInTournament(t, season);
+				}
+			}
+			System.out.println("Could not find tournament, searching with name: " + name + " season: " + season + " gender: " + gender); 
+			return Optional.empty();
+		}
+	}
+
+	private Optional<TournamentEdition> findTournamentEditionInTournament(Tournament t, String season) {
+		for(TournamentEdition te : t.getEditions()) {
+			System.out.println("TE: " + te.getSeason());
+			System.out.println("INPUT: " + season);
+			if(te.getSeason().equals(season)) {
+				System.out.println("found season");
+				return Optional.of(te);
+			}
+		}
+		System.out.println("Could not find tournament edition with that season");
+		return Optional.empty();	
+	}
+
     public Tournament createTournament(TournamentCreateRequest request) {
         Tournament tournament = new Tournament(request);
+		System.out.println(tournament.getGender());
         
         try {
             this.tournamentMapper.insertTournament(tournament);
             for(TournamentEdition edition : tournament.getEditions()) {
                 this.tournamentMapper.insertEdition(edition, tournament.getId());
+				for(Roster r : edition.getRosters()) {
+					r.setTournament(edition);
+					this.rosterMapper.insertRoster(r);
+				}
             }
         } catch(DuplicateKeyException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "tournament already exists");
         }
+		this.activeTournaments.add(tournament);	
+	
+		this.matchService.addNewMatchFolder("src/main/resources/" + request.folderName(), this);
+		
+		this.activeTournaments.remove(tournament);
+
+		for(TournamentEdition te : tournament.getEditions()) {
+			this.updateTournamentEditionDate(te.getId());
+			this.statLineService.calculateStatlines(te.getId());
+		}
         return tournament;
     }
 
@@ -78,7 +134,7 @@ public class TournamentService {
 		if(editions.size() == 0){
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot find tournament editions");
 		}
-		this.matchService.addNewMatchFolder(folderName, editions);
+		this.matchService.addNewMatchFolder(folderName, null);
 	}
 
 	public Optional<TournamentEdition> findTournamentEditionById(long id) {
@@ -115,6 +171,6 @@ public class TournamentService {
     	return this.tournamentMapper.findAllTournamentSummaries();
 	}
 
-
+	
 
 }
