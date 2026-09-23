@@ -2,6 +2,8 @@ import { useState } from "react";
 
 type Roster = {
 	name: string;
+	tricode: string;
+	organisationId?: number | null;
 };
 
 type Edition = {
@@ -16,7 +18,7 @@ export default function TournamentForm() {
 	const [editions, setEditions] = useState<Edition[]>([
 		{
 			season: "",
-			rosters: [{ name: "" }]
+			rosters: [{ name: "", tricode: "" }]
 		}
 	]);
 
@@ -25,8 +27,17 @@ export default function TournamentForm() {
 			...editions,
 			{
 				season: "",
-				rosters: [{ name: "" }]
+				rosters: [{ name: "", tricode: "" }]
 			}
+		]);
+	}
+
+	function addEditionWithPreviousTeams() {
+		const previousRosters = editions.at(-1)?.rosters ?? [];
+		setEditions([...editions, {
+			season: "",
+			rosters: structuredClone(previousRosters)
+		}
 		]);
 	}
 
@@ -51,7 +62,8 @@ export default function TournamentForm() {
 		const updated = [...editions];
 
 		updated[editionIndex].rosters.push({
-			name: ""
+			name: "",
+			tricode: ""
 		});
 
 		setEditions(updated);
@@ -68,15 +80,36 @@ export default function TournamentForm() {
 		setEditions(updated);
 	}
 
-	function updateRoster(
+	function updateRosterName(
 		editionIndex: number,
 		rosterIndex: number,
-		value: string
+		name: string
 	) {
 		const updated = [...editions];
 
-		updated[editionIndex].rosters[rosterIndex].name = value;
+		updated[editionIndex].rosters[rosterIndex].name = name;
 
+		setEditions(updated);
+	}
+	function updateRosterTricode(
+		editionIndex: number,
+		rosterIndex: number,
+		tricode: string	
+	) {
+		const updated = [...editions];
+
+		updated[editionIndex].rosters[rosterIndex].tricode = tricode;
+
+		setEditions(updated);
+	}
+
+	function updateRosterOrganisation(
+		editionIndex: number,
+		rosterIndex: number,
+		organisationId: number | null
+	) {
+		const updated = [...editions];
+		updated[editionIndex].rosters[rosterIndex].organisationId = organisationId;
 		setEditions(updated);
 	}
 
@@ -181,10 +214,35 @@ export default function TournamentForm() {
 								placeholder="Roster name"
 								value={roster.name}
 								onChange={(e) =>
-									updateRoster(
+									updateRosterName(
 										editionIndex,
 										rosterIndex,
 										e.target.value
+									)
+								}
+							/>
+							<input 
+								type="text"
+								placeholder="tricode"
+								value={roster.tricode}
+								onChange={(e) => 
+									updateRosterTricode(
+										editionIndex,
+										rosterIndex,
+										e.target.value
+									)
+								}
+							/>
+
+							<input
+								type="number"
+								placeholder="Organisation ID"
+								value={roster.organisationId ?? ""}
+								onChange={(e) => 
+									updateRosterOrganisation(
+										editionIndex,
+										rosterIndex,
+										e.target.value === "" ? null : Number(e.target.value)
 									)
 								}
 							/>
@@ -225,6 +283,9 @@ export default function TournamentForm() {
 
 			<button type="button" onClick={addEdition}>
 				Add Edition
+			</button>
+			<button type="button" onClick={addEditionWithPreviousTeams}>
+				Add Edition with previous teams
 			</button>
 
 			<br />

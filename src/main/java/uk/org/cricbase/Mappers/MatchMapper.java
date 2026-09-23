@@ -155,14 +155,12 @@ public interface MatchMapper {
 
     @Results(id = "inningSummaryResult", value = {
         @Result(property = "teamName", column = "name"),
-		@Result(property = "tricode", column = "tricode"),
         @Result(property = "runs", column = "total_runs"),
         @Result(property = "wickets", column = "wickets_taken")
     })
     @Select("""
             SELECT
                 teams.name,
-				teams.tricode,
                 innings.total_runs,
                 innings.wickets_taken
             FROM innings
@@ -221,15 +219,13 @@ public interface MatchMapper {
     
     @Results(id = "teamSummary", value = {
 		@Result(property = "id", column = "id"),
-		@Result(property = "tricode", column = "tricode"),
         @Result(property = "name", column = "name"),
         @Result(property = "players", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.PlayerMapper.findPlayersByTeamId"))
     })
     @Select("""
             SELECT 
             name,
-            id,
-			tricode
+            id
             FROM teams
             WHERE match_id = #{matchId}
             """)
@@ -337,9 +333,9 @@ public interface MatchMapper {
     
     @Insert("""
             INSERT INTO teams
-            (name, tricode, match_id)
+            (name, match_id, roster_id)
             VALUES
-            (#{name}, #{tricode},#{match.id})
+            (#{name}, #{match.id}, #{roster.id})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertTeam(Team team);

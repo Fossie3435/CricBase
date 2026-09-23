@@ -88,11 +88,21 @@ public class Match {
         HashMap<String, Player> teamOnePlayers = new HashMap<>();
         HashMap<String, Player> teamTwoPlayers = new HashMap<>();
         for(int i = 0; i < nameStrings[0].size(); i++) {
-            Player teamOnePlayer = playerService.getPlayerById( (String) registry.getOrDefault(nameStrings[0].get(i), "")).get(); // should be modified to work if no player class is found
+			System.out.println(
+    "[" + nameStrings[0].get(i) + "] -> [" +
+    registry.getOrDefault(nameStrings[0].get(i), "") + "]"
+);
+            Player teamOnePlayer = playerService.getPlayerById( (String) registry.getOrDefault(nameStrings[0].get(i), "")).orElse(null); // should be modified to work if no player class is found
+			if(teamOnePlayer == null) {
+				System.out.println(nameStrings[0].get(i));
+			}
             teamOnePlayers.put(nameStrings[0].get(i), teamOnePlayer);
         }
         for(int i = 0; i < nameStrings[1].size(); i++) {
-            Player teamTwoPlayer = playerService.getPlayerById((String) registry.getOrDefault(nameStrings[1].get(i), (""))).get();
+            Player teamTwoPlayer = playerService.getPlayerById((String) registry.getOrDefault(nameStrings[1].get(i), (""))).orElse(null);
+			if(teamTwoPlayer == null) {
+				System.out.println(nameStrings[1].get(i));
+			}
             teamTwoPlayers.put(nameStrings[1].get(i), teamTwoPlayer);            
         }
         this.teamOne.setPlayers(teamOnePlayers);

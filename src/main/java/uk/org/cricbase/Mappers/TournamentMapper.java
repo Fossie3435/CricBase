@@ -41,9 +41,9 @@ public interface TournamentMapper {
     
     @Insert("""
             INSERT INTO tournament_editions
-                (name, dates, tournament_id, edition)
+                (name, dates, tournament_id, edition, season)
             VALUES
-                (#{e.name}, daterange(#{e.start}::date, #{e.end}::date, '[)') , #{t}, #{e.edition})
+                (#{e.name}, daterange(#{e.start}::date, #{e.end}::date, '[)') , #{t}, #{e.edition}, #{e.season})
             
             """)
     @Options(useGeneratedKeys = true, keyProperty = "e.id")

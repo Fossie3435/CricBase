@@ -10,7 +10,9 @@ public class Roster {
 
 	private List<PlayerRosterContainer> players = new ArrayList<>();
 	private String name;
+	private String tricode;
 	private TournamentEdition tournament;
+	private Organisation organisation;
 	// organisation
 	
 	public Roster() {}
@@ -70,5 +72,21 @@ public class Roster {
 			}
 		}
     }
+
+	public String getTricode() {
+		return tricode;
+	}
+
+	public void setTricode(String tricode) {
+		this.tricode = tricode;
+	}
+
+	public Organisation getOrganisation() {
+		return organisation;
+	}
+
+	public void setOrganisation(Organisation organisation) {
+		this.organisation = organisation;
+	}
 }
 

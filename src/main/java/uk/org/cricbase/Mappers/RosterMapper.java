@@ -28,9 +28,9 @@ public interface RosterMapper {
 
 	@Insert("""
 		INSERT INTO rosters
-		(name, tournament_edition_id)
+		(name, tricode, tournament_edition_id)
 		VALUES
-		(#{name}, #{tournament.id})
+		(#{name}, #{tricode}, #{tournament.id})
 	""")
     @Options(useGeneratedKeys = true, keyProperty = "id")
 	void insertRoster(Roster r);

@@ -54,6 +54,7 @@ public class MatchService {
     }
     
     public Match openNewMatchFromJson(File newMatch, TournamentService tournamentService) {
+		System.out.println("opening match: " + newMatch.getPath());
         Match match = new Match();
         ObjectMapper objectMapper = new ObjectMapper();
         try {

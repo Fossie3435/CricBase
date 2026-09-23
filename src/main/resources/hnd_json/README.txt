@@ -1,5 +1,5 @@
 This zip archive contains data files from Cricsheet in JSON format. This
-archive contains 322 The Hundred matches.
+archive contains 389 The Hundred matches.
 
 
 The JSON data files contained in this zip file are version 1.2.0 files. You
@@ -22,6 +22,73 @@ as IPL). The 4th field is the gender of the players involved in the match. The
 teams involved in the match.
 
 
+2026-08-16 - club - HND - male - 1521264 - Trent Rockets vs Manchester Super Giants
+2026-08-16 - club - HND - female - 1521230 - Sunrisers Leeds vs Trent Rockets
+2026-08-14 - club - HND - male - 1521263 - Manchester Super Giants vs Sunrisers Leeds
+2026-08-14 - club - HND - female - 1521229 - Southern Brave vs Sunrisers Leeds
+2026-08-12 - club - HND - male - 1521262 - MI London vs Birmingham Phoenix
+2026-08-12 - club - HND - male - 1521261 - London Spirit vs Welsh Fire
+2026-08-12 - club - HND - female - 1521228 - MI London vs Birmingham Phoenix
+2026-08-12 - club - HND - female - 1521227 - Welsh Fire vs London Spirit
+2026-08-11 - club - HND - male - 1521260 - Sunrisers Leeds vs Manchester Super Giants
+2026-08-11 - club - HND - female - 1521226 - Sunrisers Leeds vs Manchester Super Giants
+2026-08-10 - club - HND - male - 1521259 - Trent Rockets vs Southern Brave
+2026-08-10 - club - HND - female - 1521225 - Southern Brave vs Trent Rockets
+2026-08-09 - club - HND - male - 1521258 - Birmingham Phoenix vs London Spirit
+2026-08-09 - club - HND - male - 1521257 - Sunrisers Leeds vs Welsh Fire
+2026-08-09 - club - HND - female - 1521224 - London Spirit vs Birmingham Phoenix
+2026-08-09 - club - HND - female - 1521223 - Welsh Fire vs Sunrisers Leeds
+2026-08-08 - club - HND - male - 1521256 - Manchester Super Giants vs Southern Brave
+2026-08-08 - club - HND - male - 1521255 - MI London vs Trent Rockets
+2026-08-08 - club - HND - female - 1521222 - Manchester Super Giants vs Southern Brave
+2026-08-08 - club - HND - female - 1521221 - MI London vs Trent Rockets
+2026-08-07 - club - HND - male - 1521254 - Sunrisers Leeds vs Birmingham Phoenix
+2026-08-07 - club - HND - female - 1521220 - Birmingham Phoenix vs Sunrisers Leeds
+2026-08-06 - club - HND - male - 1521253 - London Spirit vs MI London
+2026-08-06 - club - HND - female - 1521219 - MI London vs London Spirit
+2026-08-05 - club - HND - male - 1521252 - Birmingham Phoenix vs Trent Rockets
+2026-08-05 - club - HND - male - 1521251 - Welsh Fire vs Manchester Super Giants
+2026-08-05 - club - HND - female - 1521218 - Birmingham Phoenix vs Trent Rockets
+2026-08-05 - club - HND - female - 1521217 - Manchester Super Giants vs Welsh Fire
+2026-08-04 - club - HND - male - 1521250 - Sunrisers Leeds vs London Spirit
+2026-08-04 - club - HND - female - 1521216 - London Spirit vs Sunrisers Leeds
+2026-08-03 - club - HND - male - 1521249 - Southern Brave vs Welsh Fire
+2026-08-03 - club - HND - female - 1521215 - Southern Brave vs Welsh Fire
+2026-08-02 - club - HND - male - 1521248 - MI London vs Manchester Super Giants
+2026-08-02 - club - HND - male - 1521247 - Trent Rockets vs Sunrisers Leeds
+2026-08-02 - club - HND - female - 1521214 - MI London vs Manchester Super Giants
+2026-08-02 - club - HND - female - 1521213 - Trent Rockets vs Sunrisers Leeds
+2026-08-01 - club - HND - male - 1521246 - London Spirit vs Southern Brave
+2026-08-01 - club - HND - male - 1521245 - Birmingham Phoenix vs Welsh Fire
+2026-08-01 - club - HND - female - 1521212 - London Spirit vs Southern Brave
+2026-08-01 - club - HND - female - 1521211 - Welsh Fire vs Birmingham Phoenix
+2026-07-31 - club - HND - male - 1521244 - Manchester Super Giants vs Trent Rockets
+2026-07-31 - club - HND - female - 1521210 - Trent Rockets vs Manchester Super Giants
+2026-07-30 - club - HND - male - 1521243 - Southern Brave vs Birmingham Phoenix
+2026-07-30 - club - HND - female - 1521209 - Southern Brave vs Birmingham Phoenix
+2026-07-29 - club - HND - male - 1521242 - MI London vs London Spirit
+2026-07-29 - club - HND - male - 1521241 - Welsh Fire vs Trent Rockets
+2026-07-29 - club - HND - female - 1521208 - MI London vs London Spirit
+2026-07-29 - club - HND - female - 1521207 - Welsh Fire vs Trent Rockets
+2026-07-28 - club - HND - male - 1521240 - Manchester Super Giants vs Sunrisers Leeds
+2026-07-28 - club - HND - female - 1521206 - Sunrisers Leeds vs Manchester Super Giants
+2026-07-27 - club - HND - male - 1521239 - Southern Brave vs MI London
+2026-07-27 - club - HND - female - 1521205 - Southern Brave vs MI London
+2026-07-26 - club - HND - male - 1521238 - London Spirit vs Trent Rockets
+2026-07-26 - club - HND - male - 1521237 - Manchester Super Giants vs Birmingham Phoenix
+2026-07-26 - club - HND - female - 1521204 - Trent Rockets vs London Spirit
+2026-07-25 - club - HND - male - 1521236 - Welsh Fire vs MI London
+2026-07-25 - club - HND - male - 1521235 - Sunrisers Leeds vs Southern Brave
+2026-07-25 - club - HND - female - 1521202 - Welsh Fire vs MI London
+2026-07-25 - club - HND - female - 1521201 - Sunrisers Leeds vs Southern Brave
+2026-07-24 - club - HND - male - 1521234 - Birmingham Phoenix vs Trent Rockets
+2026-07-24 - club - HND - female - 1521200 - Birmingham Phoenix vs Trent Rockets
+2026-07-23 - club - HND - male - 1521233 - Manchester Super Giants vs London Spirit
+2026-07-23 - club - HND - female - 1521199 - London Spirit vs Manchester Super Giants
+2026-07-22 - club - HND - male - 1521232 - Southern Brave vs Welsh Fire
+2026-07-22 - club - HND - female - 1521198 - Southern Brave vs Welsh Fire
+2026-07-21 - club - HND - male - 1521231 - Sunrisers Leeds vs MI London
+2026-07-21 - club - HND - female - 1521197 - MI London vs Sunrisers Leeds
 2025-08-31 - club - HND - male - 1471035 - Oval Invincibles vs Trent Rockets
 2025-08-31 - club - HND - female - 1471069 - Southern Brave vs Northern Superchargers
 2025-08-30 - club - HND - male - 1471034 - Northern Superchargers vs Trent Rockets

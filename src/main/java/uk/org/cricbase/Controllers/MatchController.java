@@ -37,7 +37,7 @@ public class MatchController {
     public ResponseEntity<Void> testMatch() {
         long matchId = 1252696;
         //long matchId = 1355588;
-        matchService.updateDate(matchService.openNewMatchFromJson(new File("src/main/resources/hnd_json/" + matchId + ".json")));
+        //matchService.updateDate(matchService.openNewMatchFromJson(new File("src/main/resources/hnd_json/" + matchId + ".json")));
         return ResponseEntity.accepted().build();
     }
     

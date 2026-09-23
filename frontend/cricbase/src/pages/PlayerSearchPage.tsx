@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import PlayerSearch from "../components/PlayerSearch";
 import { Player } from "../types/Player";
+import PlayersMissingNicknames from "../components/PlayersMissingNicknames";
 
 function PlayerSearchPage() {
 	const navigate = useNavigate();
@@ -9,7 +10,11 @@ function PlayerSearchPage() {
 	}
 
 	return (
+		<>
 		<PlayerSearch handlePlayerClick={handleSearch} />
+
+		<PlayersMissingNicknames />
+		</>
 	)
 }
 
