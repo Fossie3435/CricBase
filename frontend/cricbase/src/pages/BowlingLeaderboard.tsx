@@ -4,7 +4,11 @@ import { BowlingLeaderboardEntry } from "../types/Statline";
 import './Leaderboard.css';
 import { getShortBowlingPeformanceSummary } from '../utils/bowlingPerformance'
 
-function BowlingLeaderboard() {
+interface BowlingLeaderboardProps {
+	type: string;
+}
+
+function BowlingLeaderboard({type}: BowlingLeaderboardProps) {
 	const { id } = useParams();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const sortColumn = searchParams.get("sort") ?? "wickets";
@@ -23,10 +27,13 @@ function BowlingLeaderboard() {
 		return <p>Invalid ID!</p>
 	}
 
+	if(type == undefined || (type != "tournaments" && type != "editions")) {
+		return <p>Invalid type!</p>
+	}
 	useEffect(() =>  {
 		async function getLeaderboard() {
 			const response = await fetch(
-				`http://localhost:8080/stats/editions/${id}/leaderboards/bowling`
+				`http://localhost:8080/stats/${type}/${id}/leaderboards/bowling`
 			);
 			const data = await response.json();
 			console.log(data);

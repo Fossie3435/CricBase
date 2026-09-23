@@ -2,25 +2,26 @@ import { useState, useEffect } from "react";
 import { StatLeaderboard } from "../types/StatLeader";
 import "./TournamentEdition.css";
 import { Link } from "react-router-dom";
-interface StatLeadersBlock {
+interface StatLeadersBlockProps {
 	id: string;
+	type: string;
 }
 
-function StatLeadersBlock( {id}: StatLeadersBlock ) {
+function StatLeadersBlock( {id, type}: StatLeadersBlockProps ) {
 	const [statLeaders, setStatLeaders] = useState<StatLeaderboard[] | null>(null);
 
 
 	useEffect(() => {
 		async function getStatLeaders() {
 			const response = await fetch(
-				`http://localhost:8080/stats/editions/${id}/leaders`
+				`http://localhost:8080/stats/${type}/${id}/leaders`
 			);
 			const data = await response.json();
 			console.log(data);
 			setStatLeaders(data);
 		}
 		getStatLeaders();
-	}, [id]);
+	}, [id, type]);
 	
 	if(statLeaders == null) {
 		return <p>Loading Stat Leaders</p>; 

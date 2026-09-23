@@ -53,4 +53,19 @@ public class StatsController {
 	public ResponseEntity<List<BowlingLeaderboardEntry>> getTournamentEditionBowlingStats(@PathVariable long editionId) {
 		return ResponseEntity.ok(this.statlineService.getQualifiedBowlingStatLinesForTournamentEdition(editionId));
 	}
+
+	@GetMapping("/tournaments/{tournamentId}/leaders")
+	public ResponseEntity<List<StatLeaderboard>> getTournamentStatLeaderboards(@PathVariable long tournamentId) {
+		return ResponseEntity.ok(this.statlineService.getStatLeadersForTournament(tournamentId));
+	}
+
+	@GetMapping("/tournaments/{tournamentId}/leaderboards/batting")
+	public ResponseEntity<List<BattingLeaderboardEntry>> getTournamentBattingStats(@PathVariable long tournamentId) {
+		return ResponseEntity.ok(this.statlineService.getQualifiedBattingStatLinesForTournament(tournamentId));
+	}	
+
+	@GetMapping("/tournaments/{tournamentId}/leaderboards/bowling")
+	public ResponseEntity<List<BowlingLeaderboardEntry>> getTournamentBowlingStats(@PathVariable long tournamentId) {
+		return ResponseEntity.ok(this.statlineService.getQualifiedBowlingStatLinesForTournament(tournamentId));
+	}
 }

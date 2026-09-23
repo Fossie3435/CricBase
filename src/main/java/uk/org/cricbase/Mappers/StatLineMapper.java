@@ -258,7 +258,6 @@ public interface StatLineMapper {
         	upper(te.dates) AS tournament_end,
         	te.edition AS tournament_edition,
 			te.season AS tournament_season
-
     	FROM batting_stats bs
     	JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
@@ -335,4 +334,135 @@ public interface StatLineMapper {
 		LIMIT #{entries}
 	""")
     List<StatLeaderboardEntry> getLowestBowlingAverageForTournamentEdition(@Param("tId") long editionId,@Param("entries") int entries);
+    
+	@ResultMap("statEntries")
+	@Select("""
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			SUM(bs.runs) AS stat
+		FROM batting_stats bs
+		JOIN players p ON bs.batter_id = p.id
+		JOIN tournament_editions te ON bs.tournament_edition_id = te.id
+		WHERE te.tournament_id = #{tId}
+		GROUP BY p.id
+		ORDER BY stat DESC
+		LIMIT #{entries}
+	""")
+	List<StatLeaderboardEntry> getHighestRunScorersByTournamentId(@Param("tId") long tournamentId,@Param("entries") int entries);
+
+	@ResultMap("statEntries")
+	@Select("""
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			SUM(bs.wickets) AS stat
+		FROM bowling_stats bs
+		JOIN players p ON bs.bowler_id = p.id
+		JOIN tournament_editions te ON bs.tournament_edition_id = te.id
+		WHERE te.tournament_id = #{tId}
+		GROUP BY p.id
+		ORDER BY stat DESC
+		LIMIT #{entries}
+	""")
+    List<StatLeaderboardEntry> getHighestWicketTakersByTournamentId(@Param("tId") long tournamentId,@Param("entries") int entries);
+	@ResultMap("battingLeaderboardEntry")
+	@Select("""
+		WITH best_batting_performances AS (
+			SELECT 
+				bs.batter_id,
+				bp.runs,
+				bp.is_dismissed,
+				ROW_NUMBER() OVER (
+					PARTITION BY bs.batter_id
+					ORDER BY 
+						bp.runs DESC,
+						bp.is_dismissed ASC
+				) AS rn
+			FROM batting_stats bs 
+			JOIN batting_performances bp ON bs.best = bp.id
+			JOIN tournament_editions te ON bs.tournament_edition_id = te.id
+			WHERE te.tournament_id = #{tId}
+		)
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+		    SUM(bs.runs) AS runs,
+        	SUM(bs.balls_faced) AS balls_faced,
+        	SUM(bs.matches) AS matches,
+        	SUM(bs.innings) AS innings,
+        	SUM(bs.fours) AS fours,
+        	SUM(bs.sixes) AS sixes,
+        	SUM(bs.dismissals) AS dismissals,
+			(100.0 * SUM(bs.runs) / NULLIF(SUM(bs.balls_faced), 0)) AS strike_rate,
+			COALESCE(1.0 * SUM(bs.runs) / NULLIF(SUM(bs.dismissals),0), SUM(bs.runs)) AS average,
+			bbp.runs AS best_runs,
+			bbp.is_dismissed AS best_is_dismissed,
+			t.id AS tournament_id,
+        	t.name AS tournament_name
+		FROM batting_stats bs
+		JOIN players p ON bs.batter_id = p.id
+		JOIN tournament_editions te ON bs.tournament_edition_id = te.id
+		JOIN tournaments t ON te.tournament_id = t.id
+		JOIN best_batting_performances bbp ON bs.batter_id = bbp.batter_id 
+		AND bbp.rn = 1
+		WHERE t.id = #{tId}
+		GROUP BY p.id, p.name, p.nickname, t.id, t.name, bbp.runs, bbp.is_dismissed
+	""")
+    List<BattingLeaderboardEntry> getQualifiedBattingStatsByTournamentId(@Param("tId") long tournamentId);
+
+	@ResultMap("bowlingLeaderboardEntry")
+	@Select("""
+		WITH best_bowling_performances AS (
+			SELECT 
+				bs.bowler_id,
+				bp.wicket_count,
+				bp.runs_conceded,
+				ROW_NUMBER() OVER (
+					PARTITION BY bs.bowler_id
+					ORDER BY 
+						bp.wicket_count DESC,
+						bp.runs_conceded ASC
+				) AS rn
+			FROM bowling_stats bs 
+			JOIN bowling_performances bp ON bs.best = bp.id
+			JOIN tournament_editions te ON bs.tournament_edition_id = te.id
+			WHERE te.tournament_id = #{tId}
+		)
+		SELECT 
+			p.id AS player_id,
+			p.name AS player_name,
+			p.nickname AS player_nickname,
+			SUM(bs.matches) AS matches,
+    	    SUM(bs.innings) AS innings,
+        	SUM(bs.balls_bowled) AS balls_bowled,
+        	SUM(bs.runs_conceded) AS runs_conceded,
+        	SUM(bs.wickets) AS wickets,
+        	SUM(bs.maidens) AS maidens,
+        	SUM(bs.fours_conceded) AS fours_conceded,
+			SUM(bs.sixes_conceded) AS sixes_conceded,
+        	SUM(bs.wides) AS wides,
+        	SUM(bs.no_balls) AS no_balls,
+			(1.0 * SUM(bs.runs_conceded) / NULLIF(SUM(bs.wickets), 0)) AS average,
+			(5.0 * SUM(bs.runs_conceded) / NULLIF(SUM(bs.balls_bowled), 0)) AS economyRate,
+			bbp.wicket_count AS best_wickets,
+			bbp.runs_conceded AS best_runs,
+			t.id AS tournament_id,
+        	t.name AS tournament_name
+		FROM bowling_stats bs
+		JOIN players p ON bs.bowler_id = p.id
+		JOIN best_bowling_performances bbp ON bs.bowler_id = bbp.bowler_id
+		AND bbp.rn = 1
+		JOIN tournament_editions te ON bs.tournament_edition_id = te.id
+		JOIN tournaments t ON te.tournament_id = t.id
+		WHERE t.id = #{tId}
+		GROUP BY p.id, p.name, p.nickname, t.id, t.name, bbp.wicket_count, bbp.runs_conceded
+	""")
+    List<BowlingLeaderboardEntry> getQualifiedBowlingStatsByTournamentId(long tournamentId);
 }

@@ -10,6 +10,7 @@ import TournamentEditionPage from './pages/TournamentEditionPage'
 import MatchPage from './pages/MatchPage'
 import BattingLeaderboard from './pages/BattingLeaderboard'
 import BowlingLeaderboard from './pages/BowlingLeaderboard'
+import TournamentPage from './pages/TournamentPage'
 
 function App() {
   	return (
@@ -24,9 +25,12 @@ function App() {
 				<Route path="/rosters/:id" element={<RosterPage />} />
 				<Route path="/tournaments" element={<TournamentSearchPage />} />
 				<Route path="/tournaments/editions/:id" element={<TournamentEditionPage />} />
+				<Route path="/tournaments/:id" element={<TournamentPage />} />
 				<Route path="/matches/:id" element={<MatchPage/>} />
-				<Route path="/tournaments/editions/:id/leaderboards/batting" element={<BattingLeaderboard />} />
-				<Route path="/tournaments/editions/:id/leaderboards/bowling" element={<BowlingLeaderboard />} />
+				<Route path="/tournaments/editions/:id/leaderboards/batting" element={<BattingLeaderboard type="editions" />} />
+				<Route path="/tournaments/:id/leaderboards/batting" element={<BattingLeaderboard type="tournaments" />} />
+				<Route path="/tournaments/editions/:id/leaderboards/bowling" element={<BowlingLeaderboard type="editions"/>} />
+				<Route path="/tournaments/:id/leaderboards/bowling" element={<BowlingLeaderboard type="tournaments" />} />
             </Routes>
 		</BrowserRouter>
 		</>

@@ -142,4 +142,49 @@ public class StatLineService {
     public List<BowlingLeaderboardEntry> getQualifiedBowlingStatLinesForTournamentEdition(long editionId) {
 		return this.statLineMapper.getQualifiedBowlingStatsByTournamentEditionId(editionId);
     }
+
+    public List<StatLeaderboard> getStatLeadersForTournament(long tournamentId) {
+   		ArrayList<StatLeaderboard> leaderboards = new ArrayList<>();
+		leaderboards.add(this.getHighestRunScorersForTournament(tournamentId, 5));
+		leaderboards.add(this.getHighestWicketTakersForTournament(tournamentId, 5));
+	//	leaderboards.add(this.getHighestStrikeRatesForTournament(tournamentId, 5));
+	//	leaderboards.add(this.getLowestEconomyRatesForTournament(tournamentId, 5));
+		return leaderboards;
+	}
+	
+	public StatLeaderboard getHighestRunScorersForTournament(long tournamentId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Highest Run Scorers", "runs", "runs", "batting");
+		sb.setEntries(this.statLineMapper.getHighestRunScorersByTournamentId(tournamentId, entries));
+		sb.setDecimalPlaces(0);
+		sb.generateEntryNumbers();
+		return sb;
+	}	
+	public StatLeaderboard getHighestWicketTakersForTournament(long tournamentId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Highest Wicket Takers", "wickets", "wickets", "bowling");
+		sb.setEntries(this.statLineMapper.getHighestWicketTakersByTournamentId(tournamentId, entries));
+		sb.setDecimalPlaces(0);
+		sb.generateEntryNumbers();
+		return sb;
+	}
+	public StatLeaderboard getHighestStrikeRatesForTournament(long tournamentId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Highest Strike Rates", "strikeRate", "SR", "batting");
+		//sb.setEntries(this.statLineMapper.getHighestStrikeRatesByTournamentId(tournamentId, entries));
+		sb.setDecimalPlaces(0);
+		sb.generateEntryNumbers();
+		return sb;
+	}	
+	public StatLeaderboard getLowestEconomyRatesForTournament(long tournamentId, int entries) {
+		StatLeaderboard sb = new StatLeaderboard("Lowest Economy Rates", "economyRate", "ER", "bowling");
+		//sb.setEntries(this.statLineMapper.getLowestEconomyRatesByTournamentId(tournamentId, entries));
+		sb.setDecimalPlaces(2);
+		sb.generateEntryNumbers();
+		return sb;
+	}
+	public List<BattingLeaderboardEntry> getQualifiedBattingStatLinesForTournament(long tournamentId) {
+		return this.statLineMapper.getQualifiedBattingStatsByTournamentId(tournamentId);
+    }
+
+    public List<BowlingLeaderboardEntry> getQualifiedBowlingStatLinesForTournament(long tournamentId) {
+		return this.statLineMapper.getQualifiedBowlingStatsByTournamentId(tournamentId);
+    }
 }

@@ -41,7 +41,7 @@ function TournamentEditionPage() {
 				})}
 				</div>
 				<div>
-					<StatLeadersBlock id={id} />
+					<StatLeadersBlock id={id} type="editions" />
 				</div>
 			</div>
 		</div>

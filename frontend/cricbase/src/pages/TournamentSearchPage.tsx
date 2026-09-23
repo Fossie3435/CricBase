@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Tournament } from "../types/Tournament";
 import TournamentEditionSearchButton from "../components/TournamentEditionSearchButton";
 import TournamentAdd from "../components/TournamentAdd";
+import { Link } from "react-router-dom";
 
 
 
@@ -25,14 +26,15 @@ function TournamentSearchPage() {
 	}
 	return (
 		<>
-			{tournaments.map((tournament) => {
-				return <div key={tournament.id}>
-				<h2 key={tournament.id}>{tournament.name}</h2>
+			{tournaments.map((tournament) => (
+				<div key={tournament.id}>
+					<Link key={tournament.id} to={`/tournaments/${tournament.id}`} ><h2>{tournament.name}</h2></Link>
+					<br/>
 				{tournament.editions.map((tournamentEdition) => (
 					<TournamentEditionSearchButton tournamentEdition={tournamentEdition} />		
 				))}
 				</ div>
-			})}
+			))}
 
 			<h1>Add Tournament</h1>
 			<TournamentAdd />

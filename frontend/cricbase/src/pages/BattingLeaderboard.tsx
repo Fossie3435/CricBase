@@ -5,7 +5,11 @@ import { BattingLeaderboardEntry } from "../types/Statline";
 import './Leaderboard.css';
 import { getShortBattingPerformanceSummary } from "../utils/battingPerformance";
 
-function BattingLeaderboard() {
+interface BattingLeaderboardProps {
+	type: string;
+}
+
+function BattingLeaderboard( {type}: BattingLeaderboardProps ) {
 	const { id } = useParams();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const sortColumn = searchParams.get("sort") ?? "runs";
@@ -24,11 +28,14 @@ function BattingLeaderboard() {
 	if(id == undefined) {
 		return <p>Invalid ID!</p>
 	}
+	if(type == undefined || (type != "tournaments" && type != "editions")) {
+		return <p>Invalid Type!</p>
+	}	
 
 	useEffect(() =>  {
 		async function getLeaderboard() {
 			const response = await fetch(
-				`http://localhost:8080/stats/editions/${id}/leaderboards/batting`
+				`http://localhost:8080/stats/${type}/${id}/leaderboards/batting`
 			);
 			const data = await response.json();
 			setLeaderboard(data);
