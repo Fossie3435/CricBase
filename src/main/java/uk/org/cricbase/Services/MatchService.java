@@ -274,8 +274,4 @@ public class MatchService {
 	public LocalDate getDateOfLastMatchByTournamentEditionId(long tournamentEditionId) {
 		return this.matchMapper.getDateOfLastMatchByTournamentEditionId(tournamentEditionId);
 	}
-
-    
-    
-    
 }

@@ -20,6 +20,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Service;
 
 import uk.org.cricbase.DTOs.DetailedInningSummary;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
@@ -261,9 +262,9 @@ public interface MatchMapper {
     
     @Insert("""
             INSERT INTO Innings
-            (match_id, byes, leg_byes, no_balls, penalty_runs, runs, wickets_taken, wides, batting_team_id, bowling_team_id, total_runs)
+            (match_id, byes, leg_byes, no_balls, penalty_runs, runs, wickets_taken, wides, batting_team_id, bowling_team_id, total_runs, inning_number, target)
             VALUES
-            (#{match.id}, #{byes}, #{legbyes}, #{noballs}, #{penaltyRuns}, #{runs}, #{wicketsTaken}, #{wides}, #{battingTeam.id}, #{bowlingTeam.id}, #{totalRuns})
+            (#{match.id}, #{byes}, #{legbyes}, #{noballs}, #{penaltyRuns}, #{runs}, #{wicketsTaken}, #{wides}, #{battingTeam.id}, #{bowlingTeam.id}, #{totalRuns}, #{inningNumber}, #{target})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertInning(Inning inning);
@@ -324,9 +325,9 @@ public interface MatchMapper {
 
     @Insert("""
             INSERT INTO deliveries
-            (byes, leg_byes, no_balls, penalty_runs, runs, total_delivery_count, wides, batting_performance_id, bowling_performance_id, over_id, wicket_id, bowler_id, batter_id, non_striker_id, delivery_count, non_striker_batting_performance_id)
+            (byes, leg_byes, no_balls, penalty_runs, runs, total_delivery_count, wides, batting_performance_id, bowling_performance_id, over_id, wicket_id, bowler_id, batter_id, non_striker_id, delivery_count, non_striker_batting_performance_id, total, wickets)
             VALUES
-            (#{byes}, #{legbyes}, #{noballs}, #{penaltyRuns}, #{runs}, #{totalDeliveryCount}, #{wides}, #{battingPerformance.id}, #{bowlingPerformance.id}, #{over.id}, #{wicket.id}, #{bowler.id}, #{batter.id}, #{nonStriker.id}, #{deliveryCount}, #{nonStrikerBattingPerformance.id} )
+            (#{byes}, #{legbyes}, #{noballs}, #{penaltyRuns}, #{runs}, #{totalDeliveryCount}, #{wides}, #{battingPerformance.id}, #{bowlingPerformance.id}, #{over.id}, #{wicket.id}, #{bowler.id}, #{batter.id}, #{nonStriker.id}, #{deliveryCount}, #{nonStrikerBattingPerformance.id}, #{total}, #{wicketsTaken} )
             """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertDelivery(Delivery delivery);
@@ -419,4 +420,34 @@ public interface MatchMapper {
 			LIMIT 1
 	""")
     LocalDate getDateOfLastMatchByTournamentEditionId(@Param("tId") long tournamentEditionId);
+	
+	@Results(id = "matchForPointAllocation", value = {
+        @Result(property = "id", column = "id"),
+		@Result(property = "resultType", column = "result_type"),
+		@Result(property = "teamOne.id", column = "team_one_id"),
+		@Result(property = "teamTwo.id", column = "team_two_id"),
+		@Result(property = "winner.id", column = "winner")
+	})
+	@Select("""
+		SELECT 
+			m.id AS id,
+			result_type,
+			t1.id AS team_one_id,
+			t2.id AS team_two_id,
+			winner
+		FROM matches m
+		JOIN teams t1 ON t1.match_id = m.id
+    	JOIN teams t2 ON t2.match_id = m.id
+        	AND t1.id < t2.id
+    	WHERE m.id = #{mId}
+	""")
+    Match findMatchById(@Param("mId") long matchId);
+
+	@Select("""
+		SELECT id
+		FROM matches
+		WHERE tournament_id = #{tId}
+		AND type = 'GROUP_STAGE'
+	""")
+    List<Long> findGroupStageMatchIdsByTournamentEditionId(@Param("tId") long tournamentEditionId);
 }

@@ -12,8 +12,7 @@ public class DetailedTournamentEditionSummary {
 	private Long tournamentId;
 	private String season;
 	private List<MatchSummary> matches;
-	
-
+	private List<RosterPointsLeaderboardEntry> pointsTable;
 	public DetailedTournamentEditionSummary() {}
 
 	public long getId() {
@@ -79,4 +78,14 @@ public class DetailedTournamentEditionSummary {
 	public void setSeason(String season) {
 		this.season = season;
 	}
+
+	public List<RosterPointsLeaderboardEntry> getPointsTable() {
+		return pointsTable;
+	}
+
+	public void setPointsTable(List<RosterPointsLeaderboardEntry> pointsTable) {
+		this.pointsTable = pointsTable;
+	}
+
+
 }

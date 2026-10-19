@@ -119,7 +119,8 @@ public interface TournamentMapper {
 		@Result(property = "edition", column = "edition"),
 		@Result(property = "tournamentId", column = "tournament_id"),
 		@Result(property = "season", column = "season"),
-		@Result(property = "matches", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.MatchMapper.findMatchSummariesByTournamentEditionId"))
+		@Result(property = "matches", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.MatchMapper.findMatchSummariesByTournamentEditionId")),
+		@Result(property = "pointsTable", column = "id", many=@Many(select = "uk.org.cricbase.Mappers.RosterMapper.findPointsTableByTournamentEditionId"))
 	})
 	@Select("""
 		SELECT

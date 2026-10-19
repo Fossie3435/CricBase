@@ -21,15 +21,7 @@ enum MatchType {
     KNOCKOUT
 }
 
-enum ResultType {
-    RESULT,
-    DRAW,
-    TIE,
-    CANCELLED,
-    ABANDONED,
-    IN_PROGRESS,
-    NO_RESULT
-}
+
 /**
  *
  */
@@ -55,29 +47,28 @@ public class Match {
     private Team teamTwo;
     
     private Player playerOfTheMatch;
-    private String playerOfTheMatchString;
     
     private MatchType matchType;
     private ResultType resultType;
     private Team winner;
-    private String winnerString;
     
-    private Integer inningsMargin; // innings | runs | balls | wickets. null means not applicatable
+    private Integer inningsMargin; 
     private Integer runsMargin;
     private Integer ballsMargin;
     private Integer wicketsMargin;
     
     private Team tossWinner;
-    private String tossWinnerString;
     private String tossDecision;
-    
 	private TournamentEdition tournament;
     // umpires
     
     private Map<String, Object> registry;
-    
     private List<String>[] nameStrings = new List[2];
+
+    private String playerOfTheMatchString;
+    private String tossWinnerString;
     private String tournamentString;
+    private String winnerString;
 
     public Match() {
         
@@ -123,8 +114,18 @@ public class Match {
         for(int i = 0; i < innings.size(); i++) {
             innings.get(i).setMatch(this);
             innings.get(i).setTeams(teamOne, teamTwo);
+			innings.get(i).setInningNumber(i+1);
             innings.get(i).generatePerformances();
         }
+		int netRuns = 0;
+		for(int i = 0; i < innings.size() - 1; i++) {
+			if(innings.get(i).getBattingTeam() == innings.get(0).getBattingTeam()) {
+				netRuns += innings.get(i).getTotalRuns();
+			} else {
+				netRuns -= innings.get(i).getTotalRuns();
+			}
+		}
+		innings.get(innings.size() - 1).setTarget(netRuns + 1);
     }
 	public void initGround(GroundService groundService) {
         this.ground = groundService.getGroundByName(venue)

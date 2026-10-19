@@ -78,4 +78,10 @@ public class TournamentController {
 	public ResponseEntity<List<TournamentSummary>> getAllTournamentSummaries() {
 		return ResponseEntity.ok(tournamentService.getAllTournamentSummaries());	
 	}
+
+	@GetMapping("/edition/{tournamentEditionId}/updatepoints")
+	public ResponseEntity<Void> updatepoints(@PathVariable long tournamentEditionId) {
+		tournamentService.updateTournamentEditionPoints(tournamentEditionId);
+		return ResponseEntity.ok().build();
+	}
 }

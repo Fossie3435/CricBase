@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
- * @author Benjamin Foster
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Delivery {
@@ -53,6 +52,9 @@ public class Delivery {
     private int noballs;
     private int penaltyRuns;
     private Wicket wicket;
+	
+	private int total;
+	private int wicketsTaken;
     
     @JsonProperty("runs")
     private void unpackRuns(Map<String, Object> runs) {
@@ -264,6 +266,22 @@ public class Delivery {
 
 	public void setNonStrikerBattingPerformance(BattingPerformance nonStrikerBattingPerformance) {
 		this.nonStrikerBattingPerformance = nonStrikerBattingPerformance;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	public int getWicketsTaken() {
+		return wicketsTaken;
+	}
+
+	public void setWicketsTaken(int wicketsTaken) {
+		this.wicketsTaken = wicketsTaken;
 	}
 }
     

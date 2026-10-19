@@ -20,6 +20,7 @@ import uk.org.cricbase.DTOs.TournamentEditionCreateRequest;
 import uk.org.cricbase.DTOs.TournamentSummary;
 import uk.org.cricbase.Mappers.RosterMapper;
 import uk.org.cricbase.Mappers.TournamentMapper;
+import uk.org.cricbase.Models.Match;
 import uk.org.cricbase.Models.Roster;
 import uk.org.cricbase.Models.Tournament;
 import uk.org.cricbase.Models.TournamentEdition;
@@ -34,15 +35,21 @@ public class TournamentService {
     private final MatchService matchService;
 	private final RosterMapper rosterMapper;
 	private final StatLineService statLineService;
+	private final PointsService pointsService;
 
 	private ArrayList<Tournament> activeTournaments;
 
-	public TournamentService(TournamentMapper tournamentMapper, MatchService matchService, RosterMapper rosterMapper, StatLineService statLineService) {
+	public TournamentService(TournamentMapper tournamentMapper, 
+			MatchService matchService, 
+			RosterMapper rosterMapper, 
+			StatLineService statLineService, 
+			PointsService pointsService) {
+
 		this.tournamentMapper = tournamentMapper;
 		this.matchService = matchService;
 		this.rosterMapper = rosterMapper;
 		this.statLineService = statLineService;
-
+		this.pointsService = pointsService;
 		this.activeTournaments = new ArrayList<>();
 	}
 
@@ -170,7 +177,8 @@ public class TournamentService {
     public List<TournamentSummary> getAllTournamentSummaries() {
     	return this.tournamentMapper.findAllTournamentSummaries();
 	}
-
 	
-
+	public void updateTournamentEditionPoints(long tournamentEditionId) {
+		this.pointsService.calculatePointsForTournamentEdition(tournamentEditionId);
+	}
 }

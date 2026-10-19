@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
+import uk.org.cricbase.DTOs.RosterPointsLeaderboardEntry;
 import uk.org.cricbase.DTOs.RosterSummary;
 import uk.org.cricbase.Models.PlayerRosterContainer;
 import uk.org.cricbase.Models.Roster;
@@ -81,4 +82,24 @@ public interface RosterMapper {
 
 	""")
     Roster findRosterByTournamentIdAndName(@Param("rId") long id, @Param("rName")String name);
+	
+	@Results(id="rosterPointsLeaderboardEntry", value={
+		@Result(property="id", column="id"),
+		@Result(property = "name", column = "name"),
+		@Result(property = "tournamentEditionId", column = "tournament_edition_id"),
+		@Result(property = "points", column = "points")
+	})
+	@Select("""
+		SELECT 
+			r.id AS id, 
+			r.name AS name,
+			r.tournament_edition_id AS tournament_edition_id,
+			SUM(t.points) AS points
+		FROM rosters r 
+		JOIN teams t ON r.id = t.roster_id 
+		WHERE r.tournament_edition_id = #{tId} 
+		GROUP BY r.id, r.name 
+		ORDER BY SUM(t.points) DESC;
+	""")
+    List<RosterPointsLeaderboardEntry> findPointsTableByTournamentEditionId(@Param("tId") long tournamentEditionId);
 }

@@ -16,10 +16,6 @@ import org.apache.ibatis.annotations.Select;
 import uk.org.cricbase.DTOs.BowlingPerformanceSummary;
 import uk.org.cricbase.Models.BowlingPerformance;
 
-/**
- *
- * @author Benjamin
- */
 @Mapper
 public interface BowlingPerformanceMapper {
     

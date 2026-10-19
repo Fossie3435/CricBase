@@ -13,7 +13,6 @@ import java.util.List;
 
 /**
  *
- * @author Benjamin Foster
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Inning {
@@ -41,6 +40,11 @@ public class Inning {
     private List<BattingPerformance> battingPerformances;
     
     private List<BowlingPerformance> bowlingPerformances;
+
+	private int inningNumber;
+
+	@JsonIgnore
+	private Integer target;
     
     private int runs;
     
@@ -74,6 +78,7 @@ public class Inning {
         ArrayList<FallOfWicket> fallOfWickets = new ArrayList<>();
         int currentBattingPosition = 0;
         int currentBowlingPosition = 0;
+		int totalDeliveryCount = 0;
         int wicketsTaken = 0;
         int runs = 0;
         int wides = 0;
@@ -85,7 +90,7 @@ public class Inning {
         Over currentOver;
         Delivery currentDelivery;
         int legalDeliveriesInOver;
-        int totalDeliveryCount = 0;
+
         for(int overIndex = 0; overIndex < overs.size(); overIndex++) {
             legalDeliveriesInOver = 1;
             currentOver = overs.get(overIndex);
@@ -96,6 +101,8 @@ public class Inning {
                 currentDelivery.setOver(currentOver);
                 currentDelivery.setTotalDeliveryCount(totalDeliveryCount);
                 currentDelivery.setDeliveryCount(legalDeliveriesInOver);
+				currentDelivery.setTotal(runs + wides + noballs + byes + legbyes + penaltyRuns);
+				currentDelivery.setWicketsTaken(wicketsTaken);
                 
                 currentDelivery.setBatter(battingTeam.getPlayer(currentDelivery.getBatterString()));
                 currentDelivery.setBowler(bowlingTeam.getPlayer(currentDelivery.getBowlerString()));
@@ -336,7 +343,21 @@ public class Inning {
     public void setBowlingTeam(Team bowlingTeam) {
         this.bowlingTeam = bowlingTeam;
     }
-    
+
+	public int getInningNumber() {
+		return inningNumber;
+	}
+	public void setInningNumber(int inningNumber) {
+		this.inningNumber = inningNumber;
+	}
+
+    public void setTarget(int i) {
+    	this.target = i;
+	}
+
+	public Integer getTarget() {
+		return this.target;
+	}
     
     /**
     public List<Powerplay> getPowerplays() {
