@@ -14,6 +14,12 @@ export interface TournamentEdition{
 	edition: number;
 	season: string;
 }
+export interface RosterPointsLeaderboardEntry {
+	id: number;
+	name: string;
+	tournamentEditionId: number;
+	points: number;
+}
 
 export interface DetailedTournamentEdition {
 	id: number;
@@ -23,4 +29,5 @@ export interface DetailedTournamentEdition {
 	edition: number;
 	season: string; 
 	matches: MatchSummary[];
+	pointsTable: RosterPointsLeaderboardEntry[];
 }

@@ -3,6 +3,11 @@
 	grid-template-columns: 1fr 1fr;
 }
 
+.topBar {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
 .matchList {
 	background-color: violet;
 	display: grid;

@@ -3,6 +3,7 @@ import { DetailedTournamentEdition } from "../types/Tournament";
 import { useParams } from "react-router-dom";
 import MatchSummary from "../components/MatchSummary";
 import StatLeadersBlock from "../components/StatLeadersBlock";
+import PointsTable from "../components/PointsTable";
 import "../components/TournamentEdition.css";
 
 function TournamentEditionPage() {
@@ -30,10 +31,17 @@ function TournamentEditionPage() {
 
 	return (
 		<div className="editionPage">
-			<h1>{edition.name} {edition.season}</h1>
-			<h5>Edition: {edition.edition}</h5>
-			<h5>Start: {edition.start.toString()}</h5>
-			<h5>End: {edition.end.toString()}</h5>
+			<div className="topBar">
+				<div className="info">
+					<h1>{edition.name} {edition.season}</h1>
+					<h5>Edition: {edition.edition}</h5>
+					<h5>Start: {edition.start.toString()}</h5>
+					<h5>End: {edition.end.toString()}</h5>
+				</div>
+				<div className="pointsTable">
+					<PointsTable key={"EditionPoints" + edition.id} pointsTable={edition.pointsTable} />
+				</div>
+			</div>
 			<div className="page">
 				<div className="matchList">	
 				{edition.matches.map((match) => {
