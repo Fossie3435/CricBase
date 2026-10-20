@@ -19,6 +19,10 @@ export interface RosterPointsLeaderboardEntry {
 	name: string;
 	tournamentEditionId: number;
 	points: number;
+	matches: number;
+	wins: number;
+	losses: number;
+	noResults: number;
 }
 
 export interface DetailedTournamentEdition {

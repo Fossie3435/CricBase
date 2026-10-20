@@ -87,17 +87,27 @@ public interface RosterMapper {
 		@Result(property="id", column="id"),
 		@Result(property = "name", column = "name"),
 		@Result(property = "tournamentEditionId", column = "tournament_edition_id"),
-		@Result(property = "points", column = "points")
+		@Result(property = "points", column = "points"),
+		@Result(property = "matches", column = "matches"),
+		@Result(property = "wins", column = "wins"),
+		@Result(property = "losses", column = "losses"),
+		@Result(property = "noResults", column = "no_results")
 	})
 	@Select("""
 		SELECT 
 			r.id AS id, 
 			r.name AS name,
 			r.tournament_edition_id AS tournament_edition_id,
-			SUM(t.points) AS points
+			SUM(t.points) AS points,
+			COUNT(*) as matches,
+			COUNT(*) FILTER(where m.winner = t.id) as wins,
+			COUNT(*) FILTER(WHERE m.winner != t.id AND m.result_type = 'RESULT') AS losses,
+			COUNT(*) FILTER(WHERE m.result_type = 'NO_RESULT') AS no_results
 		FROM rosters r 
-		JOIN teams t ON r.id = t.roster_id 
+		JOIN teams t ON t.roster_id = r.id
+		JOIN matches m ON t.match_id = m.id 
 		WHERE r.tournament_edition_id = #{tId} 
+		AND m.type = 'GROUP_STAGE'
 		GROUP BY r.id, r.name 
 		ORDER BY SUM(t.points) DESC;
 	""")
