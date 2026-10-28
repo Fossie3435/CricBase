@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import uk.org.cricbase.DTOs.PlayerRosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterSummary;
+import uk.org.cricbase.DTOs.RosterTournamentEditionEntry;
 import uk.org.cricbase.Mappers.RosterMapper;
 import uk.org.cricbase.Mappers.TournamentMapper;
 import uk.org.cricbase.Models.PlayerRosterContainer;
@@ -71,7 +72,7 @@ public class RosterService {
 		return (this.rosterMapper.findRosterSummaryById(rosterId));
     }
 
-    public List<RosterSummary> getAllRosters() {
+    public List<RosterTournamentEditionEntry> getAllRosters() {
 		return this.rosterMapper.findAllRosterSummaries();
     }
 

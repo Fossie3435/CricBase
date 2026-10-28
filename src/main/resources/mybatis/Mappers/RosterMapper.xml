@@ -25,4 +25,17 @@
 
     </resultMap>
 
+	<resultMap id="rosterTournamentEditionSummary" type="uk.org.cricbase.DTOs.RosterTournamentEditionEntry">
+		<id property="tournamentEditionSummary.id" column="tournament_edition_id"/>
+		
+		<association property="tournamentEditionSummary" javaType="uk.org.cricbase.DTOs.TournamentEditionSummary">
+        	<id property="id" column="tournament_edition_id"/>
+       		<result property="name" column="tournament_edition_name"/>
+        	<result property="edition" column="tournament_edition_edition"/>
+        	<result property="season" column="tournament_edition_season"/>
+    	</association>
+
+		<collection property="rosterSummary" resultMap="rosterSummary"/>
+
+	</resultMap>
 </mapper>

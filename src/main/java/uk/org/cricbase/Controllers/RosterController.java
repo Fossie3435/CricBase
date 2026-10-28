@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.org.cricbase.DTOs.PlayerRosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterSummary;
+import uk.org.cricbase.DTOs.RosterTournamentEditionEntry;
 import uk.org.cricbase.Services.RosterService;
 
 @RestController
@@ -43,7 +44,7 @@ public class RosterController {
 	}
 
 	@GetMapping("/getall")
-	public ResponseEntity<List<RosterSummary>> getAllRosters() {
+	public ResponseEntity<List<RosterTournamentEditionEntry>> getAllRosters() {
 		return ResponseEntity.ok(this.rosterService.getAllRosters());
 	}
 }
