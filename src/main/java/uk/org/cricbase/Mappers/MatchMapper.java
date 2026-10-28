@@ -20,13 +20,12 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.stereotype.Service;
-
 import uk.org.cricbase.DTOs.DetailedInningSummary;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
 import uk.org.cricbase.DTOs.InningSummary;
 import uk.org.cricbase.DTOs.MatchSummary;
 import uk.org.cricbase.DTOs.TeamSummary;
+import uk.org.cricbase.DTOs.TournamentEditionSummary;
 import uk.org.cricbase.Models.BattingPerformance;
 import uk.org.cricbase.Models.BowlingPerformance;
 import uk.org.cricbase.Models.Delivery;
@@ -450,4 +449,31 @@ public interface MatchMapper {
 		AND type = 'GROUP_STAGE'
 	""")
     List<Long> findGroupStageMatchIdsByTournamentEditionId(@Param("tId") long tournamentEditionId);
+
+	@Select("""
+		SELECT 
+			te.id, 
+			lower(te.dates) AS start,
+			upper(te.dates) AS end,
+			te.name,
+			te.edition,
+			te.season
+		FROM matches m
+		JOIN tournament_editions te ON m.tournament_id = te.id
+		GROUP BY te.id
+		HAVING COUNT(DISTINCT m.match_number) FILTER (WHERE m.match_number > 0) 
+		!= MAX(m.match_number) FILTER (WHERE m.match_number > 0)
+   		AND MIN(m.match_number) FILTER (WHERE m.match_number > 0) = 1;
+	""")
+    List<TournamentEditionSummary> findTournamentsWithMissingMatches();
+
+	@Select("""
+		SELECT
+			match_number
+		FROM matches
+		WHERE tournament_id = #{tId}
+		AND match_number > 0
+		ORDER BY match_number
+	""")
+    List<Integer> getMatchNumbersByTournamentEditionId(@Param("tId") long id);
 }

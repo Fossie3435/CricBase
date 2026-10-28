@@ -11,6 +11,7 @@ import MatchPage from './pages/MatchPage'
 import BattingLeaderboard from './pages/BattingLeaderboard'
 import BowlingLeaderboard from './pages/BowlingLeaderboard'
 import TournamentPage from './pages/TournamentPage'
+import MissingMatches from './pages/MissingMatches'
 
 function App() {
   	return (
@@ -31,6 +32,7 @@ function App() {
 				<Route path="/tournaments/:id/leaderboards/batting" element={<BattingLeaderboard type="tournaments" />} />
 				<Route path="/tournaments/editions/:id/leaderboards/bowling" element={<BowlingLeaderboard type="editions"/>} />
 				<Route path="/tournaments/:id/leaderboards/bowling" element={<BowlingLeaderboard type="tournaments" />} />
+				<Route path="/matches/missing" element={<MissingMatches/>}/>
             </Routes>
 		</BrowserRouter>
 		</>

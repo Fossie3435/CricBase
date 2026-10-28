@@ -7,6 +7,7 @@ package uk.org.cricbase.Services;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -15,8 +16,11 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
 import uk.org.cricbase.DTOs.MatchSummary;
+import uk.org.cricbase.DTOs.MissingMatch;
+import uk.org.cricbase.DTOs.TournamentEditionSummary;
 import uk.org.cricbase.Mappers.MatchMapper;
 import uk.org.cricbase.Models.BattingPerformance;
 import uk.org.cricbase.Models.BowlingPerformance;
@@ -26,6 +30,7 @@ import uk.org.cricbase.Models.Inning;
 import uk.org.cricbase.Models.Match;
 import uk.org.cricbase.Models.Over;
 import uk.org.cricbase.Models.Team;
+import uk.org.cricbase.Models.TournamentEdition;
 import uk.org.cricbase.Models.WicketFielder;
 
 /**
@@ -274,4 +279,27 @@ public class MatchService {
 	public LocalDate getDateOfLastMatchByTournamentEditionId(long tournamentEditionId) {
 		return this.matchMapper.getDateOfLastMatchByTournamentEditionId(tournamentEditionId);
 	}
+
+    public List<MissingMatch> getMissingMatches() {
+		ArrayList<MissingMatch> missingMatches = new ArrayList<>();
+		List<TournamentEditionSummary> tournamentSummaries = this.matchMapper.findTournamentsWithMissingMatches();
+
+		for(TournamentEditionSummary tournamentSummary : tournamentSummaries) {
+			MissingMatch matches = new MissingMatch(tournamentSummary);
+			List<Integer> matchNumbers = this.matchMapper.getMatchNumbersByTournamentEditionId(tournamentSummary.getId());
+			ArrayList<Integer> missingMatchNumbers = new ArrayList<>();	
+			int index = 0;
+			for(int i = 1; i < matchNumbers.getLast(); i++) {
+				if(matchNumbers.get(index) == i) {
+					index++;
+				} else {
+					missingMatchNumbers.add(i);
+				}
+			}
+				
+			matches.setMissingMatches(missingMatchNumbers);
+			missingMatches.add(matches);
+		}
+		return missingMatches;
+    }
 }
