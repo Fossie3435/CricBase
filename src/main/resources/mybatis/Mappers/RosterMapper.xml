@@ -35,7 +35,7 @@
         	<result property="season" column="tournament_edition_season"/>
     	</association>
 
-		<collection property="rosterSummary" resultMap="rosterSummary"/>
+		<collection property="rosterSummaries" resultMap="rosterSummary"/>
 
 	</resultMap>
 </mapper>

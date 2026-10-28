@@ -4,7 +4,7 @@ import java.util.List;
 
 public class RosterTournamentEditionEntry {
 	private TournamentEditionSummary tournamentEditionSummary;
-	private List<RosterSummary> rosterSummary;
+	private List<RosterSummary> rosterSummaries;
 
 	public RosterTournamentEditionEntry() {
 
@@ -18,11 +18,11 @@ public class RosterTournamentEditionEntry {
 		this.tournamentEditionSummary = tournamentEditionSummary;
 	}
 
-	public List<RosterSummary> getRosterSummary() {
-		return rosterSummary;
+	public List<RosterSummary> getRosterSummaries() {
+		return rosterSummaries;
 	}
 
-	public void setRosterSummary(List<RosterSummary> rosterSummary) {
-		this.rosterSummary = rosterSummary;
+	public void setRosterSummaries(List<RosterSummary> rosterSummaries) {
+		this.rosterSummaries = rosterSummaries;
 	}
 }

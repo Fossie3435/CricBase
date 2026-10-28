@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react"
 import { Roster } from "../types/Roster";
 import RosterList from "../components/RosterList";
+import { TournamentEdition } from "../types/Tournament";
+
+interface RosterTournamentEditionEntry {
+	tournamentEditionSummary: TournamentEdition;
+	rosterSummaries: Roster[];
+}
 
 function RosterSearchPage() {
-	const [rosters, setRosters] = useState<Roster[] | null>(null);
+	const [rosters, setRosters] = useState<RosterTournamentEditionEntry[] | null>(null);
 
 	async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -29,7 +35,7 @@ function RosterSearchPage() {
                 "http://localhost:8080/rosters/getall"
             );
 
-            const data: Roster[] = await response.json();
+            const data: RosterTournamentEditionEntry[] = await response.json();
 			console.log(data);
             setRosters(data);
         }
@@ -42,13 +48,17 @@ function RosterSearchPage() {
 
 	return (
 		<div>
-			<div className="rosterList">
-				{rosters.map(roster => (
-					<RosterList roster={roster} />
-				))}
-			</div>
-
-			<h3>Add a Roster</h3>
+			{rosters.map(roster => (
+				<div>
+					<h3>{roster.tournamentEditionSummary.name} {roster.tournamentEditionSummary.season}</h3>
+					<div className="rosterList">
+						{roster.rosterSummaries.map(rosterSummaries => (
+							<RosterList roster={rosterSummaries} />
+						))}
+					</div>
+				</div>
+			))}	
+						<h3>Add a Roster</h3>
 
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="name">Roster Name</label>
