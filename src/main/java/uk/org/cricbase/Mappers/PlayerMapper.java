@@ -95,5 +95,15 @@ public interface PlayerMapper {
 		WHERE m.tournament_id = #{tId}
 	""")
     List<Player> findPlayersByTournamentEdition(@Param("tId") long tournamentEditionId);
+	
+	@ResultMap("playerResult")
+	@Select("""
+		SELECT DISTINCT p.*
+		FROM players_teams pt
+		JOIN teams t ON pt.team_id = t.id
+		RIGHT JOIN players p ON pt.player_id = p.id
+		WHERE t.roster_id = #{rId}
+	""")
+    List<Player> findPlayersOnRoster(@Param("rId") long rosterId);
 
 }

@@ -14,20 +14,11 @@ import org.apache.ibatis.annotations.Select;
 import uk.org.cricbase.DTOs.RosterPointsLeaderboardEntry;
 import uk.org.cricbase.DTOs.RosterSummary;
 import uk.org.cricbase.DTOs.RosterTournamentEditionEntry;
-import uk.org.cricbase.Models.PlayerRosterContainer;
+import uk.org.cricbase.Models.Player;
 import uk.org.cricbase.Models.Roster;
 
 @Mapper
 public interface RosterMapper {
-
-	@Insert("""
-		INSERT INTO players_rosters
-		(player_id, active, roster_id)
-		VALUES
-		(#{player.id}, daterange(#{start}::date, #{end}::date, '[]'), #{roster.id})
-	""")
-	void insertPlayerOnRoster(PlayerRosterContainer p);
-
 	@Insert("""
 		INSERT INTO rosters
 		(name, tricode, tournament_edition_id)
@@ -117,4 +108,21 @@ public interface RosterMapper {
 		ORDER BY SUM(t.points) DESC;
 	""")
     List<RosterPointsLeaderboardEntry> findPointsTableByTournamentEditionId(@Param("tId") long tournamentEditionId);
+
+	@Insert("""
+		INSERT INTO players_rosters
+			(player_id, roster_id)
+		VALUES
+			(#{player.id}, #{rId})
+	""")
+    void insertPlayerOnRoster(@Param("player") Player player,@Param("rId") long rosterId);
+	
+	@Insert("""
+		SELECT 1
+		FROM players_rosters pr
+		WHERE pr.player_id = #{player.id} 
+		AND pr.roster_id = #{rId}
+	""")
+    boolean isPlayerOnRoster(@Param("player") Player player, @Param("rId") long rosterId);
+
 }

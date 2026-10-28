@@ -47,4 +47,14 @@ public class RosterController {
 	public ResponseEntity<List<RosterTournamentEditionEntry>> getAllRosters() {
 		return ResponseEntity.ok(this.rosterService.getAllRosters());
 	}
+
+	@GetMapping("/test")
+	public ResponseEntity<Void> test() {
+		for(RosterTournamentEditionEntry tournamentEditionEntries: this.rosterService.getAllRosters()) {
+			for(RosterSummary rosterSummary : tournamentEditionEntries.getRosterSummaries()) {
+				this.rosterService.insertCappedPlayersOnRoster(rosterSummary.getId());
+			}
+		}
+		return ResponseEntity.ok().build();
+	}
 }
