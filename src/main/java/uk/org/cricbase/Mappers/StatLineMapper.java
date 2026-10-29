@@ -91,12 +91,17 @@ public interface StatLineMapper {
 		bp.wicket_count AS best_wickets,
 		bp.runs_conceded AS best_runs,
 		(1.0 * bs.runs_conceded / NULLIF(bs.wickets, 0)) AS average,
-		(5.0 * bs.runs_conceded / NULLIF(bs.balls_bowled, 0)) AS economyRate
+		(5.0 * bs.runs_conceded / NULLIF(bs.balls_bowled, 0)) AS economyRate,
+		r.id AS roster_id,
+		r.tricode AS roster_tricode
     FROM bowling_stats bs
     JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
+	JOIN players_rosters pr ON pr.player_id = #{playerId}
+	JOIN rosters r ON pr.roster_id = r.id
 	JOIN bowling_performances bp ON bs.best = bp.id
     WHERE bs.bowler_id = #{playerId}
+	AND r.tournament_edition_id = bs.tournament_edition_id
 	ORDER BY lower(te.dates)
     """)
 @Results(id = "bowlingStatsSummary", value = {
@@ -120,6 +125,8 @@ public interface StatLineMapper {
 	@Result(property = "tournament.season", column = "te_season"),
 	@Result(property = "best.wicketsTaken", column = "best_wickets"),
 	@Result(property = "best.runsConceded", column = "best_runs"),
+	@Result(property = "rosterTricode", column = "roster_tricode"),
+	@Result(property = "rosterId", column = "roster_id"),
 })
     List<BowlingStatsSummary> getBowlingStatsSummary(@Param("playerId") String playerId);
 
@@ -141,13 +148,17 @@ public interface StatLineMapper {
         te.edition AS tournament_edition,
 		te.season AS tournament_season,
 		bp.runs AS best_runs,
-		bp.is_dismissed AS best_is_dismissed
-
+		bp.is_dismissed AS best_is_dismissed,
+		r.id AS roster_id,
+		r.tricode AS roster_tricode
     FROM batting_stats bs
     JOIN tournament_editions te
         ON bs.tournament_edition_id = te.id
 	JOIN batting_performances bp ON bp.id = bs.best
+	JOIN players_rosters pr ON pr.player_id = #{playerId}
+	JOIN rosters r ON pr.roster_id = r.id
     WHERE bs.batter_id = #{playerId}
+	AND r.tournament_edition_id = bs.tournament_edition_id
 	ORDER BY lower(te.dates)
     """)
 @Results( id = "battingStatsSummary", value = {
@@ -168,6 +179,8 @@ public interface StatLineMapper {
 	@Result(property = "tournament.season", column = "tournament_season"),
 	@Result(property = "best.runs", column = "best_runs"),
 	@Result(property = "best.isDismissed", column = "best_is_dismissed"),
+	@Result(property = "rosterTricode", column = "roster_tricode"),
+	@Result(property = "rosterId", column = "roster_id"),
 })
     List<BattingStatsSummary> getBattingStatsSummary(String playerId);
 
