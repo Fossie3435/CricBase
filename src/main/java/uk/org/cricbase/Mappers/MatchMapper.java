@@ -103,11 +103,11 @@ public interface MatchMapper {
 				p.nickname AS potm_nickname,
 				tw.name AS toss_winner_name
             FROM matches m 
-			JOIN grounds g ON m.ground_id = g.id
-			JOIN tournament_editions t ON t.tournament_id = t.id 
-			JOIN players p ON m.player_of_the_match_id = p.id
-			JOIN teams w ON m.winner = w.id
-			JOIN teams tw ON m.toss_winner = tw.id 
+			LEFT JOIN grounds g ON m.ground_id = g.id
+			LEFT JOIN tournament_editions t ON t.tournament_id = t.id 
+			LEFT JOIN players p ON m.player_of_the_match_id = p.id
+			LEFT JOIN teams w ON m.winner = w.id
+			LEFT JOIN teams tw ON m.toss_winner = tw.id 
             WHERE m.id = #{id}
             """)
     MatchSummary findMatchSummaryById(long id);
@@ -143,8 +143,8 @@ public interface MatchMapper {
 				p.nickname AS potm_nickname,
 				tw.name AS toss_winner_name
             FROM matches m 
-			JOIN grounds g ON m.ground_id = g.id
-			JOIN tournament_editions t ON m.tournament_id = t.id 
+			LEFT JOIN grounds g ON m.ground_id = g.id
+			LEFT JOIN tournament_editions t ON m.tournament_id = t.id 
 			LEFT JOIN players p ON m.player_of_the_match_id = p.id
 			LEFT JOIN teams w ON m.winner = w.id
 			LEFT JOIN teams tw ON m.toss_winner = tw.id 
@@ -166,6 +166,7 @@ public interface MatchMapper {
             FROM innings
             JOIN teams ON innings.batting_team_id = teams.id
             WHERE innings.match_id = #{matchId}
+			ORDER BY is_super_over
             """)
     List<InningSummary> findInningSummariesByMatchId(long matchId);
     
@@ -213,7 +214,8 @@ public interface MatchMapper {
             FROM innings i
 			JOIN teams batting ON batting.id = i.batting_team_id
 			JOIN teams bowling ON bowling.id = i.bowling_team_id
-            WHERE i.match_id = #{matchId};
+            WHERE i.match_id = #{matchId}
+			ORDER BY is_super_over
             """)
     List<DetailedInningSummary> findDetailedInningSummaryByMatchId(long matchId);
     

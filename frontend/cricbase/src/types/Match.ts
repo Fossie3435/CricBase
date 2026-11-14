@@ -122,17 +122,29 @@ export interface TeamSummary {
 }
 
 export function getResultString(result: Result): string {
-	if(result.type == "RESULT") {
-		var returnString: string = result.winner + " won by ";
+	switch (result.type) {
+		case "RESULT":
+			var returnString: string = result.winner + " won by ";
 
-		if(result.runsMargin != null) {
-			returnString += result.runsMargin + " runs";
-		} else if(result.wicketsMargin != null) {
-			returnString += result.wicketsMargin + " wickets";
-		}
-
-		return returnString;
-	}
+			if(result.runsMargin != null) {
+				returnString += result.runsMargin + " runs";
+			} else if(result.wicketsMargin != null) {
+				returnString += result.wicketsMargin + " wickets";
+			}
+			return returnString;
+		case "NO_RESULT":
+			return "No result";
+		case "TIE":
+			if(result.winner == null) {
+				return "Tie";
+			} else { 
+				return "Tie ("+ result.winner + " won super-over)";
+			}
+		case "DRAWN":
+			return "Draw"
+		case "ABANDONED":
+			return "Match abandoned without a ball bowled";
+	} 
 	return result.type;
 }
 
