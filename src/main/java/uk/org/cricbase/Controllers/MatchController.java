@@ -12,13 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import uk.org.cricbase.DTOs.AbandonedMatchCreateRequest;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
 import uk.org.cricbase.DTOs.MissingMatch;
 import uk.org.cricbase.Services.MatchService;
 
 /**
  *
- * @author Benjamin
  */
 @RestController
 @RequestMapping ("/matches")
@@ -52,5 +55,11 @@ public class MatchController {
         matchService.updateDates("src/main/resources/" + folderName);
         return ResponseEntity.accepted().build();
     }
+
+	@PostMapping("/abandoned")
+	public ResponseEntity<Void> addAbandonedMatch(@RequestBody AbandonedMatchCreateRequest request) {
+		matchService.createAbandonedMatch(request);
+		return ResponseEntity.ok().build();
+	}
     
 }
