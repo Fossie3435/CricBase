@@ -145,9 +145,9 @@ public interface MatchMapper {
             FROM matches m 
 			JOIN grounds g ON m.ground_id = g.id
 			JOIN tournament_editions t ON m.tournament_id = t.id 
-			JOIN players p ON m.player_of_the_match_id = p.id
-			JOIN teams w ON m.winner = w.id
-			JOIN teams tw ON m.toss_winner = tw.id 
+			LEFT JOIN players p ON m.player_of_the_match_id = p.id
+			LEFT JOIN teams w ON m.winner = w.id
+			LEFT JOIN teams tw ON m.toss_winner = tw.id 
             WHERE m.tournament_id = #{id}
 			ORDER BY date;
             """)
