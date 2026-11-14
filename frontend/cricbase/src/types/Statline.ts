@@ -13,7 +13,9 @@ export interface BattingLeaderboardEntry {
 }
 
 export interface BattingStatline {
-	tournament: TournamentEdition
+	tournament: TournamentEdition;
+	rosterTricode: string;
+	rosterId: number;
 	matches: number;
 	innings: number;
 	runs: number;
@@ -32,7 +34,9 @@ export interface BowlingLeaderboardEntry {
 }
 
 export interface BowlingStatline {
-	tournament: TournamentEdition
+	tournament: TournamentEdition;
+	rosterTricode: string;
+	rosterId: number;
 	matches: number;
 	innings: number;
 	ballsBowled: number;

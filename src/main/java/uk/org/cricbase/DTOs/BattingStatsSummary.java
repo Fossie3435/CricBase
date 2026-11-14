@@ -1,7 +1,9 @@
 package uk.org.cricbase.DTOs;
 
 public class BattingStatsSummary {
-	private TournamentEditionSummary tournament;
+	private TournamentEditionSummary tournament;	
+	private String rosterTricode;
+	private Long rosterId;
 	private int matches;
 	private int innings;
 	private int runs;
@@ -100,5 +102,21 @@ public class BattingStatsSummary {
 
 	public void setBest(BattingPerformanceSummary best) {
 		this.best = best;
+	}
+
+	public String getRosterTricode() {
+		return rosterTricode;
+	}
+
+	public void setRosterTricode(String rosterTricode) {
+		this.rosterTricode = rosterTricode;
+	}
+
+	public Long getRosterId() {
+		return rosterId;
+	}
+
+	public void setRosterId(Long rosterId) {
+		this.rosterId = rosterId;
 	}
 }

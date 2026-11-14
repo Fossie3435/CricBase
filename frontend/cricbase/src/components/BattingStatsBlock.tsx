@@ -20,6 +20,7 @@ function BattingStatsBlock( {battingStats} : BattingStatProps) {
 				<tr>
 					<th>Tournament</th>
 					<th>Season</th>
+					<th>Team</th>
 					<th>Matches</th>
 					<th>Innings</th>
 					<th>Not Outs</th>
@@ -38,6 +39,7 @@ function BattingStatsBlock( {battingStats} : BattingStatProps) {
 					<tr key={stat.tournament.id}>
 						<td>{stat.tournament.name}</td>
 						<td>{stat.tournament.season}</td>
+						<td><a href={`/rosters/${stat.rosterId}`}>{stat.rosterTricode}</a></td>
 						<td>{stat.matches}</td>
 						<td>{stat.innings}</td>
 						<td>{stat.innings - stat.dismissals}</td>

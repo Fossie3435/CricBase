@@ -19,6 +19,7 @@ function BattingStatsBlock( {bowlingStats} : BowlingStatProps) {
 			<tr>
 				<th>Tournament</th>
 				<th>Season</th>
+				<th>Team</th>
 				<th>Matches</th>
 				<th>Innings</th>
 				<th>Economy</th>
@@ -39,6 +40,7 @@ function BattingStatsBlock( {bowlingStats} : BowlingStatProps) {
 				<tr key={stat.tournament.id}>
 					<td>{stat.tournament.name}</td>
 					<td>{stat.tournament.season}</td>
+					<td><a href={`/rosters/${stat.rosterId}`}>{stat.rosterTricode}</a></td>
 					<td>{stat.matches}</td>
 					<td>{stat.innings}</td>
 					<td>{stat.economyRate.toFixed(2)}</td>

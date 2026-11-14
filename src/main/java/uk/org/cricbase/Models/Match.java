@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package uk.org.cricbase.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,13 +10,6 @@ import uk.org.cricbase.Services.GroundService;
 import uk.org.cricbase.Services.PlayerService;
 import uk.org.cricbase.Services.RosterService;
 import uk.org.cricbase.Services.TournamentService;
-
-enum MatchType {
-    WARM_UP,
-    GROUP_STAGE,
-    KNOCKOUT
-}
-
 
 /**
  *

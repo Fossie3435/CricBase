@@ -13,20 +13,12 @@ import org.apache.ibatis.annotations.Select;
 
 import uk.org.cricbase.DTOs.RosterPointsLeaderboardEntry;
 import uk.org.cricbase.DTOs.RosterSummary;
-import uk.org.cricbase.Models.PlayerRosterContainer;
+import uk.org.cricbase.DTOs.RosterTournamentEditionEntry;
+import uk.org.cricbase.Models.Player;
 import uk.org.cricbase.Models.Roster;
 
 @Mapper
 public interface RosterMapper {
-
-	@Insert("""
-		INSERT INTO players_rosters
-		(player_id, active, roster_id)
-		VALUES
-		(#{player.id}, daterange(#{start}::date, #{end}::date, '[]'), #{roster.id})
-	""")
-	void insertPlayerOnRoster(PlayerRosterContainer p);
-
 	@Insert("""
 		INSERT INTO rosters
 		(name, tricode, tournament_edition_id)
@@ -52,21 +44,25 @@ public interface RosterMapper {
 	""")
 	RosterSummary findRosterSummaryById(@Param("rId") long rosterId);
 
-	@ResultMap("rosterSummary")
+	@ResultMap("rosterTournamentEditionSummary")
 	@Select("""
 		SELECT
 			r.id AS roster_id,
 			r.name AS roster_name,
-			r.tournament_edition_id AS tournament_edition_id,
-
+			te.id AS tournament_edition_id,
+			te.name AS tournament_edition_name,
+			te.season AS tournament_edition_season,
+			te.edition AS tournament_edition_edition,
 			p.id AS player_id,
 			p.nickname AS player_nickname,
 			p.name AS player_name
 		FROM players_rosters pr
 		JOIN players p ON pr.player_id = p.id
 		RIGHT JOIN rosters r ON pr.roster_id = r.id
+		JOIN tournament_editions te ON r.tournament_edition_id = te.id
+		ORDER BY te.id, r.id, p.id
 	""")
-    List<RosterSummary> findAllRosterSummaries();
+    List<RosterTournamentEditionEntry> findAllRosterSummaries();
 
 	@Results(id="roster", value={
 		@Result(property="id", column="id"),
@@ -112,4 +108,21 @@ public interface RosterMapper {
 		ORDER BY SUM(t.points) DESC;
 	""")
     List<RosterPointsLeaderboardEntry> findPointsTableByTournamentEditionId(@Param("tId") long tournamentEditionId);
+
+	@Insert("""
+		INSERT INTO players_rosters
+			(player_id, roster_id)
+		VALUES
+			(#{player.id}, #{rId})
+	""")
+    void insertPlayerOnRoster(@Param("player") Player player,@Param("rId") long rosterId);
+	
+	@Insert("""
+		SELECT 1
+		FROM players_rosters pr
+		WHERE pr.player_id = #{player.id} 
+		AND pr.roster_id = #{rId}
+	""")
+    boolean isPlayerOnRoster(@Param("player") Player player, @Param("rId") long rosterId);
+
 }

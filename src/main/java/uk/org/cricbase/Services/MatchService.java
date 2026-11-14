@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
+import uk.org.cricbase.DTOs.AbandonedMatchCreateRequest;
 import uk.org.cricbase.DTOs.DetailedMatchSummary;
 import uk.org.cricbase.DTOs.MatchSummary;
 import uk.org.cricbase.DTOs.MissingMatch;
@@ -26,8 +26,10 @@ import uk.org.cricbase.Models.BattingPerformance;
 import uk.org.cricbase.Models.BowlingPerformance;
 import uk.org.cricbase.Models.Delivery;
 import uk.org.cricbase.Models.FallOfWicket;
+import uk.org.cricbase.Models.Ground;
 import uk.org.cricbase.Models.Inning;
 import uk.org.cricbase.Models.Match;
+import uk.org.cricbase.Models.MatchType;
 import uk.org.cricbase.Models.Over;
 import uk.org.cricbase.Models.Team;
 import uk.org.cricbase.Models.TournamentEdition;
@@ -301,5 +303,34 @@ public class MatchService {
 			missingMatches.add(matches);
 		}
 		return missingMatches;
+    }
+
+    public void createAbandonedMatch(AbandonedMatchCreateRequest request) {
+		Match match = new Match();
+		match.setBallsPerOver(request.ballsPerOver());
+		match.setGender(request.gender());
+		match.setMatchFormat(request.matchFormat());
+		match.setOvers(request.overs());
+		match.setSeason(request.season());
+		if (request.team_type().equals("club")) {
+			match.setTeamType(request.team_type());
+		}
+		// validate ground id
+		Optional<Ground> ground = groundService.getGroundById(request.groundId());
+		if (ground.isPresent()) {
+			match.setGround(ground.get());
+		} 
+		// should be a switch on match type 
+		match.setMatchType(MatchType.GROUP_STAGE);
+		match.setDate(request.date());
+		match.setTeamOne(new Team(request.homeTeam(), match));
+		match.setTeamTwo(new Team(request.awayTeam(), match));
+		match.setTournament(new TournamentEdition(request.tournamentId()));
+		match.setMatchNumber(request.matchNumber());
+		
+		this.matchMapper.insertMatch(match);
+		this.matchMapper.insertTeam(match.getTeamOne());
+		this.matchMapper.insertTeam(match.getTeamTwo());
+		
     }
 }

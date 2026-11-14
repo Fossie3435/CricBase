@@ -2,6 +2,8 @@ package uk.org.cricbase.DTOs;
 
 public class BowlingStatsSummary {
 	private TournamentEditionSummary tournament;	
+	private String rosterTricode;
+	private Long rosterId;
 	private int matches;
 	private int innings;
 	private int ballsBowled;
@@ -129,5 +131,21 @@ public class BowlingStatsSummary {
 
 	public void setBest(BowlingPerformanceSummary best) {
 		this.best = best;
+	}
+
+	public Long getRosterId() {
+		return rosterId;
+	}
+
+	public void setRosterId(Long rosterId) {
+		this.rosterId = rosterId;
+	}
+
+	public String getRosterTricode() {
+		return rosterTricode;
+	}
+
+	public void setRosterTricode(String rosterTricode) {
+		this.rosterTricode = rosterTricode;
 	}
 }

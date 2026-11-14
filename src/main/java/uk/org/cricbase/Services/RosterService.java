@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 import uk.org.cricbase.DTOs.PlayerRosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterCreateRequest;
 import uk.org.cricbase.DTOs.RosterSummary;
+import uk.org.cricbase.DTOs.RosterTournamentEditionEntry;
+import uk.org.cricbase.Mappers.PlayerMapper;
 import uk.org.cricbase.Mappers.RosterMapper;
 import uk.org.cricbase.Mappers.TournamentMapper;
+import uk.org.cricbase.Models.Player;
 import uk.org.cricbase.Models.PlayerRosterContainer;
 import uk.org.cricbase.Models.Roster;
 import uk.org.cricbase.Models.TournamentEdition;
@@ -17,11 +20,13 @@ import uk.org.cricbase.Models.TournamentEdition;
 @Service
 public class RosterService {
 	private final RosterMapper rosterMapper;
+	private final PlayerMapper playerMapper;
 	private final TournamentMapper tournamentMapper;
 
-	public RosterService(RosterMapper rosterMapper, TournamentMapper tournamentMapper) {
+	public RosterService(RosterMapper rosterMapper, TournamentMapper tournamentMapper, PlayerMapper playerMapper) {
 		this.rosterMapper = rosterMapper;
 		this.tournamentMapper = tournamentMapper;
+		this.playerMapper = playerMapper;
 	}
 
 	public void addNewRoster(RosterCreateRequest request) {
@@ -35,7 +40,7 @@ public class RosterService {
 		}
 		try {
 			for(PlayerRosterContainer p : roster.getPlayers()) {
-				this.rosterMapper.insertPlayerOnRoster(p);
+				this.rosterMapper.insertPlayerOnRoster(p.getPlayer(), p.getRoster().getId());
 			}
 		} catch (DataAccessException e) {
 			e.printStackTrace();
@@ -59,7 +64,7 @@ public class RosterService {
 					if(prc.getEnd() == null) {
 						prc.setEnd(tournamentEdition.getEnd());
 					}
-					this.rosterMapper.insertPlayerOnRoster(prc);
+					this.rosterMapper.insertPlayerOnRoster(prc.getPlayer(), prc.getRoster().getId());
 				} catch (DataAccessException e) {
 					System.out.println("Player addition failed");
 				}
@@ -71,11 +76,21 @@ public class RosterService {
 		return (this.rosterMapper.findRosterSummaryById(rosterId));
     }
 
-    public List<RosterSummary> getAllRosters() {
+    public List<RosterTournamentEditionEntry> getAllRosters() {
 		return this.rosterMapper.findAllRosterSummaries();
     }
 
     public void insertRoster(Roster r) {
 		this.rosterMapper.insertRoster(r);
     }
+
+
+	public void insertCappedPlayersOnRoster(long rosterId) {
+		List<Player> players = this.playerMapper.findPlayersOnRoster(rosterId);	
+		for(Player player: players) {
+			if(!rosterMapper.isPlayerOnRoster(player, rosterId)) {
+				this.rosterMapper.insertPlayerOnRoster(player, rosterId);
+			}
+		}
+	}
 }
