@@ -9,8 +9,9 @@ function PointsTable({pointsTable}: PointsTableProps) {
 	return (<table className="pointsTable">
 		<tr>
 			<th>Name</th>
-			<th>W</th>
-			<th>L</th>
+			<th>Games</th>
+			<th>Wins</th>
+			<th>Losses</th>
 			<th>NR</th>
 			<th>Points</th>
 		</tr>

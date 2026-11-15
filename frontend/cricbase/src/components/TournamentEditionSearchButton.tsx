@@ -9,7 +9,7 @@ function TournamentEditionSearchButton( {tournamentEdition}: TournamentEditionSe
 	const navigate = useNavigate();
 
 	function handleClick() {
-		navigate(`editions/${tournamentEdition.id}`)
+		navigate(`/tournaments/editions/${tournamentEdition.id}`)
 	}
 
 	return (
