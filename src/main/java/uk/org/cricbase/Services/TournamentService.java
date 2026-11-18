@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.management.AttributeNotFoundException;
+
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,6 @@ import uk.org.cricbase.DTOs.TournamentEditionCreateRequest;
 import uk.org.cricbase.DTOs.TournamentSummary;
 import uk.org.cricbase.Mappers.RosterMapper;
 import uk.org.cricbase.Mappers.TournamentMapper;
-import uk.org.cricbase.Models.Match;
 import uk.org.cricbase.Models.Roster;
 import uk.org.cricbase.Models.Tournament;
 import uk.org.cricbase.Models.TournamentEdition;
@@ -179,6 +180,17 @@ public class TournamentService {
 	}
 	
 	public void updateTournamentEditionPoints(long tournamentEditionId) {
-		this.pointsService.calculatePointsForTournamentEdition(tournamentEditionId);
+		try {
+			this.pointsService.calculatePointsForTournamentEdition(tournamentEditionId);
+		} catch (AttributeNotFoundException e) {
+			//
+		}
+	}
+
+    public void updateAllPoints() {
+		List<Long> tournamentEditionIds = this.tournamentMapper.findAllTournamentEditionIds();
+		for (Long id : tournamentEditionIds) {
+			updateTournamentEditionPoints(id);
+		}
 	}
 }

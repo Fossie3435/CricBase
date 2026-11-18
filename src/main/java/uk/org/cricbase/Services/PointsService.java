@@ -2,10 +2,13 @@ package uk.org.cricbase.Services;
 
 import java.util.List;
 
+import javax.management.AttributeNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import uk.org.cricbase.DTOs.RosterPointsLeaderboardEntry;
 import uk.org.cricbase.Mappers.MatchMapper;
+import uk.org.cricbase.Mappers.PointsMapper;
 import uk.org.cricbase.Mappers.RosterMapper;
 import uk.org.cricbase.Mappers.TeamMapper;
 import uk.org.cricbase.Models.Match;
@@ -17,15 +20,20 @@ public class PointsService {
     private final MatchMapper matchMapper;
 	private final TeamMapper teamMapper;
 	private final RosterMapper rosterMapper;
+	private final PointsMapper pointsMapper;
 	
-	public PointsService(MatchMapper matchMapper, TeamMapper teamMapper, RosterMapper rosterMapper) {
+	public PointsService(MatchMapper matchMapper, TeamMapper teamMapper, RosterMapper rosterMapper, PointsMapper pointsMapper) {
 		this.matchMapper = matchMapper;
 		this.teamMapper = teamMapper;
 		this.rosterMapper = rosterMapper;
+		this.pointsMapper = pointsMapper;
 	}
 
-	public void calculatePointsForTournamentEdition(long tournamentEditionId) {
-		String criteriaJson = PointsCalculator.getBasicCriteriaJson(2, 0, 1);
+	public void calculatePointsForTournamentEdition(long tournamentEditionId) throws AttributeNotFoundException {
+		String criteriaJson = this.pointsMapper.findPointsCriteriaByTournamentEditionId(tournamentEditionId);
+		if (criteriaJson == null) {
+			throw new AttributeNotFoundException("missing points criteriaJson")
+		}
 		List<Long> matchIds = matchMapper.findGroupStageMatchIdsByTournamentEditionId(tournamentEditionId);
 		System.out.println(matchIds.size());
 		for(long matchId:matchIds) {

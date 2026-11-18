@@ -167,4 +167,10 @@ public interface TournamentMapper {
 		FROM tournaments
 	""")
     List<TournamentSummary> findAllTournamentSummaries();
+
+	@Select("""
+		SELECT id
+		FROM tournament_editions
+	""")
+    List<Long> findAllTournamentEditionIds();
 }
