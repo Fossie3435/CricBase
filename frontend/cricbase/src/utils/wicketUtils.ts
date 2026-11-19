@@ -10,7 +10,7 @@ export function getWicketString(bowlingTeam: TeamSummary, wicket: WicketSummary)
 			console.log(wicket.fielders)
 			if(wicket.bowlerId == wicket.fielders[0]?.fielder) {
 				console.log("caught and bowled")
-				return "c&b " + getPlayerOnTeam(bowlingTeam, wicket.bowlerId)
+				return "c&b " + getPlayerOnTeam(bowlingTeam, wicket.bowlerId).nickname
 			} else {
 				console.log(wicket.fielders)
 				console.log("Bowler ID:", wicket.bowlerId);
