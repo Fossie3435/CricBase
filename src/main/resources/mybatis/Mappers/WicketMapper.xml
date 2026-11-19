@@ -21,7 +21,7 @@
                     ofType="uk.org.cricbase.DTOs.FielderDto">
 
             <result property="fielder"
-                    column="fielder_name"/>
+                    column="fielder_id"/>
 
             <result property="isWicketkeeper"
                     column="fielder_is_wicketkeeper"/>

@@ -20,9 +20,10 @@ public interface WicketMapper {
 	@ResultMap("wicketSummary")
 	@Select("""
 		SELECT 
-			ba.name AS batter_name,
-			bo.name AS bowler_name,
+			ba.id AS batter_id,
+			bo.id AS bowler_id,
 			w.dismissal_type AS dismissal_type,
+			f.id AS fielder_id,
 			f.name AS fielder_name,
 			wf.ordinal AS fielder_ordinal,
 			wf.is_wicketkeeper AS fielder_is_wicketkeeper,
@@ -40,9 +41,10 @@ public interface WicketMapper {
 	@ResultMap("wicketSummary")
     @Select("""
             SELECT 
-			ba.name AS batter_name,
-			bo.name AS bowler_name,
+			ba.id AS batter_id,
+			bo.id AS bowler_id,
 			w.dismissal_type AS dismissal_type,
+			f.id AS fielder_id,
 			f.name AS fielder_name,
 			wf.ordinal AS fielder_ordinal,
 			wf.is_wicketkeeper AS fielder_is_wicketkeeper,
@@ -64,6 +66,7 @@ public interface WicketMapper {
 			bo.name AS bowler_name,
 			w.dismissal_type AS dismissal_type,
 			f.name AS fielder_name,
+			f.id AS fielder_id,
 			wf.ordinal AS fielder_ordinal,
 			wf.is_wicketkeeper AS fielder_is_wicketkeeper,
 			wf.is_substitute AS fielder_is_substitute

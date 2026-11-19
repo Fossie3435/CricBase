@@ -15,7 +15,6 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import uk.org.cricbase.DTOs.BattingPerformanceSummary;
-import uk.org.cricbase.DTOs.StatLeaderboardEntry;
 import uk.org.cricbase.Models.BattingPerformance;
 
 /**

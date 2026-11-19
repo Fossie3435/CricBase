@@ -80,8 +80,8 @@ export interface BattingPerformanceSummary {
 }
 
 export interface WicketSummary {
-    batterOut: string;
-    bowler: string;
+    batterId: string;
+    bowlerId: string;
     dismissalType: string;
 	fielders: Fielder[];
 }
@@ -89,7 +89,7 @@ export interface WicketSummary {
 export interface Fielder {
 	fielder: string;
 	isWicketkeeper: boolean;
-	isSubstitute: boolean;
+	substitute: boolean;
 }
 
 export interface BowlingPerformanceSummary {

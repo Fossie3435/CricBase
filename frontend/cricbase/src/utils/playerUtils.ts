@@ -1,7 +1,7 @@
 import { Player} from '../types/Player';
 import { TeamSummary } from '../types/Match'
 
-export function getPlayerOnTeam(team: TeamSummary, playerId: string): Player  {
+export function getPlayerOnTeam(team: TeamSummary, playerId: string | undefined): Player  {
 	const player = team.players.find((player) => player.id === playerId);
 
 	if (player === undefined) {
