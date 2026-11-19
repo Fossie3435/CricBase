@@ -149,7 +149,7 @@ public interface MatchMapper {
 			LEFT JOIN teams w ON m.winner = w.id
 			LEFT JOIN teams tw ON m.toss_winner = tw.id 
             WHERE m.tournament_id = #{id}
-			ORDER BY date;
+			ORDER BY date, match_number;
             """)
    	List<MatchSummary> findMatchSummariesByTournamentEditionId(long id); 
 
