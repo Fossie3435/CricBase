@@ -41,10 +41,16 @@
 }
 
 .matchSummary h3, .matchSummary h5 {
-	margin: 2px;
+	margin: 0px;
 }
 
 .matchInfoBar {
+	grid-template-columns: 1fr 1fr;
+	display: grid;
+	padding: 0px;
+}
+
+.bottomInfoBar {
 	grid-template-columns: 1fr 1fr;
 	display: grid;
 	padding: 0px;

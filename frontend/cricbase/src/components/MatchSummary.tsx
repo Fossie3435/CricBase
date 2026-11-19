@@ -12,7 +12,7 @@ function MatchSummary( { match } : MatchSummaryProps) {
 			<div className="matchInfoBar">
 				<div className="matchNumber">
 					<h4>Match #{match.matchNumber}</h4>
-				</div >
+				</div>
 				<div className="matchDate">
 					<h4>{match.date.toString()}</h4>
 				</div>
@@ -28,7 +28,10 @@ function MatchSummary( { match } : MatchSummaryProps) {
 				</span>
 			</h3>
 			))}
-		<h5 className="matchResult">{getResultString(match.result)}</h5>
+			<div className="bottomInfoBar">
+				<h5 className="groundInfo">{match.ground.name}</h5>
+				<h5 className="matchResult">{getResultString(match.result)}</h5>
+			</div>
 		</Link> 	
 	)
 }
