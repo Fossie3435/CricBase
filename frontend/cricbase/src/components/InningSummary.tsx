@@ -38,7 +38,7 @@ function InningSummary({inning, teams } : InningSummaryProps) {
 				</tr>
 				{inning.battingScorecard.map((bp) => (
 					<tr>
-						<td>{ getPlayerOnTeam(battingTeam, bp.batterId).nickname}</td>
+						<td className="batterName">{ getPlayerOnTeam(battingTeam, bp.batterId).nickname}</td>
 						<td>{ getWicketString(bowlingTeam, bp.wicket) }</td>
 						<td>{bp.runs}</td>
 						<td>{bp.ballsFaced}</td>
@@ -49,6 +49,14 @@ function InningSummary({inning, teams } : InningSummaryProps) {
 				<tr>
 					<td><strong>Extras</strong></td>
 					<td>{inning.wides}w {inning.noballs}nb {inning.byes}b {inning.legbyes}lb</td>
+				</tr>
+				<tr>
+					<td><strong>Fall of Wickets</strong></td>
+					<td colSpan={5}>
+						{inning.fallOfWickets.map((fallOfWicket) => (
+							`${fallOfWicket.wicket}-${fallOfWicket.total} (${getPlayerOnTeam(battingTeam, fallOfWicket.batterId).nickname}, ${fallOfWicket.delivery})`
+						)).join(", ")}
+					</td>
 				</tr>
 
 			</table>
